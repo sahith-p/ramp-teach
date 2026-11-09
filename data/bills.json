@@ -1,0 +1,79 @@
+[
+  {
+    "bill_id": "bill_HSG-1001",
+    "vendor": "Halcyon Staffing Group",
+    "amount": 10869,
+    "status": "approved",
+    "receipt_id": null
+  },
+  {
+    "bill_id": "bill_HSG-1002",
+    "vendor": "Halcyon Staffing Group",
+    "amount": 12304,
+    "status": "disputed",
+    "receipt_id": null
+  },
+  {
+    "bill_id": "bill_HSG-1003",
+    "vendor": "Halcyon Staffing Group",
+    "amount": 12447,
+    "status": "disputed",
+    "receipt_id": null
+  },
+  {
+    "bill_id": "bill_HSG-1004",
+    "vendor": "Halcyon Staffing Group",
+    "amount": 11971,
+    "status": "disputed",
+    "receipt_id": null
+  },
+  {
+    "bill_id": "bill_HSG-1005",
+    "vendor": "Halcyon Staffing Group",
+    "amount": 12516,
+    "status": "disputed",
+    "receipt_id": null
+  },
+  {
+    "bill_id": "bill_HSG-1006",
+    "vendor": "Halcyon Staffing Group",
+    "amount": 14444,
+    "status": "disputed",
+    "receipt_id": null
+  },
+  {
+    "bill_id": "bill_HSG-1007",
+    "vendor": "Halcyon Staffing Group",
+    "amount": 12144,
+    "status": "disputed",
+    "receipt_id": null
+  },
+  {
+    "bill_id": "bill_HSG-1008",
+    "vendor": "Halcyon Staffing Group",
+    "amount": 14284.5,
+    "status": "approved",
+    "receipt_id": null
+  },
+  {
+    "bill_id": "bill_HSG-1009",
+    "vendor": "Halcyon Staffing Group",
+    "amount": 12871,
+    "status": "disputed",
+    "receipt_id": null
+  },
+  {
+    "bill_id": "bill_HSG-1010",
+    "vendor": "Halcyon Staffing Group",
+    "amount": 12449,
+    "status": "approved",
+    "receipt_id": null
+  },
+  {
+    "bill_id": "bill_HSG-1011",
+    "vendor": "Halcyon Staffing Group",
+    "amount": 15677,
+    "status": "pending",
+    "receipt_id": null
+  }
+]

@@ -1,0 +1,46 @@
+{
+  "vendor": "Halcyon Staffing Group",
+  "invoice_id": "HSG-1008",
+  "issue_date": "2026-09-28",
+  "due_date": "2026-10-28",
+  "line_items": [
+    {
+      "description": "Labor: Maya Chen (Senior Recruiter) - week ending 2026-09-27",
+      "quantity": 36.5,
+      "unit_rate": 95,
+      "amount": 3467.5
+    },
+    {
+      "description": "Labor: Jordan Alvarez (Recruiting Coordinator) - week ending 2026-09-27",
+      "quantity": 40,
+      "unit_rate": 62,
+      "amount": 2480
+    },
+    {
+      "description": "Labor: Priya Natarajan (Sourcer) - week ending 2026-09-27",
+      "quantity": 40,
+      "unit_rate": 70,
+      "amount": 2800
+    },
+    {
+      "description": "Labor: Sam Okafor (Data Analyst) - week ending 2026-09-27",
+      "quantity": 38,
+      "unit_rate": 88,
+      "amount": 3344
+    },
+    {
+      "description": "Labor: Elena Rossi (Recruiting Coordinator) - week ending 2026-09-27",
+      "quantity": 34,
+      "unit_rate": 62,
+      "amount": 2108
+    },
+    {
+      "description": "Background check fee",
+      "quantity": 1,
+      "unit_rate": 85,
+      "amount": 85
+    }
+  ],
+  "total": 14284.5,
+  "currency": "USD"
+}

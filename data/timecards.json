@@ -1,0 +1,317 @@
+[
+  {
+    "employee_id": "E-101",
+    "week_ending": "2026-08-09",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-102",
+    "week_ending": "2026-08-09",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-103",
+    "week_ending": "2026-08-09",
+    "approved_hours": 36,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-105",
+    "week_ending": "2026-08-09",
+    "approved_hours": 32,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-101",
+    "week_ending": "2026-08-16",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-102",
+    "week_ending": "2026-08-16",
+    "approved_hours": 38,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-103",
+    "week_ending": "2026-08-16",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-104",
+    "week_ending": "2026-08-16",
+    "approved_hours": 36,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-101",
+    "week_ending": "2026-08-23",
+    "approved_hours": 38,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-103",
+    "week_ending": "2026-08-23",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-104",
+    "week_ending": "2026-08-23",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-105",
+    "week_ending": "2026-08-23",
+    "approved_hours": 36,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-101",
+    "week_ending": "2026-08-30",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-102",
+    "week_ending": "2026-08-30",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-103",
+    "week_ending": "2026-08-30",
+    "approved_hours": 37.5,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-104",
+    "week_ending": "2026-08-30",
+    "approved_hours": 32,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-101",
+    "week_ending": "2026-09-06",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-102",
+    "week_ending": "2026-09-06",
+    "approved_hours": 36,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-104",
+    "week_ending": "2026-09-06",
+    "approved_hours": 38,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-105",
+    "week_ending": "2026-09-06",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-101",
+    "week_ending": "2026-09-13",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-103",
+    "week_ending": "2026-09-13",
+    "approved_hours": 38,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-104",
+    "week_ending": "2026-09-13",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-105",
+    "week_ending": "2026-09-13",
+    "approved_hours": 36,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-101",
+    "week_ending": "2026-09-20",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-102",
+    "week_ending": "2026-09-20",
+    "approved_hours": 32,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-103",
+    "week_ending": "2026-09-20",
+    "approved_hours": 36,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-104",
+    "week_ending": "2026-09-20",
+    "approved_hours": 38,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-101",
+    "week_ending": "2026-09-27",
+    "approved_hours": 36.5,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-102",
+    "week_ending": "2026-09-27",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-103",
+    "week_ending": "2026-09-27",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-104",
+    "week_ending": "2026-09-27",
+    "approved_hours": 38,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-105",
+    "week_ending": "2026-09-27",
+    "approved_hours": 34,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-101",
+    "week_ending": "2026-10-04",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-103",
+    "week_ending": "2026-10-04",
+    "approved_hours": 36,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-104",
+    "week_ending": "2026-10-04",
+    "approved_hours": 38,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-105",
+    "week_ending": "2026-10-04",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-101",
+    "week_ending": "2026-10-11",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-102",
+    "week_ending": "2026-10-11",
+    "approved_hours": 38,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-103",
+    "week_ending": "2026-10-11",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-104",
+    "week_ending": "2026-10-11",
+    "approved_hours": 36,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-101",
+    "week_ending": "2026-10-18",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-102",
+    "week_ending": "2026-10-18",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-103",
+    "week_ending": "2026-10-18",
+    "approved_hours": 36,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-104",
+    "week_ending": "2026-10-18",
+    "approved_hours": 38,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  }
+]

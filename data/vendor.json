@@ -1,0 +1,66 @@
+{
+  "vendor": "Halcyon Staffing Group",
+  "vendor_id": "V-HSG",
+  "contract": {
+    "contract_id": "C-HSG-2026",
+    "effective_from": "2026-01-01",
+    "effective_to": "2026-12-31",
+    "currency": "USD",
+    "payment_terms_days": 30,
+    "rate_card": [
+      {
+        "role": "Senior Recruiter",
+        "bill_rate": 95
+      },
+      {
+        "role": "Recruiting Coordinator",
+        "bill_rate": 62
+      },
+      {
+        "role": "Sourcer",
+        "bill_rate": 70
+      },
+      {
+        "role": "Data Analyst",
+        "bill_rate": 88
+      }
+    ],
+    "allowed_charges": [
+      {
+        "description": "Background check fee",
+        "max_amount": 120
+      },
+      {
+        "description": "Job board posting",
+        "max_amount": 400
+      }
+    ]
+  },
+  "employees": [
+    {
+      "employee_id": "E-101",
+      "name": "Maya Chen",
+      "role": "Senior Recruiter"
+    },
+    {
+      "employee_id": "E-102",
+      "name": "Jordan Alvarez",
+      "role": "Recruiting Coordinator"
+    },
+    {
+      "employee_id": "E-103",
+      "name": "Priya Natarajan",
+      "role": "Sourcer"
+    },
+    {
+      "employee_id": "E-104",
+      "name": "Sam Okafor",
+      "role": "Data Analyst"
+    },
+    {
+      "employee_id": "E-105",
+      "name": "Elena Rossi",
+      "role": "Recruiting Coordinator"
+    }
+  ]
+}

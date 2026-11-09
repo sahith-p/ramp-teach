@@ -1,0 +1,40 @@
+{
+  "vendor": "Halcyon Staffing Group",
+  "invoice_id": "HSG-1005",
+  "issue_date": "2026-09-07",
+  "due_date": "2026-10-07",
+  "line_items": [
+    {
+      "description": "Labor: Maya Chen (Senior Recruiter) - week ending 2026-09-06",
+      "quantity": 40,
+      "unit_rate": 95,
+      "amount": 3800
+    },
+    {
+      "description": "Labor: Jordan Alvarez (Recruiting Coordinator) - week ending 2026-09-06",
+      "quantity": 36,
+      "unit_rate": 62,
+      "amount": 2232
+    },
+    {
+      "description": "Labor: Sam Okafor (Data Analyst) - week ending 2026-09-06",
+      "quantity": 38,
+      "unit_rate": 88,
+      "amount": 3344
+    },
+    {
+      "description": "Labor: Elena Rossi (Recruiting Coordinator) - week ending 2026-09-06",
+      "quantity": 40,
+      "unit_rate": 62,
+      "amount": 2480
+    },
+    {
+      "description": "Job board posting",
+      "quantity": 1,
+      "unit_rate": 300,
+      "amount": 300
+    }
+  ],
+  "total": 12516,
+  "currency": "USD"
+}

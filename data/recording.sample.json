@@ -1,0 +1,399 @@
+{
+  "session_id": "rec_20261012_hsg1010_ap",
+  "started_at": "2026-10-12T15:02:00.000Z",
+  "steps": [
+    {
+      "ts": "2026-10-12T15:02:00.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in · Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:02:03.000Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "text": "I'm verifying Halcyon Staffing Group invoice HSG-1010, week ending October 11th. First I sign in to their timecard portal."
+      }
+    },
+    {
+      "ts": "2026-10-12T15:02:07.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in · Fixture vendor portal",
+        "selector": "input[name=username]",
+        "text": ""
+      }
+    },
+    {
+      "ts": "2026-10-12T15:02:09.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "input",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in · Fixture vendor portal",
+        "selector": "input[name=username]",
+        "value": "ap.reviewer"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:02:11.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in · Fixture vendor portal",
+        "selector": "input[name=password]",
+        "text": ""
+      }
+    },
+    {
+      "ts": "2026-10-12T15:02:13.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "input",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in · Fixture vendor portal",
+        "selector": "input[name=password]",
+        "value": "[redacted]"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:02:14.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in · Fixture vendor portal",
+        "selector": "button[type=submit]",
+        "text": "Sign in"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:02:14.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "submit",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in · Fixture vendor portal",
+        "selector": "form[action=\"/api/portal/login\"]",
+        "method": "POST",
+        "action": "http://localhost:3000/api/portal/login"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:02:15.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices · Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:02:18.000Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "text": "This is the invoice list. I open HSG-1010."
+      }
+    },
+    {
+      "ts": "2026-10-12T15:02:21.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices · Fixture vendor portal",
+        "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+        "text": "HSG-1010"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:02:22.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice HSG-1010 · Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:02:28.000Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "text": "Rule one: every labor line's hourly rate has to match the contract rate card. Senior Recruiter 95, Recruiting Coordinator 62, Sourcer 70, Data Analyst 88. Maya is 95, Jordan 62, Priya 70, Sam 88, so the rates match."
+      }
+    },
+    {
+      "ts": "2026-10-12T15:02:37.000Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "text": "Rule two: no duplicate lines. The same employee can't be billed twice for the same week. One line per person here."
+      }
+    },
+    {
+      "ts": "2026-10-12T15:02:45.000Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "text": "Rule three: any non-labor charge has to be on the contract's allowed list and under its cap. Background check fee up to 120, job board posting up to 400. This job board posting is 325, so it's fine. Anything else, like a rush fee, gets disputed."
+      }
+    },
+    {
+      "ts": "2026-10-12T15:02:54.000Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "text": "Rule four: the arithmetic has to tie. Hours times rate must equal each line amount, and the line amounts must add up to the invoice total, to the cent. They do: 12,449.00."
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:02.000Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "text": "Rule five: billed hours can't be more than the approved hours on that employee's timecard for the week. So I open each person's timecard from the invoice."
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:06.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice HSG-1010 · Fixture vendor portal",
+        "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:07.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+        "title": "Timecard: Maya Chen · week ending 2026-10-11 · Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:11.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+        "title": "Timecard: Maya Chen · week ending 2026-10-11 · Fixture vendor portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "40"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:13.000Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "text": "Maya Chen: 40 hours approved, 40 billed. Good."
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:16.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice HSG-1010 · Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:20.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice HSG-1010 · Fixture vendor portal",
+        "selector": "a[href=\"/portal/employees/E-102?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:21.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-102?week=2026-10-11",
+        "title": "Timecard: Jordan Alvarez · week ending 2026-10-11 · Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:25.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-102?week=2026-10-11",
+        "title": "Timecard: Jordan Alvarez · week ending 2026-10-11 · Fixture vendor portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "38"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:27.000Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "text": "Jordan Alvarez: 38 approved, 38 billed. Matches."
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:30.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice HSG-1010 · Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:34.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice HSG-1010 · Fixture vendor portal",
+        "selector": "a[href=\"/portal/employees/E-103?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:35.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-103?week=2026-10-11",
+        "title": "Timecard: Priya Natarajan · week ending 2026-10-11 · Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:39.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-103?week=2026-10-11",
+        "title": "Timecard: Priya Natarajan · week ending 2026-10-11 · Fixture vendor portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "40"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:41.000Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "text": "Priya Natarajan: 40 approved, 40 billed."
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:44.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice HSG-1010 · Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:48.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice HSG-1010 · Fixture vendor portal",
+        "selector": "a[href=\"/portal/employees/E-104?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:49.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+        "title": "Timecard: Sam Okafor · week ending 2026-10-11 · Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:53.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+        "title": "Timecard: Sam Okafor · week ending 2026-10-11 · Fixture vendor portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "36"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:55.000Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "text": "Sam Okafor: 36 approved, 36 billed. That's all four labor lines."
+      }
+    },
+    {
+      "ts": "2026-10-12T15:03:58.000Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice HSG-1010 · Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-10-12T15:04:03.000Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "text": "Everything ties, so HSG-1010 is an approve. If any one of these checks fails, the invoice is a dispute, and I ask Halcyon for a credit memo for the difference."
+      }
+    },
+    {
+      "ts": "2026-10-12T15:04:12.000Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "text": "Open question: sometimes Sam bills more than 40 hours in a week. The contract doesn't say whether overtime above 40 hours is billable at 1.5 times the rate. For now I only accept straight time at the rate card, up to the approved hours."
+      }
+    },
+    {
+      "ts": "2026-10-12T15:04:22.000Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "text": "Another open question: do job board postings need pre-approval from the hiring manager before Halcyon can bill them? I'll ask the controller."
+      }
+    }
+  ],
+  "transcript": [
+    "I'm verifying Halcyon Staffing Group invoice HSG-1010, week ending October 11th. First I sign in to their timecard portal.",
+    "This is the invoice list. I open HSG-1010.",
+    "Rule one: every labor line's hourly rate has to match the contract rate card. Senior Recruiter 95, Recruiting Coordinator 62, Sourcer 70, Data Analyst 88. Maya is 95, Jordan 62, Priya 70, Sam 88, so the rates match.",
+    "Rule two: no duplicate lines. The same employee can't be billed twice for the same week. One line per person here.",
+    "Rule three: any non-labor charge has to be on the contract's allowed list and under its cap. Background check fee up to 120, job board posting up to 400. This job board posting is 325, so it's fine. Anything else, like a rush fee, gets disputed.",
+    "Rule four: the arithmetic has to tie. Hours times rate must equal each line amount, and the line amounts must add up to the invoice total, to the cent. They do: 12,449.00.",
+    "Rule five: billed hours can't be more than the approved hours on that employee's timecard for the week. So I open each person's timecard from the invoice.",
+    "Maya Chen: 40 hours approved, 40 billed. Good.",
+    "Jordan Alvarez: 38 approved, 38 billed. Matches.",
+    "Priya Natarajan: 40 approved, 40 billed.",
+    "Sam Okafor: 36 approved, 36 billed. That's all four labor lines.",
+    "Everything ties, so HSG-1010 is an approve. If any one of these checks fails, the invoice is a dispute, and I ask Halcyon for a credit memo for the difference.",
+    "Open question: sometimes Sam bills more than 40 hours in a week. The contract doesn't say whether overtime above 40 hours is billable at 1.5 times the rate. For now I only accept straight time at the rate card, up to the approved hours.",
+    "Another open question: do job board postings need pre-approval from the hiring manager before Halcyon can bill them? I'll ask the controller."
+  ]
+}

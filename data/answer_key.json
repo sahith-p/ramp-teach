@@ -1,0 +1,27 @@
+{
+  "invoice_id": "HSG-1011",
+  "planted_errors": [
+    {
+      "check": "rate_matches_contract",
+      "line_index": 0,
+      "description": "Maya Chen billed at $105.00/h; the contract rate for Senior Recruiter is $95.00/h.",
+      "expected": "95.00",
+      "actual": "105.00"
+    },
+    {
+      "check": "no_duplicate_lines",
+      "line_index": 4,
+      "description": "Priya Natarajan's labor line for week ending 2026-10-18 appears twice (line_items[2] and line_items[4]).",
+      "expected": "One line per employee per week",
+      "actual": "Priya Natarajan, week ending 2026-10-18 billed twice"
+    },
+    {
+      "check": "hours_match_timecards",
+      "line_index": 3,
+      "description": "Sam Okafor billed 44 h; the approved timecard for week ending 2026-10-18 says 38 h.",
+      "expected": "<= 38 h",
+      "actual": "44 h"
+    }
+  ],
+  "expected_recommendation": "dispute"
+}
