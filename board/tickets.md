@@ -6,7 +6,7 @@
 | T-10 | data-builder | DONE (merged) | T-00 | corpus, test invoice w/ 3 planted errors, answer key, sample recording |
 | T-11 | calc-builder | DONE (merged) | T-00 | deterministic checks + vitest |
 | T-12 | fixture-builder | TODO | T-10 (spec pinned in docs/lane-spec.md) | vendor timecard portal + bill inbox |
-| T-13 | ui-builder | IN PROGRESS (WIP merged) | T-00 | receipt review page + decision API |
+| T-13 | ui-builder | DONE (merged) | T-00 | receipt review page + decision API |
 | T-14 | recorder-builder | DONE (merged; real-portal recording pending T-12) | T-00 | MV3 recorder extension |
 | T-20 | learn-builder | TODO | T-10, T-11 | workflow spec + evals |
 | T-21 | agent-builder | TODO | T-12 | engine worker: calc → browser evidence → receipt |
@@ -29,3 +29,6 @@
 [2026-11-09T09:45:00Z] orchestrator | STATUS | handoff | Session handoff for key provisioning. Next session: re-run unfinished lanes from their committed state — T-10 (fix 2 recording tests), T-13 (pages/API/tests), T-14 (extension + record-session); then wave 2 T-12, T-20, T-21 (briefs: docs/lane-spec.md + .claude/agents/*.md); then T-30..T-32. Lane worktrees under .claude/worktrees/ are local to this container and not pushed; everything they committed is merged here.
 [2026-11-09T09:55:00Z] orchestrator | DONE | T-10 | data merged (f66e8e5): HSG-1011 total 15677.00; planted errors line 0 rate 105 vs 95, line 3 Sam 44h vs 38h approved, line 4 duplicate of line 2 (Priya); 7 corrections C-001..C-007 cover all six checks; 45 timecards, 11 bills, 40-step recording. data tests 11/11. Wave 2 (T-12, T-20, T-21) is unblocked.
 [2026-11-09T10:00:00Z] orchestrator | DONE | T-14 | recorder merged (36a381a): MV3 extension (manifest, background, content, side panel w/ narration + Web Speech, export), loads in headless Chromium via channel:'chromium'; smoke recording extension/recordings/smoke.json (23 steps, schema-valid, password redacted; driver scripted, capture real); 28/28 tests. Remaining: run `npm run record:session -- --base-url http://localhost:3000 --invoice HSG-1010` once T-12 portal is merged.
+[2026-11-09T10:15:00Z] orchestrator | DONE | T-13 | ui merged (0111b55): /, /receipts, /receipts/[id] (banner, checks w/ evidence links, decision panel), evidence viewer (path-safe, blocks answer_key), POST /api/decisions (400/404/409, attaches bill), GET /api/receipts/[id]; samples/. On main: tsc OK, vitest 99/99 (6 files), plain `next build` OK (7 routes).
+[2026-11-09T10:15:00Z] orchestrator | STATUS | T-13 | Answered ui-builder QUESTIONs: (1) Turbopack fails in worktrees (symlinked node_modules) → CLAUDE.md now says use --webpack in worktrees; main builds fine. (2) components/ui/Card title prop now Omit<HTMLAttributes,"title">. (3) /AGENTS.md (created by next dev) gitignored.
+[2026-11-09T10:15:00Z] orchestrator | STATUS | handoff | Wave 1 complete: T-10, T-11, T-13, T-14 DONE and merged. Next session: wave 2 (T-12 fixture, T-20 learn, T-21 agent) per docs/lane-spec.md, then T-30..T-32 + MORNING.md.
