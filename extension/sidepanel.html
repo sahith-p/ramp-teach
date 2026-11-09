@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ramp Teach Recorder (demo)</title>
+    <link rel="stylesheet" href="sidepanel.css" />
+  </head>
+  <body>
+    <p class="demo-label" id="demo-label">Unofficial demo — records localhost fixture pages only</p>
+
+    <header>
+      <p class="eyebrow">Ramp Teach · Record</p>
+      <h1>Recorder</h1>
+      <p class="status"><span id="status-dot" class="dot"></span><span id="status-text">Idle</span></p>
+      <p class="session" id="session-id"></p>
+    </header>
+
+    <section class="card">
+      <div class="row">
+        <button id="btn-start" class="primary" type="button">Start recording</button>
+        <button id="btn-stop" type="button" disabled>Stop</button>
+      </div>
+      <p id="message" class="message" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="card">
+      <label for="narration" class="card-title">Narration</label>
+      <textarea id="narration" rows="3" placeholder="Say what you're checking and why, e.g. &quot;Billed hours must not exceed the approved timecard.&quot;"></textarea>
+      <div class="row">
+        <button id="btn-narrate" type="button">Add narration</button>
+        <button id="btn-mic" type="button" hidden aria-pressed="false">Dictate (mic)</button>
+      </div>
+      <p id="mic-note" class="note"></p>
+    </section>
+
+    <section class="card steps-card">
+      <div class="row between">
+        <span class="card-title">Steps <span id="step-count" class="count">0</span></span>
+      </div>
+      <ol id="steps" class="steps"></ol>
+    </section>
+
+    <section class="card">
+      <div class="row">
+        <button id="btn-export" type="button" disabled>Export JSON</button>
+        <button id="btn-clear" class="danger" type="button" disabled>Clear</button>
+      </div>
+      <p class="note">
+        Privacy: password fields are always saved as <code>[redacted]</code>. Nothing leaves this browser
+        until you export. Synthetic data only.
+      </p>
+    </section>
+
+    <script type="module" src="sidepanel.js"></script>
+  </body>
+</html>

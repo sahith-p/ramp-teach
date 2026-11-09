@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Ramp Teach Recorder (demo)",
+  "short_name": "Teach Recorder",
+  "version": "0.1.0",
+  "description": "Unofficial demo inspired by Ramp's design. Records a reviewer's clicks, inputs and narration on localhost fixture pages only. Synthetic data only; passwords are always redacted.",
+  "permissions": ["storage", "sidePanel", "activeTab", "scripting", "downloads", "tabs"],
+  "host_permissions": ["http://localhost/*", "http://127.0.0.1/*"],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://localhost/*", "http://127.0.0.1/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "action": {
+    "default_title": "Ramp Teach Recorder (demo) — open side panel"
+  }
+}
