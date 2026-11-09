@@ -1,0 +1,65 @@
+{
+  "run_id": "demo-2026-11-09T09-04-07-996Z",
+  "invoice_id": "HSG-1011",
+  "model": "claude-opus-5-5",
+  "api_key_visible": true,
+  "modes": {
+    "learn": "real",
+    "evidence": "real",
+    "synthesis": "real",
+    "decision": "scripted (UI click standing in for a human)"
+  },
+  "results": [
+    {
+      "step": "learn",
+      "ok": true,
+      "detail": "rules/workflow_spec.json present; mode=real"
+    },
+    {
+      "step": "server",
+      "ok": true,
+      "detail": "reusing app already running at http://localhost:3000"
+    },
+    {
+      "step": "agent",
+      "ok": true,
+      "detail": "receipt written; synthesis mode=real; evidence mode=real"
+    },
+    {
+      "step": "planted:rate_matches_contract",
+      "ok": true,
+      "detail": "Maya Chen billed at $105.00/h; the contract rate for Senior Recruiter is $95.00/h. → receipt check FAIL (flagged)"
+    },
+    {
+      "step": "planted:no_duplicate_lines",
+      "ok": true,
+      "detail": "Priya Natarajan's labor line for week ending 2026-10-18 appears twice (line_items[2] and line_items[4]). → receipt check FAIL (flagged)"
+    },
+    {
+      "step": "planted:hours_match_timecards",
+      "ok": true,
+      "detail": "Sam Okafor billed 44 h; the approved timecard for week ending 2026-10-18 says 38 h. → receipt check FAIL (flagged)"
+    },
+    {
+      "step": "recommendation",
+      "ok": true,
+      "detail": "receipt=dispute answer_key=dispute"
+    },
+    {
+      "step": "ui:render",
+      "ok": true,
+      "detail": "receipt page shows demo label and \"Dispute\""
+    },
+    {
+      "step": "ui:decision",
+      "ok": true,
+      "detail": "decision via UI → POST /api/decisions: dispute by Demo reviewer (scripted stand-in for a human)"
+    },
+    {
+      "step": "attach",
+      "ok": true,
+      "detail": "bill bill_HSG-1011 status=disputed receipt_id=rcpt_HSG-1011"
+    }
+  ],
+  "passed": true
+}

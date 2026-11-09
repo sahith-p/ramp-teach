@@ -1,26 +1,16 @@
 {
   "invoice_id": "HSG-1011",
-  "mode": "scripted",
+  "mode": "real",
   "items": [
-    {
-      "source": "fixture:/portal/invoices/HSG-1011",
-      "kind": "invoice_view",
-      "employee_id": null,
-      "week_ending": null,
-      "value": "HSG-1011",
-      "screenshot": "runs/HSG-1011/screenshots/20261109T090345-001-portal-invoices-HSG-1011.png",
-      "captured_at": "2026-11-09T09:03:47.051Z",
-      "mode": "scripted"
-    },
     {
       "source": "fixture:/portal/employees/E-101?week=2026-10-18",
       "kind": "timecard_hours",
       "employee_id": "E-101",
       "week_ending": "2026-10-18",
       "value": 40,
-      "screenshot": "runs/HSG-1011/screenshots/20261109T090345-002-portal-employees-E-101-week-2026-10-18.png",
-      "captured_at": "2026-11-09T09:03:47.237Z",
-      "mode": "scripted"
+      "screenshot": "runs/HSG-1011/screenshots/20261109T090409-001-portal-employees-E-101-week-2026-10-18.png",
+      "captured_at": "2026-11-09T09:04:38.797Z",
+      "mode": "real"
     },
     {
       "source": "fixture:/portal/employees/E-102?week=2026-10-18",
@@ -28,9 +18,9 @@
       "employee_id": "E-102",
       "week_ending": "2026-10-18",
       "value": 40,
-      "screenshot": "runs/HSG-1011/screenshots/20261109T090345-003-portal-employees-E-102-week-2026-10-18.png",
-      "captured_at": "2026-11-09T09:03:47.401Z",
-      "mode": "scripted"
+      "screenshot": "runs/HSG-1011/screenshots/20261109T090409-002-portal-employees-E-102-week-2026-10-18.png",
+      "captured_at": "2026-11-09T09:04:38.797Z",
+      "mode": "real"
     },
     {
       "source": "fixture:/portal/employees/E-103?week=2026-10-18",
@@ -38,9 +28,9 @@
       "employee_id": "E-103",
       "week_ending": "2026-10-18",
       "value": 36,
-      "screenshot": "runs/HSG-1011/screenshots/20261109T090345-004-portal-employees-E-103-week-2026-10-18.png",
-      "captured_at": "2026-11-09T09:03:47.572Z",
-      "mode": "scripted"
+      "screenshot": "runs/HSG-1011/screenshots/20261109T090409-003-portal-employees-E-103-week-2026-10-18.png",
+      "captured_at": "2026-11-09T09:04:38.797Z",
+      "mode": "real"
     },
     {
       "source": "fixture:/portal/employees/E-104?week=2026-10-18",
@@ -48,9 +38,9 @@
       "employee_id": "E-104",
       "week_ending": "2026-10-18",
       "value": 38,
-      "screenshot": "runs/HSG-1011/screenshots/20261109T090345-005-portal-employees-E-104-week-2026-10-18.png",
-      "captured_at": "2026-11-09T09:03:47.735Z",
-      "mode": "scripted"
+      "screenshot": "runs/HSG-1011/screenshots/20261109T090409-004-portal-employees-E-104-week-2026-10-18.png",
+      "captured_at": "2026-11-09T09:04:38.797Z",
+      "mode": "real"
     }
   ],
   "timecards": [
