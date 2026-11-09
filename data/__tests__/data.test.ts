@@ -275,7 +275,8 @@ describe("data: sample recording", () => {
       ...["E-101", "E-102", "E-103", "E-104"].map((e) => `${base}/portal/employees/${e}?week=2026-10-11`),
     ])
       expect(urls).toContain(u);
-    for (const u of urls) expect(u.startsWith(`${base}/`)).toBe(true);
+    for (const s of rec.steps.filter((x) => x.kind === "dom"))
+      expect(s.detail.url?.startsWith(`${base}/`), JSON.stringify(s)).toBe(true);
     const pw = rec.steps.filter((s) => s.detail.selector === "input[name=password]" && s.detail.event === "input");
     expect(pw.length).toBe(1);
     expect(pw[0].detail.value).toBe("[redacted]");
