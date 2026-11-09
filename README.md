@@ -1,11 +1,76 @@
 # Ramp Teach
 
-A service-invoice verification agent demo. **Unofficial demo inspired by Ramp's design. All data is synthetic.**
+**Unofficial demo inspired by Ramp's design. Not affiliated with Ramp. All data is synthetic.**
 
-Five stages: RECORD → LEARN → VERIFY → RECEIPT → DECIDE+ATTACH. See `docs/workflow.md` (written in T-32) and `MORNING.md`.
+An AP specialist verifies one staffing vendor's invoice once while narrating, and an agent learns
+the job from that. On a new invoice it runs deterministic checks, uses Claude to drive a browser through
+the vendor's timecard portal for evidence, and writes an auditable receipt recommending
+approve / dispute / review. A human decides, and the receipt attaches to a Ramp-style bill.
+
+```
+RECORD (MV3 extension) → LEARN (spec + evals) → VERIFY (calc + browser agent) → RECEIPT (Claude) → DECIDE + ATTACH (human)
+```
+
+How it works, what is real AI vs scripted vs mock, and the limitations: **[docs/workflow.md](docs/workflow.md)**.
+Morning status and a 3-minute demo script: **[MORNING.md](MORNING.md)**.
+
+## Quick start
 
 ```bash
 npm install
+```
+
+```bash
 npm run typecheck && npm test
+```
+
+```bash
+npm run eval
+```
+
+```bash
 npm run demo
 ```
+
+`npm run demo` builds and starts the Next app on :3000, runs the agent on the test invoice `HSG-1011`,
+checks the result against the answer key, records one decision through the UI (a scripted stand-in for a
+human) and verifies the receipt is attached to the bill. It uses real Claude calls when a key is
+visible (`RAMP_ANTHROPIC_API_KEY`, then `ANTHROPIC_API_KEY`), and labeled offline modes otherwise
+(`--offline` forces them).
+
+Look around yourself:
+
+```bash
+npm run build && npm run start
+```
+
+Then open http://localhost:3000. The pages are `/` (overview), `/receipts/HSG-1011` (the review page),
+`/portal/login` (fixture vendor portal; demo creds `ap.reviewer` / `demo-only`) and `/bills` (fixture bill inbox).
+
+## Commands
+
+| Command | What it does |
+|---|---|
+| `npm run learn` | Distill `data/recording.sample.json` into `rules/workflow_spec.json` (one Claude call, cached) plus `rules/evals.json`. `-- --offline` uses the deterministic distiller. |
+| `npm run agent -- HSG-1011` | Engine run for one invoice (needs the app running): calc → browser evidence → receipt. `--offline` gives scripted evidence and a mock receipt. |
+| `npm run eval` | Correction-derived eval cases (recall) plus a precision guard over all past invoices. |
+| `npm run demo` | The end-to-end proof above. Flags: `--offline`, `--relearn`, `--no-build`, `--keep-server`. |
+| `npm run record:session` | Play a reviewer session in Chromium with the unpacked recorder extension capturing it. |
+| `npx tsx scripts/usage.ts` | Token usage and estimated cost of the real Claude calls recorded in `runtime/usage.jsonl`. |
+
+## Layout
+
+| Path | Contents |
+|---|---|
+| `contracts/` | Frozen Zod schemas + engine interfaces (`WorkflowDefinition`, `AIProvider`, `BrowserDriver`) |
+| `agent/` | Generic engine runner, Playwright driver, browser-use loop, receipt post-pass, Anthropic adapter |
+| `workflows/invoice-review/` | The first (and only) workflow on the engine |
+| `calc/` | Deterministic checks, with no LLM |
+| `learn/`, `rules/` | Distiller, evals; learned spec and eval cases |
+| `extension/` | Manifest V3 recorder |
+| `app/` | Receipt UI + decision API, fixture vendor portal, fixture bill inbox |
+| `data/` | Synthetic vendor, invoices, timecards, corrections, answer key (tests/demo only) |
+| `board/` | Build audit trail: tickets, lane outboxes, human decisions |
+
+Stack: Next.js 16 (App Router) · TypeScript · Tailwind v4 · `@anthropic-ai/sdk` (claude-opus-5-5,
+`browser_toolset_20260801`) · Playwright · Zod · Vitest · JSON files.

@@ -123,6 +123,19 @@ describe("handleDecision", () => {
   });
 });
 
+describe("decisions across agent re-runs", () => {
+  it("a fresh (undecided) receipt for the same invoice can be decided; the log keeps both lines", async () => {
+    const { handleDecision } = await loadHandler();
+    expect(handleDecision({ invoice_id: "HSG-1011", decision: "dispute", decided_by: "Dana" }).status).toBe(200);
+    // Simulate the engine re-running: it rewrites the receipt with null human fields.
+    const r = readJson("receipts/HSG-1011.json");
+    fs.writeFileSync(path.join(root, "receipts", "HSG-1011.json"), JSON.stringify({ ...r, human_decision: null, decided_by: null, decided_at: null }));
+    expect(handleDecision({ invoice_id: "HSG-1011", decision: "dispute", decided_by: "Eve" }).status).toBe(200);
+    expect(decisionsLines()).toHaveLength(2);
+    expect(readJson("receipts/HSG-1011.json")).toMatchObject({ human_decision: "dispute", decided_by: "Eve" });
+  });
+});
+
 describe("POST /api/decisions route", () => {
   it("returns 400 for non-JSON and 200 with {decision, receipt, bill} for a valid body", async () => {
     vi.resetModules();

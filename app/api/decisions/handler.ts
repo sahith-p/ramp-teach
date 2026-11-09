@@ -14,7 +14,7 @@ import {
   type Receipt,
 } from "@/contracts";
 import { P } from "@/lib/paths";
-import { appendDecision, readDecisions } from "@/lib/store/decisions";
+import { appendDecision } from "@/lib/store/decisions";
 import { readReceipt, writeReceipt } from "@/lib/store/receipts";
 import { attachReceipt, getBill } from "@/lib/store/bills";
 import { SAFE_ID } from "@/components/receipt/format";
@@ -42,10 +42,12 @@ export function handleDecision(input: unknown, now: () => Date = () => new Date(
   const receipt = readReceipt(invoice_id);
   if (!receipt) return { status: 404, body: { error: `No receipt for ${invoice_id}` } };
 
-  if (receipt.human_decision !== null || readDecisions().some((d) => d.invoice_id === invoice_id)) {
+  // One decision per receipt. A fresh agent run writes a new receipt with null human fields, and that
+  // receipt can be decided again; receipts/decisions.jsonl stays the append-only history across runs.
+  if (receipt.human_decision !== null) {
     return {
       status: 409,
-      body: { error: `${invoice_id} was already decided (${receipt.human_decision ?? "see decisions log"}) by ${receipt.decided_by ?? "a reviewer"}` },
+      body: { error: `${invoice_id} was already decided (${receipt.human_decision}) by ${receipt.decided_by ?? "a reviewer"}` },
     };
   }
 
