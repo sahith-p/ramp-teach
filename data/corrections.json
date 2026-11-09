@@ -1,0 +1,86 @@
+[
+  {
+    "correction_id": "C-001",
+    "invoice_id": "HSG-1002",
+    "check": "line_amounts_correct",
+    "line_index": 1,
+    "description": "Jordan Alvarez's line doesn't multiply out: 38 h x $62.00 is $2,356.00 but the line says $2,536.00. Looks like transposed digits.",
+    "expected": "38 x 62.00 = 2356.00",
+    "actual": "2536.00",
+    "resolution": "Disputed; vendor issued credit memo CM-2041 for $180.00.",
+    "corrected_by": "Alex Rivera (AP)",
+    "corrected_at": "2026-08-19"
+  },
+  {
+    "correction_id": "C-002",
+    "invoice_id": "HSG-1003",
+    "check": "rate_matches_contract",
+    "line_index": 1,
+    "description": "Priya Natarajan billed at $75.00/h. The contract rate card has Sourcer at $70.00/h.",
+    "expected": "70.00 (Sourcer, C-HSG-2026)",
+    "actual": "75.00",
+    "resolution": "Disputed; vendor issued credit memo CM-2047 for $200.00 (40 h x $5.00).",
+    "corrected_by": "Alex Rivera (AP)",
+    "corrected_at": "2026-08-26"
+  },
+  {
+    "correction_id": "C-003",
+    "invoice_id": "HSG-1004",
+    "check": "no_unknown_charges",
+    "line_index": 4,
+    "description": "A $250.00 'Rush fee' line. That's not an allowed charge in the contract (only background check fees and job board postings).",
+    "expected": "Only allowed charges: Background check fee, Job board posting",
+    "actual": "Rush fee 250.00",
+    "resolution": "Disputed; vendor removed the rush fee and issued credit memo CM-2052 for $250.00.",
+    "corrected_by": "Alex Rivera (AP)",
+    "corrected_at": "2026-09-02"
+  },
+  {
+    "correction_id": "C-004",
+    "invoice_id": "HSG-1005",
+    "check": "total_matches_line_items",
+    "line_index": null,
+    "description": "Every line is right, but the lines add up to $12,156.00 and the invoice total says $12,516.00.",
+    "expected": "12156.00",
+    "actual": "12516.00",
+    "resolution": "Disputed; vendor reissued the invoice total and credited $360.00 on CM-2058.",
+    "corrected_by": "Alex Rivera (AP)",
+    "corrected_at": "2026-09-09"
+  },
+  {
+    "correction_id": "C-005",
+    "invoice_id": "HSG-1006",
+    "check": "no_duplicate_lines",
+    "line_index": 4,
+    "description": "Elena Rossi's labor line for week ending 2026-09-13 is on the invoice twice (line_items[2] and line_items[4]).",
+    "expected": "One line per employee per week",
+    "actual": "Elena Rossi, week ending 2026-09-13 billed twice (36 h each)",
+    "resolution": "Disputed; vendor issued credit memo CM-2063 for $2,232.00.",
+    "corrected_by": "Alex Rivera (AP)",
+    "corrected_at": "2026-09-16"
+  },
+  {
+    "correction_id": "C-006",
+    "invoice_id": "HSG-1007",
+    "check": "hours_match_timecards",
+    "line_index": 1,
+    "description": "Jordan Alvarez billed 40 h but his approved timecard for week ending 2026-09-20 shows 32 h.",
+    "expected": "<= 32 h (approved timecard)",
+    "actual": "40 h",
+    "resolution": "Disputed; vendor issued credit memo CM-2069 for $496.00 (8 h x $62.00).",
+    "corrected_by": "Alex Rivera (AP)",
+    "corrected_at": "2026-09-23"
+  },
+  {
+    "correction_id": "C-007",
+    "invoice_id": "HSG-1009",
+    "check": "hours_match_timecards",
+    "line_index": 2,
+    "description": "Sam Okafor billed 42 h; the approved timecard for week ending 2026-10-04 is 38 h.",
+    "expected": "<= 38 h (approved timecard)",
+    "actual": "42 h",
+    "resolution": "Disputed; vendor issued credit memo CM-2077 for $352.00 (4 h x $88.00).",
+    "corrected_by": "Alex Rivera (AP)",
+    "corrected_at": "2026-10-07"
+  }
+]
