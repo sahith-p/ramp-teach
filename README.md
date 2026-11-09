@@ -51,7 +51,7 @@ Then open http://localhost:3000. The pages are `/` (overview), `/receipts/HSG-10
 
 | Command | What it does |
 |---|---|
-| `npm run learn` | Distill `data/recording.sample.json` into `rules/workflow_spec.json` (one Claude call, cached) plus `rules/evals.json`. `-- --offline` uses the deterministic distiller. |
+| `npm run learn` | Distill the extension capture `extension/recordings/portal-HSG-1010.json` into `rules/workflow_spec.json` (one Claude call, cached; provenance in `rules/learn_meta.json`) plus `rules/evals.json`. `-- --offline` uses the deterministic distiller; `-- --recording data/recording.sample.json` uses the labeled fallback fixture. |
 | `npm run agent -- HSG-1011` | Engine run for one invoice (needs the app running): calc → browser evidence → receipt. `--offline` gives scripted evidence and a mock receipt. |
 | `npm run eval` | Correction-derived eval cases (recall) plus a precision guard over all past invoices. |
 | `npm run demo` | The end-to-end proof above. Flags: `--offline`, `--relearn`, `--no-build`, `--keep-server`. |

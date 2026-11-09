@@ -2,7 +2,7 @@
   "mode": "real",
   "model": "claude-opus-5-5",
   "recording_path": "extension/recordings/portal-HSG-1010.json",
-  "generated_at": "2026-11-09T09:43:06.111Z",
+  "generated_at": "2026-11-09T09:48:56.917Z",
   "provenance": {
     "session_id": "rec_20261109T085307Z_iwtx",
     "capture": "mv3_extension",

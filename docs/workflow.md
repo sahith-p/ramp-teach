@@ -1,4 +1,4 @@
-# Ramp Teach — how it works
+# Ramp Teach: how it works
 
 > Unofficial demo inspired by Ramp's design. Not affiliated with Ramp. Every vendor, person, invoice,
 > timecard and bill in this repo is synthetic.
@@ -23,8 +23,8 @@ recording, one new invoice with exactly three planted errors, one workflow end t
 
 | Stage | What runs | Output | Mode in tonight's committed run |
 |---|---|---|---|
-| RECORD | `extension/` (Manifest V3): a content script captures clicks, inputs, submits and navigations with URL, title and timestamp. The side panel takes narration (typed, or Web Speech API). Export downloads a `Recording` JSON. | `extension/recordings/*.json`, `data/recording.sample.json` | Capture **real** (the unpacked extension recorded it). The "reviewer" was **scripted** Playwright, not a human (§4). |
-| LEARN | `learn/distill.ts`: **one** Claude call (structured output, validated against the frozen `WorkflowSpec` schema). Without a key: `learn/deterministic.ts` extracts the same fields with no LLM. `workflows/invoice-review/evals.ts` turns every past correction into a permanent eval case. | `rules/workflow_spec.json`, `rules/learn_meta.json`, `rules/evals.json` | **real** (`learn_meta.mode = "real"`, claude-opus-5-5) |
+| RECORD | `extension/` (Manifest V3): a content script captures clicks, inputs, submits and navigations with URL, title and timestamp. The side panel takes narration (typed, or Web Speech API). Export downloads a `Recording` JSON. | `extension/recordings/portal-HSG-1010.json` (the LEARN input) | Capture **real** (the unpacked extension recorded it on the real fixture portal). The "reviewer" was a **scripted** Playwright operator, not a human (§4). |
+| LEARN | `learn/distill.ts`: **one** Claude call on the extension capture (structured output, validated against the frozen `WorkflowSpec` schema). Without a key: `learn/deterministic.ts` extracts the same fields with no LLM. `workflows/invoice-review/evals.ts` turns every past correction into a permanent eval case. | `rules/workflow_spec.json`, `rules/learn_meta.json` (with `recording_path` + `provenance`), `rules/evals.json` | **real** (`learn_meta.mode = "real"`, claude-opus-5-5, `recording_path = extension/recordings/portal-HSG-1010.json`) |
 | VERIFY | (a) `calc/` deterministic checks; (b) `agent/providers/browser-loop.ts`: Claude drives a local Chromium through `browser_toolset_20260801` on the fixture vendor portal and records timecard facts with a `record_evidence` tool; (c) calc runs again with the portal evidence. | `runs/<id>/calc.json`, `runs/<id>/evidence.json`, `runs/<id>/screenshots/` | calc **deterministic**; evidence **real** |
 | RECEIPT | `agent/engine.ts`: **one** structured Claude call over calc + evidence + learned spec, then `agent/enforce.ts` post-pass. Without a key: `mockReceipt` (deterministic mapper, same shape). | `receipts/<id>.json` | **real** |
 | DECIDE + ATTACH | `app/receipts/[invoiceId]`: Approve/Dispute buttons → `POST /api/decisions` → append `receipts/decisions.jsonl`, set the receipt's human fields, attach it to `bill_<id>` with status `approved`/`disputed`. | `receipts/decisions.jsonl`, `runtime/bills.json` | In `npm run demo` the click is a **scripted stand-in for a human**, and `decided_by` says so |
@@ -91,14 +91,14 @@ Stated plainly, for the committed artifacts (`rules/`, `receipts/HSG-1011.json`,
 
 | Piece | Mode | What that means |
 |---|---|---|
-| Workflow spec (`rules/workflow_spec.json`) | **real** | One claude-opus-5-5 call distilled it from `data/recording.sample.json`. Later `npm run learn` runs hit the disk cache and say `cache_hit: true` in `learn/trace.jsonl`. |
-| Eval cases (`rules/evals.json`) | deterministic | Generated from `data/corrections.json` by code. |
+| Workflow spec (`rules/workflow_spec.json`) | **real** | One claude-opus-5-5 call distilled it from the **extension capture** `extension/recordings/portal-HSG-1010.json`. `rules/learn_meta.json` records the path and a `provenance` block (`capture: mv3_extension`, `operator: scripted_playwright`, session id). Later `npm run learn` runs hit the disk cache and say `cache_hit: true` in `learn/trace.jsonl`. The seeded `data/recording.sample.json` is a labeled **fallback fixture** only: LEARN uses it only if the capture is missing, and unit tests use it. |
+| Eval cases (`rules/evals.json`) | deterministic | Generated from `data/corrections.json` by code, in the same `npm run learn` run. They come from the vendor's correction history, not from the recording, so re-learning on the capture left them byte-identical. |
 | Calc checks | deterministic | Plain code, always. |
-| Browser evidence | **real** | claude-opus-5-5 chose every action via `browser_toolset_20260801`, executed by our Playwright driver. In the committed run: 6× `navigate`, 6× `get_page_text`, 2× `read_page`, 2× `form_input` (filling the login form), 1× `left_click` (Sign in), 1× `wait`, then 12× `record_evidence`. It signed in itself, opened each timecard and recorded 12 facts in 8 of 25 allowed turns. |
+| Browser evidence | **real** | claude-opus-5-5 chose every action via `browser_toolset_20260801`, executed by our Playwright driver. In the committed run (`invoice-review:HSG-1011:20261109T094529`, from the capture-learned spec): 6× `navigate`, 6× `get_page_text`, 2× `form_input` (filling the login form), 1× `read_page`, 1× `find`, 1× `left_click` (Sign in), 1× `wait`, then 12× `record_evidence`. It signed in itself, opened each timecard and recorded 12 facts in 8 of 25 allowed turns. |
 | Receipt (`receipts/HSG-1011.json`, `mode: "real"`) | **real** | One structured claude-opus-5-5 call, then the deterministic post-pass. |
 | Fixture login + timecard reads when no key / when the model misses a fact | scripted | Fixed Playwright steps reading the `[data-field]` markers. Each evidence item carries its own mode. Not used in the committed run. |
 | Receipt without a key | mock | `mockReceipt`, a deterministic mapper with the same shape. |
-| The recorded reviewer session | scripted driver, real capture | `extension/scripts/record-session.ts` plays the reviewer with Playwright while the real extension records. The committed spec was distilled from the data lane's sample recording (same flow, more narration). No human has recorded a session yet. |
+| The recorded reviewer session | scripted driver, real capture | `extension/scripts/record-session.ts` plays the reviewer with Playwright while the real extension records. Its clicks and narration lines are fixed in that script. This capture is what the committed spec was distilled from. **No human has recorded a session yet.** |
 | The human decision in `npm run demo` | scripted | A Playwright click on the real UI. `decided_by` reads "Demo reviewer (scripted stand-in for a human)". |
 
 Every trace line (`agent/trace.jsonl`, `learn/trace.jsonl`) carries `mode ∈ real | scripted | mock | deterministic`.
@@ -159,8 +159,8 @@ The fixture apps stand in for two real systems behind narrow seams:
    real portal means adding that one origin to `allowedOrigins`, keeping credentials in a vault the agent
    never sees (sign-in stays a scripted, labeled step), and keeping the read-only rule.
 3. **Recording → real reviewers.** Load `extension/` unpacked, record a real AP specialist, and run
-   `npm run learn` on that recording (point `invoiceReviewLearn.recordingPath` at it). The distiller and
-   schema don't change.
+   `npm run learn` on that recording: add it as the first entry of `invoiceReviewRecordings` in
+   `workflows/invoice-review/learn.ts` with `operator: "human"`. The distiller and schema don't change.
 4. **Contracts and timecards from systems of record** (contract repository, HRIS / VMS) replace
    `data/vendor.json` and the portal's timecards. The `calc/` inputs are already typed by `contracts/`.
 
@@ -174,6 +174,10 @@ The fixture apps stand in for two real systems behind narrow seams:
   lives), the synthesis prompt and the open questions on the receipt. The six checks themselves live in
   `calc/` and were written by the calc lane from the brief. Learning executable checks from a recording
   is future work.
+- **The captured session teaches less than the seeded sample did.** Its narration states the six rules
+  but no rate numbers, never names the vendor, and has no interim overtime policy. So the spec's `vendor` is
+  "Not stated in recording" (the distiller is told not to guess), and its rules point at the contract rate
+  card instead of quoting rates. The checks don't depend on this: rates come from `data/vendor.json` through calc.
 - **No human has recorded or decided yet.** The reviewer in the recording and the decision click in the
   demo are scripted stand-ins, labeled as such.
 - **Browser evidence is not cached.** Each real run pays for a fresh loop (~$0.15 tonight; synthesis is

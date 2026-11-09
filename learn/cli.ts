@@ -59,7 +59,11 @@ async function main() {
     provenance,
   });
   if (source.provenance.role === "fallback_fixture") {
-    console.log(`  NOTE: extension capture not found; LEARN is using the labeled FALLBACK fixture ${recordingPath}`);
+    console.log(
+      requested
+        ? `  NOTE: --recording selected the labeled FALLBACK fixture ${recordingPath} (not the extension capture)`
+        : `  NOTE: extension capture not found; LEARN is using the labeled FALLBACK fixture ${recordingPath}`,
+    );
   }
 
   const provider = offline ? null : getProvider();
