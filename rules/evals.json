@@ -1,0 +1,79 @@
+[
+  {
+    "eval_id": "EV-C-001",
+    "source_correction_id": "C-001",
+    "invoice_path": "data/invoices/past/HSG-1002.json",
+    "expect": {
+      "check": "line_amounts_correct",
+      "result": "fail",
+      "line_index": 1
+    },
+    "note": "Jordan Alvarez's line doesn't multiply out: 38 h x $62.00 is $2,356.00 but the line says $2,536.00. Looks like transposed digits. Expected 38 x 62.00 = 2356.00; invoice had 2536.00. Resolution: Disputed; vendor issued credit memo CM-2041 for $180.00. (Alex Rivera (AP), 2026-08-19)"
+  },
+  {
+    "eval_id": "EV-C-002",
+    "source_correction_id": "C-002",
+    "invoice_path": "data/invoices/past/HSG-1003.json",
+    "expect": {
+      "check": "rate_matches_contract",
+      "result": "fail",
+      "line_index": 1
+    },
+    "note": "Priya Natarajan billed at $75.00/h. The contract rate card has Sourcer at $70.00/h. Expected 70.00 (Sourcer, C-HSG-2026); invoice had 75.00. Resolution: Disputed; vendor issued credit memo CM-2047 for $200.00 (40 h x $5.00). (Alex Rivera (AP), 2026-08-26)"
+  },
+  {
+    "eval_id": "EV-C-003",
+    "source_correction_id": "C-003",
+    "invoice_path": "data/invoices/past/HSG-1004.json",
+    "expect": {
+      "check": "no_unknown_charges",
+      "result": "fail",
+      "line_index": 4
+    },
+    "note": "A $250.00 'Rush fee' line. That's not an allowed charge in the contract (only background check fees and job board postings). Expected Only allowed charges: Background check fee, Job board posting; invoice had Rush fee 250.00. Resolution: Disputed; vendor removed the rush fee and issued credit memo CM-2052 for $250.00. (Alex Rivera (AP), 2026-09-02)"
+  },
+  {
+    "eval_id": "EV-C-004",
+    "source_correction_id": "C-004",
+    "invoice_path": "data/invoices/past/HSG-1005.json",
+    "expect": {
+      "check": "total_matches_line_items",
+      "result": "fail",
+      "line_index": null
+    },
+    "note": "Every line is right, but the lines add up to $12,156.00 and the invoice total says $12,516.00. Expected 12156.00; invoice had 12516.00. Resolution: Disputed; vendor reissued the invoice total and credited $360.00 on CM-2058. (Alex Rivera (AP), 2026-09-09)"
+  },
+  {
+    "eval_id": "EV-C-005",
+    "source_correction_id": "C-005",
+    "invoice_path": "data/invoices/past/HSG-1006.json",
+    "expect": {
+      "check": "no_duplicate_lines",
+      "result": "fail",
+      "line_index": 4
+    },
+    "note": "Elena Rossi's labor line for week ending 2026-09-13 is on the invoice twice (line_items[2] and line_items[4]). Expected One line per employee per week; invoice had Elena Rossi, week ending 2026-09-13 billed twice (36 h each). Resolution: Disputed; vendor issued credit memo CM-2063 for $2,232.00. (Alex Rivera (AP), 2026-09-16)"
+  },
+  {
+    "eval_id": "EV-C-006",
+    "source_correction_id": "C-006",
+    "invoice_path": "data/invoices/past/HSG-1007.json",
+    "expect": {
+      "check": "hours_match_timecards",
+      "result": "fail",
+      "line_index": 1
+    },
+    "note": "Jordan Alvarez billed 40 h but his approved timecard for week ending 2026-09-20 shows 32 h. Expected <= 32 h (approved timecard); invoice had 40 h. Resolution: Disputed; vendor issued credit memo CM-2069 for $496.00 (8 h x $62.00). (Alex Rivera (AP), 2026-09-23)"
+  },
+  {
+    "eval_id": "EV-C-007",
+    "source_correction_id": "C-007",
+    "invoice_path": "data/invoices/past/HSG-1009.json",
+    "expect": {
+      "check": "hours_match_timecards",
+      "result": "fail",
+      "line_index": 2
+    },
+    "note": "Sam Okafor billed 42 h; the approved timecard for week ending 2026-10-04 is 38 h. Expected <= 38 h (approved timecard); invoice had 42 h. Resolution: Disputed; vendor issued credit memo CM-2077 for $352.00 (4 h x $88.00). (Alex Rivera (AP), 2026-10-07)"
+  }
+]
