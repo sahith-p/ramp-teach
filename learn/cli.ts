@@ -1,0 +1,83 @@
+/**
+ * `npm run learn` — LEARN stage CLI. The ONLY place in learn/ (besides run-evals.ts) that wires a
+ * workflow in; learn/distill.ts stays generic.
+ *
+ * Writes rules/workflow_spec.json, rules/learn_meta.json (LearnMeta), rules/evals.json and appends
+ * TraceEvents (stage "learn", honest mode) to learn/trace.jsonl.
+ *
+ * Flags: --offline  force deterministic mode (no API call) even when credentials exist.
+ */
+import fs from "node:fs";
+import path from "node:path";
+import { EvalsFileSchema, RecordingSchema, type TraceMode } from "@/contracts";
+import { getProvider } from "@/agent/providers";
+import { ROOT } from "@/lib/paths";
+import { trace } from "@/lib/trace";
+import { distill } from "@/learn/distill";
+import { invoiceReviewLearn } from "@/workflows/invoice-review/learn";
+import { invoiceReviewEvals } from "@/workflows/invoice-review/evals";
+
+const TRACE_FILE = path.join(ROOT, "learn", "trace.jsonl");
+
+function writeJson(rel: string, value: unknown) {
+  const file = path.join(ROOT, rel);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, JSON.stringify(value, null, 2) + "\n");
+}
+
+async function main() {
+  const offline = process.argv.includes("--offline");
+  const learnDef = invoiceReviewLearn;
+  const runId = `learn_${new Date().toISOString().replace(/[-:.]/g, "").slice(0, 15)}`;
+  const t = (step: string, mode: TraceMode, detail: Record<string, unknown> = {}) =>
+    trace({ run_id: runId, stage: "learn", mode, step, detail }, TRACE_FILE);
+
+  const recording = RecordingSchema.parse(JSON.parse(fs.readFileSync(path.join(ROOT, learnDef.recordingPath), "utf8")));
+  t("load_recording", "deterministic", {
+    recording_path: learnDef.recordingPath,
+    session_id: recording.session_id,
+    steps: recording.steps.length,
+    narration: recording.steps.filter((s) => s.kind === "narration").length,
+  });
+
+  const provider = offline ? null : getProvider();
+  if (!provider) {
+    t("provider", "deterministic", { reason: offline ? "--offline flag" : "no credentials or RAMP_TEACH_OFFLINE=1" });
+  }
+
+  const result = await distill(recording, learnDef, provider, {
+    recordingPath: learnDef.recordingPath,
+    onTrace: (ev) => t(ev.step, ev.mode, ev.detail),
+  });
+
+  writeJson(learnDef.specPath, result.spec);
+  writeJson("rules/learn_meta.json", result.meta);
+  const evals = EvalsFileSchema.parse(invoiceReviewEvals());
+  writeJson("rules/evals.json", evals);
+  t("write_outputs", "deterministic", {
+    spec: learnDef.specPath,
+    meta: "rules/learn_meta.json",
+    evals: "rules/evals.json",
+    eval_cases: evals.length,
+    spec_mode: result.meta.mode,
+  });
+
+  const s = result.spec;
+  console.log(`LEARN — mode: ${result.meta.mode}${result.meta.model ? ` (model ${result.meta.model}${result.cacheHit ? ", from cache" : ", fresh API call"})` : ""}`);
+  if (result.fallbackReason) console.log(`  real mode failed, fell back to deterministic: ${result.fallbackReason}`);
+  if (!provider) console.log(`  deterministic distiller (no LLM): ${offline ? "--offline" : "no AI provider credentials"}`);
+  console.log(`  vendor: ${s.vendor}`);
+  console.log(`  proof_sources (${s.proof_sources.length}):`);
+  for (const p of s.proof_sources) console.log(`    - ${p.app} ${p.location} [${p.fields.join(", ")}]`);
+  console.log(`  rules (${s.rules.length}):`);
+  for (const r of s.rules) console.log(`    - ${r}`);
+  console.log(`  open_questions (${s.open_questions.length}):`);
+  for (const q of s.open_questions) console.log(`    - ${q}`);
+  console.log(`  evals: ${evals.length} cases from data/corrections.json -> rules/evals.json`);
+  console.log(`  wrote ${learnDef.specPath}, rules/learn_meta.json, rules/evals.json; trace -> learn/trace.jsonl (run ${runId})`);
+}
+
+main().catch((err) => {
+  console.error("learn failed:", err instanceof Error ? err.message : String(err));
+  process.exit(1);
+});
