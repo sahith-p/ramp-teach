@@ -199,6 +199,8 @@ export function allowedPointers(calc: CalcReport, evidence: EvidenceBundle | nul
 
 export function synthesisPrompt(args: {
   summary: SubjectSummary;
+  /** The workflow's subject record (e.g. the invoice + vendor contract), serialized as-is. */
+  subject?: unknown;
   calc: CalcReport;
   evidence: EvidenceBundle | null;
   spec: WorkflowSpec;
@@ -211,6 +213,9 @@ export function synthesisPrompt(args: {
     "Workflow instructions:",
     args.instructions,
     "",
+    ...(args.subject !== undefined
+      ? ["Subject record (the document under review and its reference data):", clipJson(args.subject, 16000), ""]
+      : []),
     `Checks, in this order: ${args.calc.checks.map((c) => c.check).join(", ")}.`,
     "",
     "Deterministic calc report (authoritative):",
@@ -228,6 +233,11 @@ export function synthesisPrompt(args: {
 }
 
 /* --------------------------------- helpers --------------------------------- */
+
+function clipJson(v: unknown, max: number): string {
+  const s = JSON.stringify(v);
+  return s.length > max ? `${s.slice(0, max)}… (truncated)` : s;
+}
 
 function writeJson(file: string, value: unknown): void {
   fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -465,7 +475,7 @@ export async function runWorkflow<S>(def: WorkflowDefinition<S>, subjectId: stri
   if (opts.provider) {
     const pointers = allowedPointers(calc, evidence, specPointer);
     const system = `${SYNTHESIS_SYSTEM}\n\n${def.synthesisInstructions}`;
-    const prompt = synthesisPrompt({ summary, calc, evidence, spec, instructions: def.synthesisInstructions, pointers });
+    const prompt = synthesisPrompt({ summary, subject, calc, evidence, spec, instructions: def.synthesisInstructions, pointers });
     const provider = opts.provider;
     try {
       t("synthesis", "real", "synthesis.start", { model: provider.model, pointers: pointers.length });

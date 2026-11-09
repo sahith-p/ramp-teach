@@ -311,7 +311,7 @@ export const INVOICE_SYNTHESIS_INSTRUCTIONS = [
   "  for a passing or unverified check cite calc:<check>.",
   "- Recommendation: dispute if any check fails (ask for a credit memo); review if any check is unverified; approve only if every check passes.",
   "- Reasons: one short sentence per failing finding with its dollar impact (rate: hours × (billed − contract rate); duplicate: the duplicate line amount;",
-  "  hours: (billed − approved hours) × rate), then the total credit memo to request, then at most one relevant open question from the learned spec.",
+  "  hours: (billed − approved hours) × rate) computed from the subject record, then the total credit memo to request, then at most one\n  relevant open question from the learned spec (omit it if the spec has none).",
 ].join("\n");
 
 export const invoiceReviewWorkflow: WorkflowDefinition<InvoiceSubject> = {

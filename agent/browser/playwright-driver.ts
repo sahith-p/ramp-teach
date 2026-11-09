@@ -56,6 +56,8 @@ export class PlaywrightDriver implements BrowserDriver {
   private activeTab: string | null = null;
   private tabSeq = 0;
   private shotSeq = 0;
+  /** Per-driver stamp so screenshots of different runs never overwrite each other. */
+  private readonly shotStamp = new Date().toISOString().replace(/[-:]/g, "").slice(0, 15);
   readonly blockedRequests: string[] = [];
   /** Every URL a document finished loading at (for evidence-pointer resolution). */
   readonly visited: string[] = [];
@@ -170,7 +172,7 @@ export class PlaywrightDriver implements BrowserDriver {
       fs.mkdirSync(this.opts.screenshotDir, { recursive: true });
       const u = new URL(page.url());
       const slug = `${u.pathname}${u.search}`.replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "page";
-      const file = path.join(this.opts.screenshotDir, `${String(++this.shotSeq).padStart(3, "0")}-${slug}.png`);
+      const file = path.join(this.opts.screenshotDir, `${this.shotStamp}-${String(++this.shotSeq).padStart(3, "0")}-${slug}.png`);
       fs.writeFileSync(file, png);
       savedPath = path.relative(ROOT, file).split(path.sep).join("/");
     }
