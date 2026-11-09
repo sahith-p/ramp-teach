@@ -8,7 +8,7 @@
 | T-12 | fixture-builder | IN PROGRESS | T-10 (spec pinned in docs/lane-spec.md) | vendor timecard portal + bill inbox |
 | T-13 | ui-builder | IN PROGRESS (WIP merged) | T-00 | receipt review page + decision API |
 | T-14 | recorder-builder | DONE (merged; real-portal recording pending T-12) | T-00 | MV3 recorder extension |
-| T-20 | learn-builder | IN PROGRESS | T-10, T-11 | workflow spec + evals |
+| T-20 | learn-builder | DONE (merged) | T-10, T-11 | workflow spec + evals |
 | T-21 | agent-builder | IN PROGRESS | T-12 | engine worker: calc → browser evidence → receipt |
 | T-30 | orchestrator | IN PROGRESS (scripts/demo.ts drafted) | all | npm run demo end to end |
 | T-31 | orchestrator | TODO | T-20 | npm run eval |
@@ -32,3 +32,4 @@
 [2026-11-09T10:40:00Z] orchestrator | STATUS | T-00 | Continuation session 3. Env setup script fixed (npm install now runs inside the checkout). RAMP_ANTHROPIC_API_KEY present in shell; verified by USE: GET /v1/models → 200, GET /v1/models/claude-opus-5-5 → 200. Real (Mode A) paths enabled tonight. Baseline: typecheck clean, vitest 47/47.
 [2026-11-09T10:40:00Z] orchestrator | STATUS | wave-2 | Spawning in parallel: T-12 fixture, T-13 ui (continue from WIP), T-20 learn, T-21 agent (builds against the pinned routes in docs/lane-spec.md §2; orchestrator integrates against the merged fixture). Budget guardrail passed to lanes: T-20 ≤1 real call (cached), T-21 ≤4 real browser-loop runs + ≤2 synthesis calls during development.
 [2026-11-09T10:45:00Z] orchestrator | STATUS | T-00 | Merged remote T-14 DONE (5d04a44) into this session's branch; T-14 not re-spawned. Security check (operator request): git grep for sk-ant across all revisions + literal key value in tracked files/history → clean.
+[2026-11-09T08:52:00Z] orchestrator | DONE | T-20 | learn merged (e2e9aed → ecf58a8): rules/ produced by ONE real claude-opus-5-5 call (5,522 in / 622 out tokens; learn_meta mode=real), cached; 8 rules, 3 proof sources, 2 open questions (OT >40h at 1.5×?, job-board pre-approval?). Evals 7/7 PASS via learn/run-evals.ts. vitest 94/94. Re-ran `npm run learn` on main: cache hit (cached response copied from the lane worktree), no new API call. Answer to learn-builder Q1: run-evals.ts importing calc/ + workflows/ as a wiring entry point (like cli.ts) is accepted.
