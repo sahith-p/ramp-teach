@@ -10,7 +10,7 @@ export const engineConfig = {
   /** Force offline modes even when credentials exist (for tests/CI). */
   offline: process.env.RAMP_TEACH_OFFLINE === "1",
   browser: {
-    maxTurns: Number(process.env.RAMP_TEACH_MAX_TURNS ?? 40),
+    maxTurns: Number(process.env.RAMP_TEACH_MAX_TURNS ?? 25),
     headless: process.env.RAMP_TEACH_HEADFUL !== "1",
     viewport: { width: 1280, height: 860 },
   },
