@@ -3,7 +3,7 @@
 | Ticket | Lane | Status | Depends on | Notes |
 |---|---|---|---|---|
 | T-00 | orchestrator | DONE | — | Phase 0 scaffold, contracts, board, agents, design doc |
-| T-10 | data-builder | IN PROGRESS (WIP merged) | T-00 | corpus, test invoice w/ 3 planted errors, answer key, sample recording |
+| T-10 | data-builder | DONE (merged) | T-00 | corpus, test invoice w/ 3 planted errors, answer key, sample recording |
 | T-11 | calc-builder | DONE (merged) | T-00 | deterministic checks + vitest |
 | T-12 | fixture-builder | TODO | T-10 (spec pinned in docs/lane-spec.md) | vendor timecard portal + bill inbox |
 | T-13 | ui-builder | IN PROGRESS (WIP merged) | T-00 | receipt review page + decision API |
@@ -27,3 +27,4 @@
 [2026-11-09T09:45:00Z] orchestrator | STATUS | T-14 | WIP merged (554978b): extension/lib/recording.js helpers; unpacked extension loads headless via channel:'chromium'. Manifest/content/sidepanel/record-session NOT yet built.
 [2026-11-09T09:45:00Z] orchestrator | STATUS | T-00 | Provider key order implemented (config/engine.ts resolveAnthropicKey): RAMP_ANTHROPIC_API_KEY → ANTHROPIC_API_KEY → $HOME/ramp-teach.env; client gets explicit apiKey + baseURL https://api.anthropic.com (session's ANTHROPIC_BASE_URL is for Claude Code). In this session: no key visible (curl 401 with empty header; node: unset).
 [2026-11-09T09:45:00Z] orchestrator | STATUS | handoff | Session handoff for key provisioning. Next session: re-run unfinished lanes from their committed state — T-10 (fix 2 recording tests), T-13 (pages/API/tests), T-14 (extension + record-session); then wave 2 T-12, T-20, T-21 (briefs: docs/lane-spec.md + .claude/agents/*.md); then T-30..T-32. Lane worktrees under .claude/worktrees/ are local to this container and not pushed; everything they committed is merged here.
+[2026-11-09T09:55:00Z] orchestrator | DONE | T-10 | data merged (f66e8e5): HSG-1011 total 15677.00; planted errors line 0 rate 105 vs 95, line 3 Sam 44h vs 38h approved, line 4 duplicate of line 2 (Priya); 7 corrections C-001..C-007 cover all six checks; 45 timecards, 11 bills, 40-step recording. data tests 11/11. Wave 2 (T-12, T-20, T-21) is unblocked.
