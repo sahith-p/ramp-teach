@@ -12,7 +12,9 @@
  * outputs and printed, never assumed. The answer key is read HERE ONLY (scripts/ + tests), never by
  * agent/, learn/, or the provider.
  *
- * Flags: --invoice HSG-1011   --skip-learn   --keep-server   --base-url http://localhost:3000
+ * Flags: --invoice HSG-1011   --relearn (re-run LEARN even if rules/ exist)   --skip-learn
+ *        --no-build (reuse an existing .next build)   --keep-server   --base-url http://localhost:3000
+ *        --offline (force labeled offline modes: deterministic learn, scripted evidence, mock receipt)
  */
 import { spawn, type ChildProcess } from "node:child_process";
 import fs from "node:fs";
@@ -23,7 +25,7 @@ import { P, ROOT } from "@/lib/paths";
 import { trace } from "@/lib/trace";
 import { readReceipt } from "@/lib/store/receipts";
 import { getBill, resetBills } from "@/lib/store/bills";
-import { providerCredentialsPresent, engineConfig } from "@/config/engine";
+import { providerCredentialsPresent, engineConfig, credentialSource } from "@/config/engine";
 
 const args = process.argv.slice(2);
 const flag = (name: string) => args.includes(`--${name}`);
@@ -66,7 +68,7 @@ async function ensureServer(): Promise<ChildProcess | null> {
     return null;
   }
   const port = new URL(BASE_URL).port || "3000";
-  if (!fs.existsSync(path.join(ROOT, ".next", "BUILD_ID")) || flag("rebuild")) {
+  if (!flag("no-build") || !fs.existsSync(path.join(ROOT, ".next", "BUILD_ID"))) {
     console.log("… building the Next app (next build)");
     const code = await run("npx", ["next", "build"]);
     if (code !== 0) throw new Error("next build failed");
@@ -85,18 +87,26 @@ async function ensureServer(): Promise<ChildProcess | null> {
 
 async function main() {
   fs.mkdirSync(DEMO_DIR, { recursive: true });
-  const keyPresent = providerCredentialsPresent();
+  const offline = flag("offline");
+  const childEnv: Record<string, string> = offline ? { RAMP_TEACH_OFFLINE: "1" } : {};
+  const keyPresent = !offline && providerCredentialsPresent();
   console.log(`Ramp Teach demo — invoice ${INVOICE} — model ${engineConfig.model}`);
   console.log(
     keyPresent
-      ? "ANTHROPIC_API_KEY visible: learn/evidence/synthesis will use REAL Claude calls (cached in runtime/cache)."
-      : "ANTHROPIC_API_KEY NOT visible to this process: learn=deterministic, evidence=scripted, receipt=mock (all labeled).",
+      ? `Anthropic credential found (${credentialSource()}): evidence + synthesis use REAL Claude calls (synthesis cached in runtime/cache).`
+      : offline
+        ? "--offline: learn=deterministic, evidence=scripted, receipt=mock (all labeled)."
+        : "No Anthropic credential visible to this process: learn=deterministic, evidence=scripted, receipt=mock (all labeled).",
   );
 
-  // 1. LEARN
-  if (!flag("skip-learn") || !fs.existsSync(P.workflowSpec)) {
-    const code = await run("npx", ["tsx", "learn/cli.ts"]);
+  // 1. LEARN — the committed rules/ are the canonical LEARN output; re-run only when asked or missing.
+  const metaPath0 = path.join(P.rules, "learn_meta.json");
+  const needLearn = !flag("skip-learn") && (flag("relearn") || !fs.existsSync(P.workflowSpec) || !fs.existsSync(metaPath0));
+  if (needLearn) {
+    const code = await run("npx", ["tsx", "learn/cli.ts", ...(offline ? ["--offline"] : [])], childEnv);
     if (code !== 0) throw new Error("learn failed");
+  } else {
+    console.log("… LEARN: using committed rules/ (pass --relearn to re-distill)");
   }
   const metaPath = path.join(P.rules, "learn_meta.json");
   const learnMeta = fs.existsSync(metaPath) ? LearnMetaSchema.parse(JSON.parse(fs.readFileSync(metaPath, "utf8"))) : null;
@@ -108,7 +118,7 @@ async function main() {
 
   try {
     // 3. VERIFY + RECEIPT: the agent worker
-    const code = await run("npx", ["tsx", "agent/cli.ts", INVOICE], { BASE_URL });
+    const code = await run("npx", ["tsx", "agent/cli.ts", INVOICE, "--base-url", BASE_URL, ...(offline ? ["--offline"] : [])], { BASE_URL, ...childEnv });
     if (code !== 0) throw new Error("agent run failed");
     const receipt = readReceipt(INVOICE);
     if (!receipt) throw new Error(`no receipt written for ${INVOICE}`);
