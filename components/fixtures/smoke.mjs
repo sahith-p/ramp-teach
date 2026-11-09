@@ -32,7 +32,7 @@ try {
   await page.fill('input[name="username"]', "ap.reviewer");
   await page.fill('input[name="password"]', "wrong");
   await Promise.all([page.waitForURL(/error=1/), page.getByRole("button", { name: "Sign in" }).click()]);
-  check("bad creds → ?error=1 with visible error", await page.getByRole("alert").isVisible());
+  check("bad creds → ?error=1 with visible error", await page.getByTestId("login-error").isVisible());
 
   // 3. Login
   check("demo creds shown", (await page.textContent("body")).includes("demo-only"));
