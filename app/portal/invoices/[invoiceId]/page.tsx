@@ -74,7 +74,7 @@ export default async function PortalInvoice({ params }: { params: Promise<{ invo
               <td className={td}>{l.item.description}</td>
               <td className={td}>
                 {l.employee ? (
-                  <span>
+                  <span className="whitespace-nowrap">
                     {l.employee.name} <span className="text-ink-faint">({l.employee.employee_id})</span>
                   </span>
                 ) : l.labor ? (
@@ -88,7 +88,7 @@ export default async function PortalInvoice({ params }: { params: Promise<{ invo
               <td className={tdMoney}>{fmtMoney(l.item.amount, cur)}</td>
               <td className={td}>
                 {l.timecardHref ? (
-                  <Link href={l.timecardHref} className={link}>
+                  <Link href={l.timecardHref} className={`${link} whitespace-nowrap`}>
                     View timecard
                   </Link>
                 ) : (

@@ -138,7 +138,7 @@ export default async function BillDetail({
             </div>
           ) : (
             <p className="text-sm text-ink-muted">
-              No receipt yet for {invoiceId}. The agent writes one with <code>npm run agent -- {invoiceId}</code>.
+              No receipt yet for {invoiceId}. The agent writes one with <code className="whitespace-nowrap">npm run agent -- {invoiceId}</code>.
             </p>
           )}
         </Card>
