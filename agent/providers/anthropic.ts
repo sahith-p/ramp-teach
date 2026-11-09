@@ -12,7 +12,7 @@ import type {
   StructuredRequest,
   StructuredResult,
 } from "@/contracts";
-import { engineConfig } from "@/config/engine";
+import { anthropicBaseUrl, engineConfig, resolveAnthropicKey } from "@/config/engine";
 
 export class ProviderRefusalError extends Error {
   constructor(public category: string | null, public explanation: string | null) {
@@ -27,7 +27,10 @@ export class AnthropicProvider implements AIProvider {
 
   constructor(opts: { model?: string } = {}) {
     this.model = opts.model ?? engineConfig.model;
-    this.client = new Anthropic(); // reads ANTHROPIC_API_KEY from env; never logged
+    const cred = resolveAnthropicKey();
+    if (!cred) throw new Error("No Anthropic credentials (RAMP_ANTHROPIC_API_KEY / ANTHROPIC_API_KEY / $HOME/ramp-teach.env)");
+    // Key and base URL passed explicitly; the key is never logged.
+    this.client = new Anthropic({ apiKey: cred.key, baseURL: anthropicBaseUrl });
   }
 
   async generateStructured<T>(req: StructuredRequest<T>): Promise<StructuredResult<T>> {

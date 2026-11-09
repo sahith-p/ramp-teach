@@ -12,7 +12,7 @@ node_modules/@anthropic-ai/sdk when unsure, and let `npx tsc --noEmit` tell you.
 - No `temperature`/`top_p`/`top_k`.
 - Always check `stop_reason` before reading content; handle `"refusal"` (read `stop_details`).
 - Refusal fallback opt-in (beta): `client.beta.messages.*` with `betas: ["server-side-fallback-2026-07-01"]`, `fallbacks: "default"`.
-- Only call the API when `process.env.ANTHROPIC_API_KEY` is set. Without it, run the labeled offline mode.
+- Only call the API when `providerCredentialsPresent()` (config/engine.ts) is true. Key order: `RAMP_ANTHROPIC_API_KEY` → `ANTHROPIC_API_KEY` → `$HOME/ramp-teach.env`. Always construct the client via `agent/providers` (explicit `apiKey` + `baseURL: https://api.anthropic.com`; the session exports `ANTHROPIC_BASE_URL` for Claude Code itself). Never log the key. Without it, run the labeled offline mode.
 
 ## Structured outputs (Zod) — used by learn + receipt synthesis
 ```ts
