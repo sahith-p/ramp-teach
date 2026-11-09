@@ -5,11 +5,11 @@
 | T-00 | orchestrator | DONE | — | Phase 0 scaffold, contracts, board, agents, design doc |
 | T-10 | data-builder | DONE (merged) | T-00 | corpus, test invoice w/ 3 planted errors, answer key, sample recording |
 | T-11 | calc-builder | DONE (merged) | T-00 | deterministic checks + vitest |
-| T-12 | fixture-builder | TODO | T-10 (spec pinned in docs/lane-spec.md) | vendor timecard portal + bill inbox |
+| T-12 | fixture-builder | IN PROGRESS | T-10 (spec pinned in docs/lane-spec.md) | vendor timecard portal + bill inbox |
 | T-13 | ui-builder | IN PROGRESS (WIP merged) | T-00 | receipt review page + decision API |
 | T-14 | recorder-builder | IN PROGRESS (WIP merged) | T-00 | MV3 recorder extension |
-| T-20 | learn-builder | TODO | T-10, T-11 | workflow spec + evals |
-| T-21 | agent-builder | TODO | T-12 | engine worker: calc → browser evidence → receipt |
+| T-20 | learn-builder | IN PROGRESS | T-10, T-11 | workflow spec + evals |
+| T-21 | agent-builder | IN PROGRESS | T-12 | engine worker: calc → browser evidence → receipt |
 | T-30 | orchestrator | IN PROGRESS (scripts/demo.ts drafted) | all | npm run demo end to end |
 | T-31 | orchestrator | TODO | T-20 | npm run eval |
 | T-32 | orchestrator | TODO | all | README + docs/workflow.md |
@@ -28,3 +28,5 @@
 [2026-11-09T09:45:00Z] orchestrator | STATUS | T-00 | Provider key order implemented (config/engine.ts resolveAnthropicKey): RAMP_ANTHROPIC_API_KEY → ANTHROPIC_API_KEY → $HOME/ramp-teach.env; client gets explicit apiKey + baseURL https://api.anthropic.com (session's ANTHROPIC_BASE_URL is for Claude Code). In this session: no key visible (curl 401 with empty header; node: unset).
 [2026-11-09T09:45:00Z] orchestrator | STATUS | handoff | Session handoff for key provisioning. Next session: re-run unfinished lanes from their committed state — T-10 (fix 2 recording tests), T-13 (pages/API/tests), T-14 (extension + record-session); then wave 2 T-12, T-20, T-21 (briefs: docs/lane-spec.md + .claude/agents/*.md); then T-30..T-32. Lane worktrees under .claude/worktrees/ are local to this container and not pushed; everything they committed is merged here.
 [2026-11-09T09:55:00Z] orchestrator | DONE | T-10 | data merged (f66e8e5): HSG-1011 total 15677.00; planted errors line 0 rate 105 vs 95, line 3 Sam 44h vs 38h approved, line 4 duplicate of line 2 (Priya); 7 corrections C-001..C-007 cover all six checks; 45 timecards, 11 bills, 40-step recording. data tests 11/11. Wave 2 (T-12, T-20, T-21) is unblocked.
+[2026-11-09T10:40:00Z] orchestrator | STATUS | T-00 | Continuation session 3. Env setup script fixed (npm install now runs inside the checkout). RAMP_ANTHROPIC_API_KEY present in shell; verified by USE: GET /v1/models → 200, GET /v1/models/claude-opus-5-5 → 200. Real (Mode A) paths enabled tonight. Baseline: typecheck clean, vitest 47/47.
+[2026-11-09T10:40:00Z] orchestrator | STATUS | wave-2 | Spawning in parallel: T-12 fixture, T-13 ui (continue from WIP), T-14 recorder (continue from WIP), T-20 learn, T-21 agent (builds against the pinned routes in docs/lane-spec.md §2; orchestrator integrates against the merged fixture). Budget guardrail passed to lanes: T-20 ≤1 real call (cached), T-21 ≤4 real browser-loop runs + ≤2 synthesis calls during development.
