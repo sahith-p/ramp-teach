@@ -1,0 +1,35 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/newsreader";
+
+/* Design tokens — see docs/design.md. Unofficial demo inspired by Ramp's design. */
+@theme {
+  --color-ink: #1f1f1f;
+  --color-ink-muted: #5c5c5c;
+  --color-ink-faint: #8a8a8a;
+  --color-line: #e6e6e3;
+  --color-surface: #ffffff;
+  --color-wash: #f7f7f5;
+  --color-accent: #e4f222; /* lemon — primary actions + recommendation banner ONLY */
+  --color-accent-ink: #1f1f1f;
+  --color-pass: #1d7a46;
+  --color-fail: #b42318;
+  --color-warn: #a15c07;
+
+  --font-sans: "Inter Variable", "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Newsreader Variable", "Source Serif 4", ui-serif, Georgia, serif;
+
+  --radius-card: 14px;
+}
+
+html,
+body {
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}

@@ -1,0 +1,12 @@
+node_modules
+.next
+.env.local
+.env*.local
+.claude/worktrees/
+next-env.d.ts
+*.tsbuildinfo
+/runtime/
+/.scratch/
+/test-results/
+/playwright-report/
+/runs/**/screenshots/

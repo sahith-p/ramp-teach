@@ -1,0 +1,2 @@
+# Outbox — orchestrator (append-only)
+
