@@ -1,0 +1,86 @@
+{
+  "invoice_id": "HSG-1011",
+  "mode": "scripted",
+  "items": [
+    {
+      "source": "fixture:/portal/invoices/HSG-1011",
+      "kind": "invoice_view",
+      "employee_id": null,
+      "week_ending": null,
+      "value": "HSG-1011",
+      "screenshot": "runs/HSG-1011/screenshots/20261109T090345-001-portal-invoices-HSG-1011.png",
+      "captured_at": "2026-11-09T09:03:47.051Z",
+      "mode": "scripted"
+    },
+    {
+      "source": "fixture:/portal/employees/E-101?week=2026-10-18",
+      "kind": "timecard_hours",
+      "employee_id": "E-101",
+      "week_ending": "2026-10-18",
+      "value": 40,
+      "screenshot": "runs/HSG-1011/screenshots/20261109T090345-002-portal-employees-E-101-week-2026-10-18.png",
+      "captured_at": "2026-11-09T09:03:47.237Z",
+      "mode": "scripted"
+    },
+    {
+      "source": "fixture:/portal/employees/E-102?week=2026-10-18",
+      "kind": "timecard_hours",
+      "employee_id": "E-102",
+      "week_ending": "2026-10-18",
+      "value": 40,
+      "screenshot": "runs/HSG-1011/screenshots/20261109T090345-003-portal-employees-E-102-week-2026-10-18.png",
+      "captured_at": "2026-11-09T09:03:47.401Z",
+      "mode": "scripted"
+    },
+    {
+      "source": "fixture:/portal/employees/E-103?week=2026-10-18",
+      "kind": "timecard_hours",
+      "employee_id": "E-103",
+      "week_ending": "2026-10-18",
+      "value": 36,
+      "screenshot": "runs/HSG-1011/screenshots/20261109T090345-004-portal-employees-E-103-week-2026-10-18.png",
+      "captured_at": "2026-11-09T09:03:47.572Z",
+      "mode": "scripted"
+    },
+    {
+      "source": "fixture:/portal/employees/E-104?week=2026-10-18",
+      "kind": "timecard_hours",
+      "employee_id": "E-104",
+      "week_ending": "2026-10-18",
+      "value": 38,
+      "screenshot": "runs/HSG-1011/screenshots/20261109T090345-005-portal-employees-E-104-week-2026-10-18.png",
+      "captured_at": "2026-11-09T09:03:47.735Z",
+      "mode": "scripted"
+    }
+  ],
+  "timecards": [
+    {
+      "employee_id": "E-101",
+      "week_ending": "2026-10-18",
+      "approved_hours": 40,
+      "approved_by": "Dana Whitfield",
+      "status": "approved"
+    },
+    {
+      "employee_id": "E-102",
+      "week_ending": "2026-10-18",
+      "approved_hours": 40,
+      "approved_by": "Dana Whitfield",
+      "status": "approved"
+    },
+    {
+      "employee_id": "E-103",
+      "week_ending": "2026-10-18",
+      "approved_hours": 36,
+      "approved_by": "Dana Whitfield",
+      "status": "approved"
+    },
+    {
+      "employee_id": "E-104",
+      "week_ending": "2026-10-18",
+      "approved_hours": 38,
+      "approved_by": "Dana Whitfield",
+      "status": "approved"
+    }
+  ]
+}

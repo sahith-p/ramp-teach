@@ -21,6 +21,7 @@ export interface UsageRecord {
 
 /** Accepts the SDK's `usage` object (or anything shaped like it). Never throws. */
 export function recordUsage(purpose: string, model: string, usage: unknown): void {
+  if (process.env.VITEST) return; // unit tests use fake clients; keep the ledger to real calls
   try {
     const u = (usage ?? {}) as Record<string, unknown>;
     const n = (k: string) => (typeof u[k] === "number" ? (u[k] as number) : 0);

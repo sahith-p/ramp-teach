@@ -12,6 +12,7 @@ import type {
   StructuredResult,
 } from "@/contracts";
 import { anthropicBaseUrl, engineConfig, resolveAnthropicKey } from "@/config/engine";
+import { recordUsage } from "@/lib/usage";
 import { runBrowserLoop, type BrowserLoopResult } from "./browser-loop";
 
 export class ProviderRefusalError extends Error {
@@ -52,6 +53,7 @@ export class AnthropicProvider implements AIProvider {
       model: string;
       usage?: Record<string, unknown>;
     };
+    recordUsage("structured", msg.model ?? this.model, msg.usage);
     if (msg.stop_reason === "refusal") {
       throw new ProviderRefusalError(msg.stop_details?.category ?? null, msg.stop_details?.explanation ?? null);
     }

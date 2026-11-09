@@ -16,6 +16,7 @@
  * onStep never receives image bytes or credentials.
  */
 import type Anthropic from "@anthropic-ai/sdk";
+import { recordUsage } from "@/lib/usage";
 import type {
   BetaContentBlock,
   BetaContentBlockParam,
@@ -227,6 +228,7 @@ export async function runBrowserLoop(
     turns++;
     model = res.model ?? model;
     addUsage(usage, res.usage as unknown as Partial<Record<keyof TokenUsage, number | null>>);
+    recordUsage("browser-turn", res.model ?? model, res.usage);
     messages.push({ role: "assistant", content: res.content as unknown as BetaContentBlockParam[] });
     const text = textOf(res.content);
     if (text) {

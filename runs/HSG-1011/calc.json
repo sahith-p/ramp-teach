@@ -1,0 +1,66 @@
+{
+  "invoice_id": "HSG-1011",
+  "computed_at": "2026-11-09T09:03:47.792Z",
+  "checks": [
+    {
+      "check": "line_amounts_correct",
+      "result": "pass",
+      "findings": [],
+      "summary": "All 6 line amounts equal quantity × unit rate to the cent."
+    },
+    {
+      "check": "total_matches_line_items",
+      "result": "pass",
+      "findings": [],
+      "summary": "Invoice total $15,677.00 equals the sum of 6 line amounts."
+    },
+    {
+      "check": "rate_matches_contract",
+      "result": "fail",
+      "findings": [
+        {
+          "line_index": 0,
+          "expected": "95.00/h",
+          "actual": "105.00/h",
+          "message": "Line 1 (\"Labor: Maya Chen (Senior Recruiter) - week ending 2026-10-18\"): billed at 105.00/h; contract rate for Senior Recruiter is 95.00/h.",
+          "evidence": "data/vendor.json#contract.rate_card.Senior Recruiter"
+        }
+      ],
+      "summary": "1 labor line do not match the contract rate card."
+    },
+    {
+      "check": "no_duplicate_lines",
+      "result": "fail",
+      "findings": [
+        {
+          "line_index": 4,
+          "expected": "one labor line for Priya Natarajan, week ending 2026-10-18",
+          "actual": "duplicate of line 3 (line_items[2])",
+          "message": "Line 5 (\"Labor: Priya Natarajan (Sourcer) - week ending 2026-10-18\") bills Priya Natarajan for week ending 2026-10-18 again; already billed on line 3 (line_items[2]).",
+          "evidence": "data/invoices/new/HSG-1011.json#line_items[4]"
+        }
+      ],
+      "summary": "1 labor line bill an employee-week already billed earlier on the invoice."
+    },
+    {
+      "check": "no_unknown_charges",
+      "result": "pass",
+      "findings": [],
+      "summary": "All 1 non-labor charge are allowed by the contract and within their caps."
+    },
+    {
+      "check": "hours_match_timecards",
+      "result": "fail",
+      "findings": [
+        {
+          "line_index": 3,
+          "expected": "38 h",
+          "actual": "44 h",
+          "message": "Line 4 (\"Labor: Sam Okafor (Data Analyst) - week ending 2026-10-18\"): billed 44 h, but Sam Okafor's approved timecard for week ending 2026-10-18 shows 38 h.",
+          "evidence": "fixture:/portal/employees/E-104?week=2026-10-18"
+        }
+      ],
+      "summary": "1 labor line bill hours not supported by an approved timecard."
+    }
+  ]
+}
