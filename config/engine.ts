@@ -12,7 +12,11 @@ export const engineConfig = {
   browser: {
     maxTurns: Number(process.env.RAMP_TEACH_MAX_TURNS ?? 25),
     headless: process.env.RAMP_TEACH_HEADFUL !== "1",
-    viewport: { width: 1280, height: 860 },
+    // Override with RAMP_TEACH_VIEWPORT=WIDTHxHEIGHT (e.g. 1280x720 for the walkthrough video).
+    viewport: (() => {
+      const m = /^(\d{3,4})x(\d{3,4})$/.exec(process.env.RAMP_TEACH_VIEWPORT ?? "");
+      return m ? { width: Number(m[1]), height: Number(m[2]) } : { width: 1280, height: 860 };
+    })(),
   },
 };
 

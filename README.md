@@ -13,6 +13,7 @@ RECORD (MV3 extension) → LEARN (spec + evals) → VERIFY (calc + browser agent
 
 How it works, what is real AI vs scripted vs mock, and the limitations: **[docs/workflow.md](docs/workflow.md)**.
 Morning status and a 3-minute demo script: **[MORNING.md](MORNING.md)**.
+Two-minute walkthrough video (real app, live Claude run): **[demo/video/ramp-teach-walkthrough.mp4](demo/video/ramp-teach-walkthrough.mp4)**.
 
 ## Quick start
 

@@ -1,0 +1,98 @@
+{
+  "tStart": 0.44699999999999995,
+  "tEnd": 24.788999999999998,
+  "speed": 1,
+  "overlays": [
+    {
+      "file": "turn-1.png",
+      "from": 0,
+      "to": 2.0989999999999998,
+      "caption": {
+        "step": "STEP 3 OF 5 · VERIFY · TURN 1 OF 8",
+        "modes": [
+          "live"
+        ],
+        "title": "Claude opens the portal's sign-in page and reads it.",
+        "sub": "Claude's own browser, recorded live (21:30 UTC), real time. Local demo portal only; synthetic data."
+      }
+    },
+    {
+      "file": "turn-2.png",
+      "from": 2.0989999999999998,
+      "to": 5.285,
+      "caption": {
+        "step": "STEP 3 OF 5 · VERIFY · TURN 2 OF 8",
+        "modes": [
+          "live"
+        ],
+        "title": "Claude signs in, opens invoice HSG-1011 and finds the timecard links.",
+        "sub": "Claude's own browser, recorded live (21:30 UTC), real time. Local demo portal only; synthetic data."
+      }
+    },
+    {
+      "file": "turn-3.png",
+      "from": 5.285,
+      "to": 9.695,
+      "caption": {
+        "step": "STEP 3 OF 5 · VERIFY · TURN 3 OF 8",
+        "modes": [
+          "live"
+        ],
+        "title": "Claude opens Maya Chen's timecard and reads it.",
+        "sub": "Claude's own browser, recorded live (21:30 UTC), real time. Local demo portal only; synthetic data."
+      }
+    },
+    {
+      "file": "turn-4.png",
+      "from": 9.695,
+      "to": 14.058000000000002,
+      "caption": {
+        "step": "STEP 3 OF 5 · VERIFY · TURN 4 OF 8",
+        "modes": [
+          "live"
+        ],
+        "title": "Claude records Maya Chen: 40 approved hours, then opens Jordan Alvarez's timecard and reads it.",
+        "sub": "Claude's own browser, recorded live (21:30 UTC), real time. Local demo portal only; synthetic data."
+      }
+    },
+    {
+      "file": "turn-5.png",
+      "from": 14.058000000000002,
+      "to": 18.471,
+      "caption": {
+        "step": "STEP 3 OF 5 · VERIFY · TURN 5 OF 8",
+        "modes": [
+          "live"
+        ],
+        "title": "Claude records Jordan Alvarez: 40 approved hours, then opens Priya Natarajan's timecard and reads it.",
+        "sub": "Claude's own browser, recorded live (21:30 UTC), real time. Local demo portal only; synthetic data."
+      }
+    },
+    {
+      "file": "turn-6.png",
+      "from": 18.471,
+      "to": 22.106,
+      "caption": {
+        "step": "STEP 3 OF 5 · VERIFY · TURN 6 OF 8",
+        "modes": [
+          "live"
+        ],
+        "title": "Claude records Priya Natarajan: 36 approved hours, then opens Sam Okafor's timecard and reads it.",
+        "sub": "Claude's own browser, recorded live (21:30 UTC), real time. Local demo portal only; synthetic data."
+      }
+    },
+    {
+      "file": "turn-7.png",
+      "from": 22.106,
+      "to": 24.342,
+      "caption": {
+        "step": "STEP 3 OF 5 · VERIFY · TURN 7 OF 8",
+        "modes": [
+          "live"
+        ],
+        "title": "Claude records Sam Okafor: 38 approved hours.",
+        "sub": "Claude's own browser, recorded live (21:30 UTC), real time. Local demo portal only; synthetic data."
+      }
+    }
+  ]
+}

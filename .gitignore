@@ -11,3 +11,4 @@ next-env.d.ts
 /playwright-report/
 /runs/**/screenshots/
 /AGENTS.md
+/demo/video/work/

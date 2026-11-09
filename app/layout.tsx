@@ -18,6 +18,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Link href="/" className="font-display text-xl tracking-tight">
               Ramp Teach
             </Link>
+            <Link href="/learn" className="text-ink-muted hover:text-ink">
+              Record and learn
+            </Link>
             <Link href="/portal/login" className="text-ink-muted hover:text-ink">
               Vendor portal (fixture)
             </Link>

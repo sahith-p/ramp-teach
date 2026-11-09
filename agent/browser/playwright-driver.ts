@@ -79,7 +79,18 @@ export class PlaywrightDriver implements BrowserDriver {
     if (this.context) return;
     // Preinstalled Chromium pinned to Playwright 1.63.0: launch with defaults.
     this.browser = await chromium.launch(this.opts.headless ? undefined : { headless: false });
-    this.context = await this.browser.newContext({ viewport: this.opts.viewport, acceptDownloads: false });
+    // Optional: record a video of the agent's OWN browser (for the walkthrough film). Off unless
+    // RAMP_TEACH_RECORD_VIDEO_DIR is set. Recording does not change what the model sees or can do.
+    const videoDir = process.env.RAMP_TEACH_RECORD_VIDEO_DIR;
+    this.context = await this.browser.newContext({
+      viewport: this.opts.viewport,
+      acceptDownloads: false,
+      ...(videoDir ? { recordVideo: { dir: videoDir, size: this.opts.viewport } } : {}),
+    });
+    if (videoDir) {
+      fs.mkdirSync(videoDir, { recursive: true });
+      fs.writeFileSync(path.join(videoDir, "video-start.json"), JSON.stringify({ started_at: new Date().toISOString(), viewport: this.opts.viewport }) + "\n");
+    }
     this.context.setDefaultTimeout(this.opts.timeoutMs);
     await this.context.route("**/*", (route) => {
       const url = route.request().url();
