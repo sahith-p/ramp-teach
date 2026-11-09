@@ -10,7 +10,7 @@ type Props = { params: Promise<{ invoiceId: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { invoiceId } = await params;
-  return { title: `Receipt ${invoiceId} — Ramp Teach` };
+  return { title: `Receipt ${invoiceId} · Ramp Teach` };
 }
 
 export default async function ReceiptPage({ params }: Props) {

@@ -4,15 +4,15 @@
   "checks": [
     {
       "name": "line_amounts_correct",
-      "expected": "Each line amount = quantity × unit rate (6 lines)",
+      "expected": "Each line amount = quantity × unit rate (Lines 1–6)",
       "actual": "All 6 line amounts match to the cent",
       "result": "pass",
       "evidence": "calc:line_amounts_correct"
     },
     {
       "name": "total_matches_line_items",
-      "expected": "Invoice total = sum of 6 line amounts",
-      "actual": "Total $15,677.00 equals sum of lines",
+      "expected": "Total equals sum of Lines 1–6: $15,677.00",
+      "actual": "Invoice total $15,677.00",
       "result": "pass",
       "evidence": "calc:total_matches_line_items"
     },
@@ -25,15 +25,15 @@
     },
     {
       "name": "no_duplicate_lines",
-      "expected": "One labor line for Priya Natarajan, week ending 2026-10-18",
-      "actual": "Line 5 duplicates Line 3 (36 h × 70.00/h, $2,520.00)",
+      "expected": "One labor line for Priya Natarajan, week ending 2026-10-18 (Line 3)",
+      "actual": "Line 5 duplicates Line 3 (36 h × 70.00/h = $2,520.00)",
       "result": "fail",
       "evidence": "data/invoices/new/HSG-1011.json#line_items[4]"
     },
     {
       "name": "no_unknown_charges",
-      "expected": "Non-labor charges on allowed list and within cap",
-      "actual": "Line 6 Background check fee $85.00 (cap $120.00)",
+      "expected": "Line 6 Background check fee allowed, cap $120.00",
+      "actual": "Line 6 billed $85.00",
       "result": "pass",
       "evidence": "calc:no_unknown_charges"
     },
@@ -47,14 +47,14 @@
   ],
   "recommendation": "dispute",
   "reasons": [
-    "Line 1 Maya Chen billed at 105.00/h vs contract 95.00/h: 40 h × $10.00 = $400.00 overbilled.",
-    "Line 5 duplicates Priya Natarajan's week ending 2026-10-18 already billed on Line 3: $2,520.00 overbilled.",
+    "Line 1 Maya Chen billed 105.00/h vs contract 95.00/h: 40 h × $10.00 = $400.00 overbilled.",
+    "Line 5 duplicates Priya Natarajan's week ending 2026-10-18 already on Line 3: $2,520.00 overbilled.",
     "Line 4 Sam Okafor billed 44 h vs 38 h approved: 6 h × 88.00/h = $528.00 overbilled.",
-    "Request a credit memo from Halcyon Staffing Group for $3,448.00 (correct payable $12,229.00).",
-    "Open question: is overtime above 40 hours billable at 1.5× the rate card rate? The contract does not say; until resolved, accept straight time only."
+    "Request a credit memo from Halcyon Staffing Group for $3,448.00 against HSG-1011.",
+    "Open question: is overtime above 40 hours a week billable at 1.5 times the rate?"
   ],
   "mode": "real",
   "human_decision": "dispute",
   "decided_by": "Demo reviewer (scripted stand-in for a human)",
-  "decided_at": "2026-11-09T09:04:47.225Z"
+  "decided_at": "2026-11-09T09:46:06.810Z"
 }

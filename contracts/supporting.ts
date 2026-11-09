@@ -217,11 +217,27 @@ export type DecisionRecord = z.infer<typeof DecisionRecordSchema>;
 
 /* -------------------------------- Learn meta -------------------------------- */
 
+/**
+ * Where the recording LEARN consumed came from (additive, optional — added after Phase 0 per the
+ * "additive only" rule above). `operator` says who performed the demonstrated session; `capture` says
+ * what produced the Recording JSON. Keep these honest: a Playwright-driven session is "scripted_playwright"
+ * even when the real extension captured it.
+ */
+export const RecordingProvenanceSchema = z.object({
+  session_id: z.string(),
+  capture: z.enum(["mv3_extension", "hand_authored_fixture"]),
+  operator: z.enum(["human", "scripted_playwright", "synthetic"]),
+  role: z.enum(["primary", "fallback_fixture"]),
+  note: z.string(),
+});
+export type RecordingProvenance = z.infer<typeof RecordingProvenanceSchema>;
+
 export const LearnMetaSchema = z.object({
   mode: z.enum(["real", "deterministic"]),
   model: z.string().nullable(),
   recording_path: z.string(),
   generated_at: z.string(),
+  provenance: RecordingProvenanceSchema.optional(),
 });
 export type LearnMeta = z.infer<typeof LearnMetaSchema>;
 

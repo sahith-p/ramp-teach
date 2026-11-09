@@ -1,15 +1,15 @@
 {
-  "vendor": "Halcyon Staffing Group",
+  "vendor": "Not stated in recording",
   "proof_sources": [
     {
       "app": "Fixture vendor portal",
       "location": "/portal/invoices/<invoice_id>",
       "fields": [
-        "line description",
+        "description",
         "quantity",
         "unit_rate",
-        "line amount",
-        "invoice total"
+        "amount",
+        "total"
       ]
     },
     {
@@ -23,24 +23,21 @@
       "app": "Vendor contract",
       "location": "data/vendor.json#contract",
       "fields": [
-        "rate card",
-        "allowed non-labor charges",
-        "charge caps"
+        "rate_card",
+        "allowed_charges"
       ]
     }
   ],
   "rules": [
-    "Each line amount must equal hours (quantity) times unit rate, to the cent.",
-    "The sum of all line amounts must equal the invoice total, to the cent.",
-    "Each labor line's hourly rate must match the contract rate card for the role: Senior Recruiter $95, Recruiting Coordinator $62, Sourcer $70, Data Analyst $88.",
-    "The same employee must not be billed on more than one line for the same week.",
-    "Non-labor charges are allowed only if on the contract's allowed list and within cap: background check fee up to $120, job board posting up to $400; any other charge (e.g. a rush fee) is disputed.",
-    "Billed hours for each employee and week must not exceed the approved_hours on that employee's timecard for that week.",
-    "If all checks pass, approve the invoice; if any check fails, dispute it and ask Halcyon for a credit memo for the difference.",
-    "Until resolved: accept only straight-time hours at the rate card rate, up to the approved hours; do not accept overtime premiums above 40 hours."
+    "Each line amount must equal quantity (hours) times unit_rate.",
+    "The sum of all line amounts must equal the invoice total.",
+    "Every labor line's hourly rate must equal the contract rate card rate for that employee's role.",
+    "No employee may be billed on more than one labor line for the same week ending date.",
+    "Every non-labor charge must be on the contract's allowed charges list and must not exceed its cap.",
+    "Billed hours for an employee and week must not exceed the approved_hours on that employee's timecard for the same week ending date.",
+    "If any check fails, recommend dispute and ask the vendor for a credit memo; if all checks pass, approve."
   ],
   "open_questions": [
-    "Is overtime above 40 hours in a week billable at 1.5 times the rate card rate? The contract does not say.",
-    "Do job board postings need pre-approval from the hiring manager before Halcyon can bill them? To be asked of the controller."
+    "Is overtime above 40 hours a week billable at 1.5 times the rate?"
   ]
 }

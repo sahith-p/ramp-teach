@@ -11,7 +11,7 @@ import {
 } from "@/components/fixtures/portal-data";
 import { Field, PageTitle, PortalHeader, Table, link, td, tdMoney, th, thMoney } from "@/components/fixtures/FixtureChrome";
 
-export const metadata = { title: "Employee timecards — Fixture vendor portal" };
+export const metadata = { title: "Employee timecards · Fixture vendor portal" };
 
 function NoTimecard({ employeeId, week, known }: { employeeId: string; week?: string; known: boolean }) {
   return (
@@ -75,7 +75,7 @@ export default async function PortalEmployee({
             ← All timecards for {employee.name}
           </Link>
         </p>
-        <PageTitle sub={`Week ending ${tc.week_ending}`}>Timecard — {employee.name}</PageTitle>
+        <PageTitle sub={`Week ending ${tc.week_ending}`}>Timecard: {employee.name}</PageTitle>
         <Card title="Approved timecard" className="max-w-3xl">
           <dl className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <Field label="Employee ID" field="employee_id">{employee.employee_id}</Field>

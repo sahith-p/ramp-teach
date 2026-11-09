@@ -22,6 +22,24 @@ export function checkLabel(name: string): string {
 }
 
 /**
+ * Copy for a FAILED check, used on red flags (line-items table). Check names read as if the property
+ * holds ("Rate matches contract"), so a red flag must state the failure instead. Hours: the check also
+ * fails when no approved timecard exists, so "not approved" (not "over approved") stays true either way.
+ */
+export const FAILURE_LABELS: Record<CheckName, string> = {
+  line_amounts_correct: "Line amount wrong",
+  total_matches_line_items: "Total mismatch",
+  rate_matches_contract: "Rate mismatch",
+  no_duplicate_lines: "Duplicate line",
+  no_unknown_charges: "Unknown charge",
+  hours_match_timecards: "Hours not approved",
+};
+
+export function failureLabel(name: string): string {
+  return (CHECK_NAMES as readonly string[]).includes(name) ? FAILURE_LABELS[name as CheckName] : `Failed: ${name}`;
+}
+
+/**
  * Where an evidence pointer links to: `fixture:/x` → `/x` on this app; data/rules/calc → the
  * read-only evidence viewer. Invalid pointers → null (rendered as "no valid evidence").
  */
@@ -51,7 +69,7 @@ export function calcLineFragment(fragment: string): number | null {
 }
 
 export function fmtDateTime(iso: string | null): string {
-  if (!iso) return "—";
+  if (!iso) return "n/a";
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
   return d.toLocaleString("en-US", {

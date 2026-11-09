@@ -5,7 +5,7 @@ import { requirePortalSession } from "@/components/fixtures/require-session";
 import { invoiceWeekEnding } from "@/components/fixtures/portal-data";
 import { PageTitle, PortalHeader, Table, link, td, tdMoney, th, thMoney } from "@/components/fixtures/FixtureChrome";
 
-export const metadata = { title: "Invoices — Fixture vendor portal" };
+export const metadata = { title: "Invoices · Fixture vendor portal" };
 
 export default async function PortalInvoices() {
   await requirePortalSession();

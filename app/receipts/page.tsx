@@ -6,7 +6,7 @@ import { listReceipts } from "@/lib/store/receipts";
 import { DecisionBadge, RECOMMENDATION_WORD, SampleLabel } from "@/components/receipt/badges";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Receipts — Ramp Teach" };
+export const metadata: Metadata = { title: "Receipts · Ramp Teach" };
 
 export default function ReceiptsPage() {
   const receipts = listReceipts().sort((a, b) => a.invoice_id.localeCompare(b.invoice_id));

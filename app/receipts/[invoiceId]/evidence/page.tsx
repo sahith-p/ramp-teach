@@ -7,7 +7,7 @@ import { ResultBadge, SampleLabel } from "@/components/receipt/badges";
 import { checkLabel, evidenceHref, isSafeId, SAMPLE_ID } from "@/components/receipt/format";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Evidence — Ramp Teach" };
+export const metadata: Metadata = { title: "Evidence · Ramp Teach" };
 
 type Props = {
   params: Promise<{ invoiceId: string }>;
@@ -162,7 +162,7 @@ function EvidenceBody({ view, invoiceId }: { view: EvidenceView; invoiceId: stri
                 return (
                   <tr key={i} className={`border-b border-line align-top last:border-0 ${hl ? "bg-wash" : ""}`} data-highlight={hl || undefined}>
                     <td className={`px-6 py-3 text-right tabular ${hl ? "font-semibold" : ""}`}>
-                      {f.line_index === null ? "—" : f.line_index + 1}
+                      {f.line_index === null ? "Invoice level" : f.line_index + 1}
                       {hl && <span className="ml-2"><Badge>cited</Badge></span>}
                     </td>
                     <td className="px-3 py-3 tabular">{f.expected}</td>

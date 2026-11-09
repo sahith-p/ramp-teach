@@ -4,7 +4,7 @@ import { PageTitle, PortalHeader } from "@/components/fixtures/FixtureChrome";
 import { DEMO_PASSWORD, DEMO_USERNAME } from "@/components/fixtures/session";
 import { firstParam } from "@/components/fixtures/portal-data";
 
-export const metadata = { title: "Sign in — Fixture vendor portal" };
+export const metadata = { title: "Sign in · Fixture vendor portal" };
 
 export default async function PortalLogin({
   searchParams,

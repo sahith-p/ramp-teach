@@ -144,7 +144,7 @@ const QUESTION_LABEL = /^(?:another\s+|one more\s+)?open question\s*:\s*/i;
 
 /** Normative language: the sentence states a constraint or a decision. */
 const NORMATIVE =
-  /\b(must|has to|have to|needs? to|can't|cannot|can not|must not|never|only|not allowed|is not allowed|no duplicate|gets? disputed|is a dispute|gets? rejected|should|required?)\b/i;
+  /\b(must|has to|have to|needs? to|can't|cannot|can not|must not|never|only|not allowed|is not allowed|no duplicate|gets? disputed|is a dispute|gets? rejected|should|required?|recommends?)\b/i;
 
 /** Reference-value lists such as "Senior Recruiter 95, Sourcer 70" or "fee up to 120, posting up to 400". */
 const REFERENCE_LIST = /^(?:[A-Za-z][A-Za-z' ]*?\s(?:up to\s)?\$?\d[\d,]*(?:\.\d+)?)(?:\s*,\s*(?:and\s+)?[A-Za-z][A-Za-z' ]*?\s(?:up to\s)?\$?\d[\d,]*(?:\.\d+)?)+\.?$/;

@@ -1,8 +1,18 @@
 {
-  "run_id": "demo-2026-11-09T09-04-07-996Z",
+  "run_id": "demo-2026-11-09T09-45-09-242Z",
   "invoice_id": "HSG-1011",
   "model": "claude-opus-5-5",
   "api_key_visible": true,
+  "learn_recording": {
+    "path": "extension/recordings/portal-HSG-1010.json",
+    "provenance": {
+      "session_id": "rec_20261109T085307Z_iwtx",
+      "capture": "mv3_extension",
+      "operator": "scripted_playwright",
+      "role": "primary",
+      "note": "Captured by the unpacked Ramp Teach Recorder (MV3 extension: content script + side panel) on the real fixture portal at http://localhost:3000, reviewing past invoice HSG-1010. The session was PERFORMED by a scripted Playwright operator (extension/scripts/record-session.ts), not a human: its clicks and narration lines are fixed in that script. A genuinely human-recorded session is still outstanding."
+    }
+  },
   "modes": {
     "learn": "real",
     "evidence": "real",
@@ -16,9 +26,14 @@
       "detail": "rules/workflow_spec.json present; mode=real"
     },
     {
+      "step": "learn:recording",
+      "ok": true,
+      "detail": "spec distilled from extension/recordings/portal-HSG-1010.json (session rec_20261109T085307Z_iwtx; capture=mv3_extension; operator=scripted_playwright; primary)"
+    },
+    {
       "step": "server",
       "ok": true,
-      "detail": "reusing app already running at http://localhost:3000"
+      "detail": "started next start on http://localhost:3000"
     },
     {
       "step": "agent",

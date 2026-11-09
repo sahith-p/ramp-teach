@@ -5,16 +5,20 @@
  * Writes rules/workflow_spec.json, rules/learn_meta.json (LearnMeta), rules/evals.json and appends
  * TraceEvents (stage "learn", honest mode) to learn/trace.jsonl.
  *
- * Flags: --offline  force deterministic mode (no API call) even when credentials exist.
+ * Recording: the first existing entry of invoiceReviewRecordings — the MV3 extension capture (primary),
+ * else the seeded sample (labeled fallback fixture). Its provenance is written into learn_meta.json.
+ *
+ * Flags: --offline            force deterministic mode (no API call) even when credentials exist.
+ *        --recording <path>   use one specific listed recording (repo-relative).
  */
 import fs from "node:fs";
 import path from "node:path";
-import { EvalsFileSchema, RecordingSchema, type TraceMode } from "@/contracts";
+import { EvalsFileSchema, LearnMetaSchema, RecordingSchema, type TraceMode } from "@/contracts";
 import { getProvider } from "@/agent/providers";
 import { ROOT } from "@/lib/paths";
 import { trace } from "@/lib/trace";
 import { distill } from "@/learn/distill";
-import { invoiceReviewLearn } from "@/workflows/invoice-review/learn";
+import { invoiceReviewLearn, invoiceReviewRecordings } from "@/workflows/invoice-review/learn";
 import { invoiceReviewEvals } from "@/workflows/invoice-review/evals";
 
 const TRACE_FILE = path.join(ROOT, "learn", "trace.jsonl");
@@ -32,13 +36,31 @@ async function main() {
   const t = (step: string, mode: TraceMode, detail: Record<string, unknown> = {}) =>
     trace({ run_id: runId, stage: "learn", mode, step, detail }, TRACE_FILE);
 
-  const recording = RecordingSchema.parse(JSON.parse(fs.readFileSync(path.join(ROOT, learnDef.recordingPath), "utf8")));
+  const ri = process.argv.indexOf("--recording");
+  const requested = ri >= 0 ? process.argv[ri + 1] : null;
+  const source = requested
+    ? invoiceReviewRecordings.find((r) => r.path === requested)
+    : invoiceReviewRecordings.find((r) => fs.existsSync(path.join(ROOT, r.path)));
+  if (!source) {
+    throw new Error(
+      requested
+        ? `--recording ${requested} is not a listed LEARN recording (${invoiceReviewRecordings.map((r) => r.path).join(", ")})`
+        : "no LEARN recording found",
+    );
+  }
+  const recordingPath = source.path;
+  const recording = RecordingSchema.parse(JSON.parse(fs.readFileSync(path.join(ROOT, recordingPath), "utf8")));
+  const provenance = { session_id: recording.session_id, ...source.provenance };
   t("load_recording", "deterministic", {
-    recording_path: learnDef.recordingPath,
+    recording_path: recordingPath,
     session_id: recording.session_id,
     steps: recording.steps.length,
     narration: recording.steps.filter((s) => s.kind === "narration").length,
+    provenance,
   });
+  if (source.provenance.role === "fallback_fixture") {
+    console.log(`  NOTE: extension capture not found; LEARN is using the labeled FALLBACK fixture ${recordingPath}`);
+  }
 
   const provider = offline ? null : getProvider();
   if (!provider) {
@@ -46,12 +68,13 @@ async function main() {
   }
 
   const result = await distill(recording, learnDef, provider, {
-    recordingPath: learnDef.recordingPath,
+    recordingPath,
     onTrace: (ev) => t(ev.step, ev.mode, ev.detail),
   });
 
   writeJson(learnDef.specPath, result.spec);
-  writeJson("rules/learn_meta.json", result.meta);
+  const meta = LearnMetaSchema.parse({ ...result.meta, provenance });
+  writeJson("rules/learn_meta.json", meta);
   const evals = EvalsFileSchema.parse(invoiceReviewEvals());
   writeJson("rules/evals.json", evals);
   t("write_outputs", "deterministic", {
@@ -66,6 +89,7 @@ async function main() {
   console.log(`LEARN — mode: ${result.meta.mode}${result.meta.model ? ` (model ${result.meta.model}${result.cacheHit ? ", from cache" : ", fresh API call"})` : ""}`);
   if (result.fallbackReason) console.log(`  real mode failed, fell back to deterministic: ${result.fallbackReason}`);
   if (!provider) console.log(`  deterministic distiller (no LLM): ${offline ? "--offline" : "no AI provider credentials"}`);
+  console.log(`  recording: ${recordingPath} (session ${recording.session_id}; capture ${provenance.capture}; operator ${provenance.operator}; ${provenance.role})`);
   console.log(`  vendor: ${s.vendor}`);
   console.log(`  proof_sources (${s.proof_sources.length}):`);
   for (const p of s.proof_sources) console.log(`    - ${p.app} ${p.location} [${p.fields.join(", ")}]`);

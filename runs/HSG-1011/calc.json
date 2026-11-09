@@ -1,6 +1,6 @@
 {
   "invoice_id": "HSG-1011",
-  "computed_at": "2026-11-09T09:04:38.849Z",
+  "computed_at": "2026-11-09T09:45:58.270Z",
   "checks": [
     {
       "check": "line_amounts_correct",

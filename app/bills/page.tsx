@@ -4,7 +4,7 @@ import { fmtMoney } from "@/lib/money";
 import { BillStatusBadge, FixtureLabel, PageTitle, Table, link, td, tdMoney, th, thMoney } from "@/components/fixtures/FixtureChrome";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Bills — Fixture bill inbox" };
+export const metadata = { title: "Bills · Fixture bill inbox" };
 
 export default function BillsInbox() {
   const bills = readBills();

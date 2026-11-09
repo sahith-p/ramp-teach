@@ -4,7 +4,7 @@ import { requirePortalSession } from "@/components/fixtures/require-session";
 import { timecardsForEmployee } from "@/components/fixtures/portal-data";
 import { PageTitle, PortalHeader, Table, link, td, tdMoney, th, thMoney } from "@/components/fixtures/FixtureChrome";
 
-export const metadata = { title: "Employees — Fixture vendor portal" };
+export const metadata = { title: "Employees · Fixture vendor portal" };
 
 export default async function PortalEmployees() {
   await requirePortalSession();
@@ -41,7 +41,7 @@ export default async function PortalEmployees() {
                 </td>
                 <td className={td}>{e.role}</td>
                 <td className={tdMoney}>{cards.length}</td>
-                <td className={td}>{cards[0]?.week_ending ?? "—"}</td>
+                <td className={td}>{cards[0]?.week_ending ?? "None"}</td>
               </tr>
             );
           })}

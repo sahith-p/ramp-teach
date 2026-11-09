@@ -5,7 +5,7 @@ import type { BillStatus } from "@/contracts";
 
 /** Visible per-app fixture label (the global demo banner comes from app/layout.tsx). */
 export function FixtureLabel({ app }: { app: "portal" | "bills" }) {
-  const text = app === "portal" ? "Fixture vendor portal — synthetic data" : "Fixture bill inbox — synthetic data";
+  const text = app === "portal" ? "Fixture vendor portal (synthetic data)" : "Fixture bill inbox (synthetic data)";
   return (
     <p
       data-testid="fixture-label"
@@ -25,7 +25,7 @@ export function PortalHeader({ signedIn = true }: { signedIn?: boolean }) {
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line pb-4">
         <div>
           <div className="text-xs uppercase tracking-wider text-ink-faint">Vendor timecard portal</div>
-          <div className="text-lg font-semibold tracking-tight">Halcyon Staffing Group — client access</div>
+          <div className="text-lg font-semibold tracking-tight">Halcyon Staffing Group: client access</div>
         </div>
         {signedIn && (
           <nav aria-label="Portal" className="flex items-center gap-5 text-sm">

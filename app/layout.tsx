@@ -4,7 +4,7 @@ import "./globals.css";
 import { DemoBanner } from "@/components/ui/DemoBanner";
 
 export const metadata: Metadata = {
-  title: "Ramp Teach — invoice verification demo",
+  title: "Ramp Teach · invoice verification demo",
   description: "Unofficial demo inspired by Ramp's design. Teach an agent to verify a service invoice.",
 };
 

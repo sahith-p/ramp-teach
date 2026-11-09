@@ -10,7 +10,7 @@ import { firstParam } from "@/components/fixtures/portal-data";
 import { BillStatusBadge, Field, FixtureLabel, PageTitle, link } from "@/components/fixtures/FixtureChrome";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Bill — Fixture bill inbox" };
+export const metadata = { title: "Bill · Fixture bill inbox" };
 
 const recWord = { approve: "Approve", dispute: "Dispute", review: "Review" } as const;
 const decisionWord = { approve: "Approved", dispute: "Disputed" } as const;

@@ -6,7 +6,7 @@ import { requirePortalSession } from "@/components/fixtures/require-session";
 import { invoiceWeekEnding, portalLines } from "@/components/fixtures/portal-data";
 import { Field, PageTitle, PortalHeader, Table, link, td, tdMoney, th, thMoney } from "@/components/fixtures/FixtureChrome";
 
-export const metadata = { title: "Invoice — Fixture vendor portal" };
+export const metadata = { title: "Invoice · Fixture vendor portal" };
 
 export default async function PortalInvoice({ params }: { params: Promise<{ invoiceId: string }> }) {
   await requirePortalSession();
@@ -78,7 +78,7 @@ export default async function PortalInvoice({ params }: { params: Promise<{ invo
                     {l.employee.name} <span className="text-ink-faint">({l.employee.employee_id})</span>
                   </span>
                 ) : l.labor ? (
-                  <span className="text-warn">{l.labor.employeeName} — not on roster</span>
+                  <span className="text-warn">{l.labor.employeeName} (not on roster)</span>
                 ) : (
                   <span className="text-ink-faint">Non-labor charge</span>
                 )}
@@ -92,7 +92,7 @@ export default async function PortalInvoice({ params }: { params: Promise<{ invo
                     View timecard
                   </Link>
                 ) : (
-                  <span className="text-ink-faint">—</span>
+                  <span className="text-ink-faint">n/a</span>
                 )}
               </td>
             </tr>

@@ -6,7 +6,7 @@ import { Money } from "@/components/ui/Money";
 import type { ReviewData } from "./load";
 import { DecisionPanel } from "./DecisionPanel";
 import { RECOMMENDATION_WORD, ResultBadge, SampleLabel } from "./badges";
-import { checkLabel, evidenceHref, lineIndexFromPointer } from "./format";
+import { checkLabel, evidenceHref, failureLabel, lineIndexFromPointer } from "./format";
 
 const MODE_SENTENCE: Record<Receipt["mode"], string> = {
   real: "Synthesized by a Claude call from the deterministic checks and browser evidence.",
@@ -162,7 +162,7 @@ function RecommendationBanner({ receipt }: { receipt: Receipt }) {
           ))}
         </ul>
       )}
-      <p className="mt-6 border-t border-ink/15 pt-4 text-sm font-medium">Recommendation — a human decides.</p>
+      <p className="mt-6 border-t border-ink/15 pt-4 text-sm font-medium">Recommendation only. A human decides.</p>
     </section>
   );
 }
@@ -285,9 +285,9 @@ function LineItemsTable({ invoice, receipt, calc }: { invoice: Invoice; receipt:
                   <td className="px-6 py-3">
                     <div className="flex flex-wrap gap-1.5">
                       {f.map((name) => (
-                        <Badge key={name} tone="fail">
-                          {checkLabel(name)}
-                        </Badge>
+                        <span key={name} title={`Failed check: ${checkLabel(name)} (${name})`}>
+                          <Badge tone="fail">{failureLabel(name)}</Badge>
+                        </span>
                       ))}
                     </div>
                   </td>

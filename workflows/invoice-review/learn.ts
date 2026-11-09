@@ -6,7 +6,13 @@
  * Invoice-specific knowledge lives HERE (distillHints, field hints, vendor pattern); the generic
  * extraction logic lives in learn/deterministic.ts so the engine stays reusable.
  */
-import { WorkflowSpecSchema, type Recording, type WorkflowDefinition, type WorkflowSpec } from "@/contracts";
+import {
+  WorkflowSpecSchema,
+  type Recording,
+  type RecordingProvenance,
+  type WorkflowDefinition,
+  type WorkflowSpec,
+} from "@/contracts";
 import {
   extractOpenQuestions,
   extractProofSources,
@@ -28,7 +34,8 @@ contract's allowed list and within its cap; billed hours <= approved timecard ho
 A browser agent gathers approved timecard hours from the vendor portal pages the demonstrator visited.
 
 Guidance:
-- vendor: the vendor's name exactly as the demonstrator says it.
+- vendor: the vendor's name exactly as the demonstrator says or as a captured page shows it. If the recording never
+  states it, return exactly "Not stated in recording". Never guess or infer a vendor name.
 - rules: one self-contained, checkable sentence per rule, carrying the concrete values the demonstrator stated
   (rates per role, allowed charges and caps). Phrase them so each maps onto one of the six checks above. Also
   include the decision rule (what happens when any check fails) and any interim policy stated alongside an open
@@ -56,7 +63,8 @@ const FIELD_HINTS: Record<string, string[]> = {
   ],
 };
 
-const VENDOR_PATTERN = /\bverifying\s+(.+?)\s+invoice\b/i;
+const VENDOR_PATTERN = /\bverifying\s+(?!invoice\b)(.+?)\s+invoice\b/i;
+export const VENDOR_NOT_STATED = "Not stated in recording";
 const CONTRACT_MENTION = /\b(rate card|contract|allowed list|allowed charges?)\b/i;
 
 /**
@@ -65,7 +73,7 @@ const CONTRACT_MENTION = /\b(rate card|contract|allowed list|allowed charges?)\b
  * questions from narration, plus the vendor contract when the narration relies on it.
  */
 export function deterministicDistill(recording: Recording): WorkflowSpec {
-  const vendor = firstMatch(recording, VENDOR_PATTERN) ?? "Unknown vendor";
+  const vendor = firstMatch(recording, VENDOR_PATTERN) ?? VENDOR_NOT_STATED;
   const proof_sources = extractProofSources(recording, { fieldHints: FIELD_HINTS });
   if (narrations(recording).some((t) => CONTRACT_MENTION.test(t))) {
     proof_sources.push({ app: "Vendor contract", location: "data/vendor.json#contract", fields: ["rate_card", "allowed_charges"] });
@@ -78,8 +86,40 @@ export function deterministicDistill(recording: Recording): WorkflowSpec {
   });
 }
 
+/**
+ * LEARN inputs, in priority order. RECORD → LEARN is connected through the PRIMARY entry: the Recording
+ * the MV3 extension captured on the real fixture portal. The seeded sample stays as a labeled FALLBACK
+ * fixture only (used when the capture is missing, and by unit tests); it is never renamed or copied over.
+ */
+export const invoiceReviewRecordings: { path: string; provenance: Omit<RecordingProvenance, "session_id"> }[] = [
+  {
+    path: "extension/recordings/portal-HSG-1010.json",
+    provenance: {
+      capture: "mv3_extension",
+      operator: "scripted_playwright",
+      role: "primary",
+      note:
+        "Captured by the unpacked Ramp Teach Recorder (MV3 extension: content script + side panel) on the real fixture " +
+        "portal at http://localhost:3000, reviewing past invoice HSG-1010. The session was PERFORMED by a scripted " +
+        "Playwright operator (extension/scripts/record-session.ts), not a human: its clicks and narration lines are " +
+        "fixed in that script. A genuinely human-recorded session is still outstanding.",
+    },
+  },
+  {
+    path: "data/recording.sample.json",
+    provenance: {
+      capture: "hand_authored_fixture",
+      operator: "synthetic",
+      role: "fallback_fixture",
+      note:
+        "Seeded sample written by the data lane (T-10) before the extension existed, so LEARN never blocked on RECORD. " +
+        "Fallback fixture only: used when the extension capture is missing, and by unit tests.",
+    },
+  },
+];
+
 export const invoiceReviewLearn: WorkflowDefinition["learn"] = {
-  recordingPath: "data/recording.sample.json",
+  recordingPath: invoiceReviewRecordings[0].path,
   specPath: "rules/workflow_spec.json",
   distillHints,
   deterministicDistill,

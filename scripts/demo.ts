@@ -111,6 +111,12 @@ async function main() {
   const metaPath = path.join(P.rules, "learn_meta.json");
   const learnMeta = fs.existsSync(metaPath) ? LearnMetaSchema.parse(JSON.parse(fs.readFileSync(metaPath, "utf8"))) : null;
   log("learn", fs.existsSync(P.workflowSpec), `rules/workflow_spec.json present; mode=${learnMeta?.mode ?? "unknown"}`);
+  const prov = learnMeta?.provenance;
+  log(
+    "learn:recording",
+    !!learnMeta && prov?.role === "primary",
+    `spec distilled from ${learnMeta?.recording_path ?? "?"} (session ${prov?.session_id ?? "?"}; capture=${prov?.capture ?? "?"}; operator=${prov?.operator ?? "?"}; ${prov?.role ?? "no provenance"})`,
+  );
 
   // 2. Fresh bill state, app up
   resetBills();
@@ -147,6 +153,7 @@ async function main() {
       invoice_id: INVOICE,
       model: engineConfig.model,
       api_key_visible: keyPresent,
+      learn_recording: { path: learnMeta?.recording_path ?? null, provenance: learnMeta?.provenance ?? null },
       modes: { learn: learnMeta?.mode ?? "unknown", evidence: evidenceMode, synthesis: receipt.mode, decision: "scripted (UI click standing in for a human)" },
       results,
       passed: results.every((r) => r.ok),

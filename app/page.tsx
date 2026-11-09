@@ -129,7 +129,7 @@ export default function Home() {
       <Card eyebrow="Run it" title="One command, labelled honestly">
         <p className="text-sm text-ink-muted">
           <code className="font-mono text-xs text-ink">npm run demo</code> runs learn → verify → receipt end to end against the local
-          fixture app. With no API credentials it runs in labelled offline modes (deterministic, scripted, mock) — never presented as AI.
+          fixture app. With no API credentials it runs in labelled offline modes (deterministic, scripted, mock), never presented as AI.
         </p>
       </Card>
     </div>
