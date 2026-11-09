@@ -1,0 +1,66 @@
+{
+  "invoice_id": "HSG-1011",
+  "computed_at": "2026-10-19T14:02:11.000Z",
+  "checks": [
+    {
+      "check": "line_amounts_correct",
+      "result": "pass",
+      "findings": [],
+      "summary": "All 7 line amounts equal quantity × unit_rate."
+    },
+    {
+      "check": "total_matches_line_items",
+      "result": "pass",
+      "findings": [],
+      "summary": "Invoice total $17,696.00 equals the sum of line amounts."
+    },
+    {
+      "check": "rate_matches_contract",
+      "result": "fail",
+      "findings": [
+        {
+          "line_index": 0,
+          "expected": "95.00",
+          "actual": "105.00",
+          "message": "Maya Chen (Senior Recruiter) billed at $105.00/h; contract rate is $95.00/h.",
+          "evidence": "data/vendor.json#contract.rate_card.Senior Recruiter"
+        }
+      ],
+      "summary": "1 labor line billed above the contract rate card."
+    },
+    {
+      "check": "no_duplicate_lines",
+      "result": "fail",
+      "findings": [
+        {
+          "line_index": 3,
+          "expected": "1 line for Priya Natarajan, week ending 2026-10-18",
+          "actual": "2 lines (line_items[2], line_items[3])",
+          "message": "Priya Natarajan billed twice for week ending 2026-10-18.",
+          "evidence": "data/invoices/new/HSG-1011.json#line_items[3]"
+        }
+      ],
+      "summary": "1 duplicate employee-week labor line."
+    },
+    {
+      "check": "no_unknown_charges",
+      "result": "pass",
+      "findings": [],
+      "summary": "1 non-labor line; all on the allowed list and within cap."
+    },
+    {
+      "check": "hours_match_timecards",
+      "result": "fail",
+      "findings": [
+        {
+          "line_index": 4,
+          "expected": "<= 38",
+          "actual": "44",
+          "message": "Sam Okafor billed 44 h; approved timecard shows 38 h.",
+          "evidence": "fixture:/portal/employees/E-104?week=2026-10-18"
+        }
+      ],
+      "summary": "1 labor line exceeds approved timecard hours."
+    }
+  ]
+}

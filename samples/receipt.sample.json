@@ -1,0 +1,59 @@
+{
+  "invoice_id": "HSG-1011",
+  "vendor": "Halcyon Staffing Group",
+  "checks": [
+    {
+      "name": "line_amounts_correct",
+      "expected": "quantity × unit_rate = amount on every line",
+      "actual": "7 of 7 lines tie to the cent",
+      "result": "pass",
+      "evidence": "calc:line_amounts_correct"
+    },
+    {
+      "name": "total_matches_line_items",
+      "expected": "$17,696.00 (sum of 7 line amounts)",
+      "actual": "$17,696.00 invoice total",
+      "result": "pass",
+      "evidence": "data/invoices/new/HSG-1011.json#total"
+    },
+    {
+      "name": "rate_matches_contract",
+      "expected": "Senior Recruiter at $95.00/h (contract C-HSG-2026)",
+      "actual": "Maya Chen billed at $105.00/h on line 1",
+      "result": "fail",
+      "evidence": "data/vendor.json#contract.rate_card.Senior Recruiter"
+    },
+    {
+      "name": "no_duplicate_lines",
+      "expected": "One labor line per employee per week",
+      "actual": "Priya Natarajan, week ending 2026-10-18, billed on lines 3 and 4",
+      "result": "fail",
+      "evidence": "calc:no_duplicate_lines#line-3"
+    },
+    {
+      "name": "no_unknown_charges",
+      "expected": "Non-labor lines on the contract's allowed list, within cap",
+      "actual": "Background check fee $120.00 (cap $120.00)",
+      "result": "pass",
+      "evidence": "rules/workflow_spec.json#rules[0]"
+    },
+    {
+      "name": "hours_match_timecards",
+      "expected": "Sam Okafor ≤ 38 h (approved timecard, week ending 2026-10-18)",
+      "actual": "44 h billed on line 5",
+      "result": "fail",
+      "evidence": "fixture:/portal/employees/E-104?week=2026-10-18"
+    }
+  ],
+  "recommendation": "dispute",
+  "reasons": [
+    "Maya Chen billed at $105.00/h; contract C-HSG-2026 sets Senior Recruiter at $95.00/h ($400.00 over on 40 h).",
+    "Priya Natarajan's labor line for week ending 2026-10-18 appears twice ($2,520.00 duplicate).",
+    "Sam Okafor billed 44 h; the approved portal timecard shows 38 h ($528.00 over at $88.00/h).",
+    "Dispute and request a credit memo for $3,448.00."
+  ],
+  "mode": "mock",
+  "human_decision": null,
+  "decided_by": null,
+  "decided_at": null
+}
