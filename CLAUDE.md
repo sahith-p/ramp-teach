@@ -68,4 +68,4 @@ or attaches; human decisions go only through `POST /api/decisions`.
 
 ## Worktree setup (lanes)
 Worktrees have no node_modules. First command in a lane worktree: `ln -s /home/user/ramp-teach/node_modules node_modules`.
-Do not run `npm install` in a worktree.
+Do not run `npm install` in a worktree. In a worktree, run Next with `--webpack` (`npx next dev --webpack -p <lane port>`, `npx next build --webpack`): Turbopack refuses the symlinked node_modules. Main uses plain `next build`.

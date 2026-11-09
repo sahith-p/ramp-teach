@@ -12,7 +12,7 @@ export function Card({
   eyebrow?: ReactNode;
   children: ReactNode;
   className?: string;
-} & React.HTMLAttributes<HTMLElement>) {
+} & Omit<React.HTMLAttributes<HTMLElement>, "title">) {
   return (
     <section className={`rounded-[var(--radius-card)] border border-line bg-surface p-6 ${className}`} {...rest}>
       {eyebrow && <div className="mb-1 text-xs uppercase tracking-wider text-ink-faint">{eyebrow}</div>}
