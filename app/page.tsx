@@ -24,7 +24,7 @@ const STAGES: Stage[] = [
     description: "An AP reviewer verifies a past invoice in the vendor portal while the Chrome recorder captures clicks and narration.",
     modes: [
       { badge: HUMAN, text: "A person does the work; the extension only records it (passwords redacted)." },
-      { badge: <ModeBadge mode="deterministic" />, text: "Offline: data/recording.sample.json stands in." },
+      { badge: <Badge>Sample file</Badge>, text: "Offline: the committed data/recording.sample.json stands in." },
     ],
     links: [{ href: "/portal/login", label: "Vendor portal (fixture)" }],
     span: "md:col-span-2",
@@ -88,7 +88,7 @@ export default function Home() {
     <div className="space-y-10">
       <header className="max-w-3xl">
         <div className="mb-2 text-xs uppercase tracking-wider text-ink-faint">Service-invoice verification</div>
-        <h1 className="font-display text-5xl leading-[1.05] tracking-tight">Teach an agent to check an invoice the way you do.</h1>
+        <h1 className="font-display text-4xl leading-tight tracking-tight">Teach an agent to check an invoice the way you do.</h1>
         <p className="mt-4 text-base text-ink-muted">
           Record a reviewer once, learn the rules, verify a new Halcyon Staffing Group invoice with evidence for every check, and hand
           a receipt to a human who decides. Every output says how it was produced.

@@ -40,7 +40,6 @@ export function ReceiptView({ data }: { data: ReviewData }) {
           <h1 className="font-display text-4xl tracking-tight">{receipt.invoice_id}</h1>
           <p className="mt-1 text-base text-ink-muted">{receipt.vendor}</p>
         </div>
-        <ModeBadge mode={receipt.mode} />
       </header>
 
       {sample && (
