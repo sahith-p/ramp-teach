@@ -1,0 +1,348 @@
+{
+  "session_id": "rec_20261109T085307Z_iwtx",
+  "started_at": "2026-11-09T08:53:07.816Z",
+  "steps": [
+    {
+      "ts": "2026-11-09T08:53:07.833Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:07.945Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "text": "I'm verifying invoice HSG-1010 against the vendor timecard portal. First I sign in."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:08.601Z",
+      "kind": "dom",
+      "detail": {
+        "event": "input",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "selector": "input[name=\"username\"]",
+        "value": "ap.reviewer"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:09.236Z",
+      "kind": "dom",
+      "detail": {
+        "event": "input",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "selector": "input[name=\"password\"]",
+        "value": "[redacted]"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:11.311Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "selector": "div:nth-of-type(2) > section > form > button",
+        "text": "Sign in"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:11.313Z",
+      "kind": "dom",
+      "detail": {
+        "event": "submit",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "selector": "div > div:nth-of-type(2) > section > form"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:11.431Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:12.098Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices — Fixture vendor portal",
+        "text": "Rules I apply: every labor rate must equal the contract rate card; no employee may be billed twice for the same week; non-labor charges must be on the allowed list and under their cap; line amounts and the total must tie."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:12.765Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices — Fixture vendor portal",
+        "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+        "text": "HSG-1010"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:13.273Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:13.978Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "text": "Now I open each employee's timecard for that week and compare billed hours to approved hours."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:15.886Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:16.472Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:18.930Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "40"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:19.596Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "text": "Maya Chen's approved timecard for week ending 2026-10-11 shows 40 hours. Billed hours must not exceed approved hours."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:20.476Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:23.037Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "selector": "a[href=\"/portal/employees/E-102?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:23.673Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-102?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:25.730Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-102?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "38"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:26.394Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/employees/E-102?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "text": "Jordan Alvarez's approved timecard for week ending 2026-10-11 shows 38 hours. Billed hours must not exceed approved hours."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:27.272Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:29.798Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "selector": "a[href=\"/portal/employees/E-103?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:30.476Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-103?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:32.534Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-103?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "40"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:33.214Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/employees/E-103?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "text": "Priya Natarajan's approved timecard for week ending 2026-10-11 shows 40 hours. Billed hours must not exceed approved hours."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:34.232Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:36.605Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "selector": "a[href=\"/portal/employees/E-104?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:37.272Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:39.339Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "36"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:39.995Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "text": "Sam Okafor's approved timecard for week ending 2026-10-11 shows 36 hours. Billed hours must not exceed approved hours."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:40.872Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:41.594Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "text": "If any check fails I recommend dispute and ask the vendor for a credit memo; otherwise approve."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:42.261Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "text": "Open question: is overtime above 40 hours a week billable at 1.5 times the rate?"
+      }
+    }
+  ],
+  "transcript": [
+    "I'm verifying invoice HSG-1010 against the vendor timecard portal. First I sign in.",
+    "Rules I apply: every labor rate must equal the contract rate card; no employee may be billed twice for the same week; non-labor charges must be on the allowed list and under their cap; line amounts and the total must tie.",
+    "Now I open each employee's timecard for that week and compare billed hours to approved hours.",
+    "Maya Chen's approved timecard for week ending 2026-10-11 shows 40 hours. Billed hours must not exceed approved hours.",
+    "Jordan Alvarez's approved timecard for week ending 2026-10-11 shows 38 hours. Billed hours must not exceed approved hours.",
+    "Priya Natarajan's approved timecard for week ending 2026-10-11 shows 40 hours. Billed hours must not exceed approved hours.",
+    "Sam Okafor's approved timecard for week ending 2026-10-11 shows 36 hours. Billed hours must not exceed approved hours.",
+    "If any check fails I recommend dispute and ask the vendor for a credit memo; otherwise approve.",
+    "Open question: is overtime above 40 hours a week billable at 1.5 times the rate?"
+  ]
+}

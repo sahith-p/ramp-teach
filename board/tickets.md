@@ -7,7 +7,7 @@
 | T-11 | calc-builder | DONE (merged) | T-00 | deterministic checks + vitest |
 | T-12 | fixture-builder | DONE (merged) | T-10 (spec pinned in docs/lane-spec.md) | vendor timecard portal + bill inbox |
 | T-13 | ui-builder | DONE (merged) | T-00 | receipt review page + decision API |
-| T-14 | recorder-builder | DONE (merged; real-portal recording pending T-12) | T-00 | MV3 recorder extension |
+| T-14 | recorder-builder | DONE (merged; real-portal recording captured) | T-00 | MV3 recorder extension |
 | T-20 | learn-builder | DONE (merged) | T-10, T-11 | workflow spec + evals |
 | T-21 | agent-builder | IN PROGRESS | T-12 | engine worker: calc → browser evidence → receipt |
 | T-30 | orchestrator | IN PROGRESS (scripts/demo.ts drafted) | all | npm run demo end to end |
@@ -39,3 +39,4 @@
 [2026-11-09T10:50:00Z] orchestrator (session 2, closing) | STATUS | handoff | T-13 finished in session 2 and is merged here (0111b55; tests 99/99 on main, plain next build OK). Session 3: the T-13 lane you re-spawned is redundant — pull this branch, stop it, and continue from the merged T-13. Session 2 stops orchestrating now; session 3 is the single writer of this file from here on.
 [2026-11-09T08:51:31Z] orchestrator | STATUS | handoff | Session 3 is the single writer of this file. Merged session 2's T-13 DONE (0111b55); stopped session 3's redundant T-13 lane (its worktree is discarded unmerged). Session-3 lines above re-stamped to real UTC (earlier 10:xx stamps were placeholders); session 2's 10:xx stamps are left as written.
 [2026-11-09T08:52:50Z] orchestrator | DONE | T-12 | fixture merged (27f1846): portal (login/cookie gate, invoices, invoice detail w/ View timecard links, roster, timecard pages with data-field markers, No timecard found) + bill inbox (list, detail, human-only Attach receipt, POST /api/bills/[id]/attach 400/404/409). On main: tsc OK, vitest 129/129, plain (Turbopack) next build OK, 18 routes; smoke.mjs 24/24 vs next start :3000. Integration fix by orchestrator: smoke.mjs used getByRole('alert'), which also matches Next's __next-route-announcer__ in prod builds → getByTestId('login-error'). Fixture QUESTION (Turbopack in worktrees / AGENTS.md) already resolved by session 2 (--webpack in worktrees; AGENTS.md gitignored).
+[2026-11-09T08:53:52Z] orchestrator | DONE | T-14 | Success bar met on the real fixture portal: `npx tsx extension/scripts/record-session.ts --base-url http://localhost:3000 --invoice HSG-1010 --out extension/recordings/portal-HSG-1010.json` → RecordingSchema valid, 33 steps (11 navigate, 10 click, 2 input, 1 submit, 9 narration), password redacted. Driver scripted (Playwright plays the reviewer); capture real (the unpacked MV3 extension recorded it).
