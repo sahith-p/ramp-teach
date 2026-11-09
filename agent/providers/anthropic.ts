@@ -1,18 +1,18 @@
 /**
  * Anthropic adapter for the AIProvider boundary (contracts/engine.ts).
- * Phase 0 (orchestrator) wrote generateStructured; agent-builder owns this file from T-21 on
- * and implements runBrowserTask with the browser_toolset_20260801 toolset.
+ * Phase 0 (orchestrator) wrote generateStructured; agent-builder owns this file from T-21 on.
+ * runBrowserTask runs the browser_toolset_20260801 loop in ./browser-loop.ts.
  */
 import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import type {
   AIProvider,
   BrowserTaskRequest,
-  BrowserTaskResult,
   StructuredRequest,
   StructuredResult,
 } from "@/contracts";
 import { anthropicBaseUrl, engineConfig, resolveAnthropicKey } from "@/config/engine";
+import { runBrowserLoop, type BrowserLoopResult } from "./browser-loop";
 
 export class ProviderRefusalError extends Error {
   constructor(public category: string | null, public explanation: string | null) {
@@ -62,7 +62,11 @@ export class AnthropicProvider implements AIProvider {
     return { output, model: msg.model, usage: msg.usage };
   }
 
-  async runBrowserTask(_req: BrowserTaskRequest): Promise<BrowserTaskResult> {
-    throw new Error("runBrowserTask not implemented yet (T-21 agent-builder)");
+  /**
+   * Model-driven browser loop over the BrowserDriver (mode: real). See ./browser-loop.ts.
+   * Returns a BrowserLoopResult (BrowserTaskResult + usage, stopReason, screenshots).
+   */
+  async runBrowserTask(req: BrowserTaskRequest): Promise<BrowserLoopResult> {
+    return runBrowserLoop(this.client, { model: this.model, effort: engineConfig.effort }, req);
   }
 }
