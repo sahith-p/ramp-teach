@@ -4,7 +4,7 @@
 
 This is the RECORD stage of the Ramp Teach engine. It records a reviewer working through the fixture
 vendor portal (clicks, field inputs, form submits, page navigations) plus their narration, and exports a
-`Recording` (`contracts/core.ts` → `RecordingSchema`) that the LEARN stage distills into rules.
+`Recording` (`src/contracts/core.ts` → `RecordingSchema`) that the LEARN stage distills into rules.
 
 Plain JS with no build step: load the folder unpacked.
 
@@ -43,7 +43,7 @@ Plain JS with no build step: load the folder unpacked.
 
 The film's stage (`public/stage/chrome-shim.js`) has no mic: the narrator's lines drive the visualizer and
 arrive through the dictation code path, and Stop asks `/api/stt` for the transcript built from the narration
-steps' timestamps (`lib/speech/simulated.ts`, ~2.6 words/s, confidence 1). Server side: `lib/speech/`.
+steps' timestamps (`src/lib/speech/simulated.ts`, ~2.6 words/s, confidence 1). Server side: `src/lib/speech/`.
 
 ### Export format (exactly `RecordingSchema`)
 ```json

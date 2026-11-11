@@ -16,7 +16,7 @@ Pay. Three technical pillars do the work, and every step leaves a trace:
 Models and services: **claude-opus-5-5** (learning, browser agent, receipt, eval judge), TypeSafe **Jev** (routing), Anthropic **Skills
 API**, **code execution** sandbox, **Files API**, **citations**, **structured outputs**, **Message Batches**,
 **ElevenLabs Scribe v2** (batch) and **Scribe v2 Realtime** (live preview). Contracts for everything below:
-`contracts/pillars.ts`; shared paths and readers: `lib/pillars.ts`.
+`src/contracts/pillars.ts`; shared paths and readers: `src/lib/pillars.ts`.
 
 ---
 
@@ -32,12 +32,12 @@ prompt), shows a 28-bar level visualizer, and a live preview of the words.
 and streams 16 kHz PCM to Scribe v2 Realtime over WebSocket (partial and committed transcripts). Without one it falls
 back to the browser's dictation. The key never reaches the extension.
 
-**Final transcript (`POST /api/stt`, `lib/speech/`).** On Stop the panel uploads the audio and the recording. The
+**Final transcript (`POST /api/stt`, `src/lib/speech/`).** On Stop the panel uploads the audio and the recording. The
 server calls Scribe v2 (`POST /v1/speech-to-text`, `model_id=scribe_v2`, `timestamps_granularity=word`) with
 **page-aware key terms**: IDs, names, headings and field labels the content script saw on the recorded pages (up to
 100), so "HSG-1011", "Maya Chen" and "approved hours" come out right. Confidence per word is `exp(logprob)`.
 
-**Speech ↔ click alignment (`lib/speech/align.ts`, deterministic).** Words become sentences (punctuation, pauses of
+**Speech ↔ click alignment (`src/lib/speech/align.ts`, deterministic).** Words become sentences (punctuation, pauses of
 1.2 s or more), and each sentence is linked to the DOM steps it is about: steps from 6 s before to 1.5 s after that
 share a token with it (numbers, IDs like E-104, names, the clicked element's text or field name, the URL), else the
 nearest click. Words under 0.6 confidence are flagged for one-click correction. The result is stored on the
@@ -45,11 +45,11 @@ recording as `speech` (`SpeechTranscript`: utterances with word timings and `ste
 waveform peaks file.
 
 **Demo path.** The product film drives the real side panel with a scripted narrator; its transcript is built with the
-same word-timing and alignment code (`lib/speech/simulated.ts`, provider recorded in the data, mode `scripted`).
+same word-timing and alignment code (`src/lib/speech/simulated.ts`, provider recorded in the data, mode `scripted`).
 
 ## 2. Learning the skill
 
-**Pipeline (`learn/skill/`).** `learnSkill(recording)` produces `skills/<id>/v<n>/`. Each stage is saved with its
+**Pipeline (`src/learn/skill/`).** `learnSkill(recording)` produces `skills/<id>/v<n>/`. Each stage is saved with its
 timing, mode, model, request ID and token usage:
 
 | Stage | How | Output |
@@ -58,13 +58,13 @@ timing, mode, model, request ID and token usage:
 | claims | Claude with **citations** on two documents (transcript, step list) | claims, each citing exact spoken words; citation offsets mapped back to utterance IDs and linked clicks |
 | synthesize | Claude with **structured output** | rules (check / decision / procedure; said, shown or both), portal map (pages, fields, selectors), vendor, open questions; every quote verified against the transcript in code |
 | critique | Claude, structured | unsupported or invented rules dropped; gaps become open questions |
-| checks | Claude writes Python checks, run in Anthropic's **code execution** sandbox (inputs uploaded with the **Files API**) | agreement of each learned check with the hand-written `calc/` checks on past invoices. `calc/` stays authoritative |
+| checks | Claude writes Python checks, run in Anthropic's **code execution** sandbox (inputs uploaded with the **Files API**) | agreement of each learned check with the hand-written `src/calc/` checks on past invoices. `src/calc/` stays authoritative |
 | package | code + **Skills API** | `SKILL.md` (Agent Skills format), `skill.json` (`SkillVersion`), `checks/*.py`; uploaded with `skills.create` / `skills.versions.create` |
 
 A rule that was **shown, not said** (the reviewer clicked the approved-hours field but never mentioned it) is kept
-with a citation to the click instead of words. Versions are diffed rule by rule (`lib/skills/diff.ts`).
+with a citation to the click instead of words. Versions are diffed rule by rule (`src/lib/skills/diff.ts`).
 
-**Evals of the learned skill (`evals/`, `lib/evals/`).** They answer one question: did Ramp Teach learn the right
+**Evals of the learned skill (`evals/`, `src/lib/evals/`).** They answer one question: did Ramp Teach learn the right
 workflow from the recording? Eight hand-authored recording variants of the primary capture, each with a gold answer:
 
 | Case | Tests |
@@ -81,7 +81,7 @@ workflow from the recording? Eight hand-authored recording variants of the prima
 Graders: **rule recall and precision** (Claude judge with structured output matching learned rules to gold rules one
 by one; code computes the scores), **citation validity** (code: every quote exists, every linked click happened),
 **coverage** (code: pages and fields vs what the reviewer visited), **replay** (code: the skill's checks run through
-`calc/` on 10 past invoices vs the reviewer's past outcomes), **consistency** (judge: paired recordings give the same
+`src/calc/` on 10 past invoices vs the reviewer's past outcomes), **consistency** (judge: paired recordings give the same
 skill), **voice accuracy** (word error rate and key-term accuracy). `npm run eval:skill` prints a cost estimate and
 stops before any paid call unless `--yes`; `--batch` sends judge calls through the Message Batches API at half
 price.
@@ -92,7 +92,7 @@ failure it is marked blocked with the failing cases listed.
 
 ## 3. Execution
 
-**Routing (`agent/router.ts`, `agent/jev.ts`).** When an invoice arrives in Bill Pay, TypeSafe's **Jev** (a System
+**Routing (`src/agent/router.ts`, `src/agent/jev.ts`).** When an invoice arrives in Bill Pay, TypeSafe's **Jev** (a System
 One decision model) decides which workflow handles it. One request to `POST https://api.typesafe.ai/v1/systemone`
 carries the invoice and the catalog of active workflows as state, and two typed questions: a **Choice** across the
 workflows (a probability per workflow plus confidence) and a companion **Noul**, "does any workflow cover this vendor
@@ -102,7 +102,7 @@ OFS-2201 from an office-supply vendor). Without a TypeSafe key the same decision
 low effort), and offline or with `RAMP_TEACH_ROUTER=deterministic` by a code path (vendor match plus document shape).
 The decision, model and request ID are saved to `runs/<id>/route.json` and a span.
 
-**Workflow agent (`agent/`).** Claude drives a real Chromium through Anthropic's `browser_toolset_20260801`, served
+**Workflow agent (`src/agent/`).** Claude drives a real Chromium through Anthropic's `browser_toolset_20260801`, served
 by a Playwright driver:
 - Each page reaches the model as a short outline; every usable element gets a `data-agent-ref` written into the page,
   so the model acts by reference, not by pixel.
@@ -110,19 +110,19 @@ by a Playwright driver:
 - A **task budget** lets the agent pace itself; turns are streamed.
 - Facts are saved only through `record_evidence`, each with the page it came from.
 - Sign-in goes through the `sign_in` tool: the harness fills the portal's form from a server-side credential vault
-  (`lib/vault.ts`: `RAMP_TEACH_VAULT_<PORTAL>_USERNAME` / `_PASSWORD`, or gitignored `runtime/vault.json`; the local
+  (`src/lib/vault.ts`: `RAMP_TEACH_VAULT_<PORTAL>_USERNAME` / `_PASSWORD`, or gitignored `runtime/vault.json`; the local
   fixture portal falls back to its public demo login). The model never sees the password; traces keep portal and
   username only. The scripted path signs in the same way.
 - Guardrails: localhost pages only (checked in the toolset and again in the driver), no scripts, no uploads, a 25-turn
   cap. The agent never approves, pays or attaches; people decide through `POST /api/decisions`.
 
-**Evidence re-check (`agent/evidence-check.ts`, code).** After the run, every recorded fact is re-read from its source
+**Evidence re-check (`src/agent/evidence-check.ts`, code).** After the run, every recorded fact is re-read from its source
 page (`[data-field=…]`) and compared; mismatches and missing fields are flagged, with a crop of the field.
 
-**Checks and receipt.** The six checks are plain code (`calc/`, never a model). Claude writes the receipt from the
-check results and evidence; a post-pass makes the numbers match the code. Credits are code too: `calc/credits.ts` puts
+**Checks and receipt.** The six checks are plain code (`src/calc/`, never a model). Claude writes the receipt from the
+check results and evidence; a post-pass makes the numbers match the code. Credits are code too: `src/calc/credits.ts` puts
 an overbilled `amount` on every failing finding and a `credit_total` on the report (HSG-1011: $400 + $2,520 + $528 =
-$3,448); Claude is told to copy them, and `agent/enforce.ts` replaces or flags any dollar figure in the reasons that
+$3,448); Claude is told to copy them, and `src/agent/enforce.ts` replaces or flags any dollar figure in the reasons that
 is not one of them and makes the credit-memo line state `credit_total`.
 
 ## 4. Observability
@@ -135,7 +135,7 @@ is not one of them and makes the credit-memo line state `credit_total`.
 | Step screenshots, field crops | `runs/<id>/screenshots/`, `runs/<id>/evidence/` |
 | Evidence re-check | `runs/<id>/evidence-check.json` |
 | Learning stages with request IDs and usage | `skills/<id>/v<n>/stages/` |
-| Traces with a mode on every line (`real`, `scripted`, `mock`, `deterministic`) | `agent/trace.jsonl`, `learn/trace.jsonl` |
+| Traces with a mode on every line (`real`, `scripted`, `mock`, `deterministic`) | `src/agent/trace.jsonl`, `src/learn/trace.jsonl` |
 | Every Claude call with tokens, Anthropic request ID and message ID | `runtime/usage.jsonl` (`npx tsx scripts/usage.ts` for cost) |
 | Eval runs | `evals/runs/` |
 
@@ -171,4 +171,4 @@ npm run agent -- HSG-1011
 ```
 
 Keys: `RAMP_ANTHROPIC_API_KEY` (required for real mode), `TYPESAFE_API_KEY` (routing with Jev) and `ELEVENLABS_API_KEY` (voice). Without them everything runs
-in labeled offline modes. See `docs/HANDOFF.md` for configuration and `demo/video/PIPELINE.md` for the film.
+in labeled offline modes. See `docs/HANDOFF.md` for configuration.

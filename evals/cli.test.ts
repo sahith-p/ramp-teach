@@ -47,15 +47,15 @@ describe("learner adapter", () => {
   });
   it("loads learnSkill from learn/skill/index", async () => {
     const root = mkTmp();
-    fs.mkdirSync(path.join(root, "learn", "skill"), { recursive: true });
-    fs.writeFileSync(path.join(root, "learn", "skill", "index.js"), "export async function learnSkill(rec) { return { from: rec.session_id }; }\n");
+    fs.mkdirSync(path.join(root, "src", "learn", "skill"), { recursive: true });
+    fs.writeFileSync(path.join(root, "src", "learn", "skill", "index.js"), "export async function learnSkill(rec) { return { from: rec.session_id }; }\n");
     const fn = await loadLearner(root);
     expect(await fn({ session_id: "s1" } as never)).toEqual({ from: "s1" });
   });
   it("rejects a module without learnSkill", async () => {
     const root = mkTmp();
-    fs.mkdirSync(path.join(root, "learn", "skill"), { recursive: true });
-    fs.writeFileSync(path.join(root, "learn", "skill", "index.js"), "export const nope = 1;\n");
+    fs.mkdirSync(path.join(root, "src", "learn", "skill"), { recursive: true });
+    fs.writeFileSync(path.join(root, "src", "learn", "skill", "index.js"), "export const nope = 1;\n");
     await expect(loadLearner(root)).rejects.toThrow(/does not export learnSkill/);
   });
 });

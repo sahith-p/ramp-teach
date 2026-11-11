@@ -11,7 +11,9 @@ next-env.d.ts
 /playwright-report/
 /runs/**/screenshots/
 /AGENTS.md
-/demo/video/work/
-/demo/video/work-film/
-/demo/video/assets/fonts/lausanne/
 /runs/**/live/
+
+# Video production tooling (kept locally, not in the repo)
+/demo/
+/public/stage/
+/src/app/stage-ext/

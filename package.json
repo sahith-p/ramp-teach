@@ -11,13 +11,13 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "setup": "tsx scripts/setup.ts",
-    "learn": "tsx learn/cli.ts",
-    "agent": "tsx agent/cli.ts",
-    "eval": "tsx learn/run-evals.ts",
+    "learn": "tsx src/learn/cli.ts",
+    "agent": "tsx src/agent/cli.ts",
+    "eval": "tsx src/learn/run-evals.ts",
     "eval:skill": "tsx evals/cli.ts",
     "demo": "tsx scripts/demo.ts",
     "record:session": "tsx extension/scripts/record-session.ts",
-    "skill:learn": "tsx learn/skill/cli.ts"
+    "skill:learn": "tsx src/learn/skill/cli.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.6.0",

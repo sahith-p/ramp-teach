@@ -103,7 +103,7 @@ async function main() {
   const metaPath0 = path.join(P.rules, "learn_meta.json");
   const needLearn = !flag("skip-learn") && (flag("relearn") || !fs.existsSync(P.workflowSpec) || !fs.existsSync(metaPath0));
   if (needLearn) {
-    const code = await run("npx", ["tsx", "learn/cli.ts", ...(offline ? ["--offline"] : [])], childEnv);
+    const code = await run("npx", ["tsx", "src/learn/cli.ts", ...(offline ? ["--offline"] : [])], childEnv);
     if (code !== 0) throw new Error("learn failed");
   } else {
     console.log("… LEARN: using committed rules/ (pass --relearn to re-distill)");
@@ -124,7 +124,7 @@ async function main() {
 
   try {
     // 3. VERIFY + RECEIPT: the agent worker
-    const code = await run("npx", ["tsx", "agent/cli.ts", INVOICE, "--base-url", BASE_URL, ...(offline ? ["--offline"] : [])], { BASE_URL, ...childEnv });
+    const code = await run("npx", ["tsx", "src/agent/cli.ts", INVOICE, "--base-url", BASE_URL, ...(offline ? ["--offline"] : [])], { BASE_URL, ...childEnv });
     if (code !== 0) throw new Error("agent run failed");
     const receipt = readReceipt(INVOICE);
     if (!receipt) throw new Error(`no receipt written for ${INVOICE}`);

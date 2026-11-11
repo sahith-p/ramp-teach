@@ -10,7 +10,7 @@
 <p align="center">
   <a href="docs/TECHNICAL.md">How it works</a> &nbsp;&nbsp;
   <a href="docs/HANDOFF.md">Handoff</a> &nbsp;&nbsp;
-  <a href="demo/video/ramp-teach-demo.mp4">Product demo</a>
+  <a href="docs/ramp-teach-demo.mp4">Product demo</a>
 </p>
 
 ---
@@ -133,7 +133,7 @@ What a recorded moment looks like:
 - **Element identity:** `[data-field]`, then `tag[name]`, `#id`, `a[href]`, then a short CSS path.
 - **Privacy:** passwords are redacted in the page and again in the worker, before anything is sent.
 - **Speech:** ElevenLabs Scribe v2 with page-aware key terms (names, IDs, field labels seen on the recorded pages),
-  aligned to clicks in `lib/speech/align.ts`.
+  aligned to clicks in `src/lib/speech/align.ts`.
 
 ---
 
@@ -167,7 +167,7 @@ How one rule is learned:
 
 | Learned from the recording | Written by engineers |
 |---|---|
-| rules, where the proof lives, vendor, open questions, citations | the six checks in `calc/` (TypeScript), the evidence tasks, receipt enforcement, guardrails |
+| rules, where the proof lives, vendor, open questions, citations | the six checks in `src/calc/` (TypeScript), the evidence tasks, receipt enforcement, guardrails |
 
 **Skill evals** (`npm run eval:skill`): 8 recording variants with known answers (baseline, paraphrase, reordered,
 shown not said, said not shown, filler, a skipped step, speech-to-text noise), graded for rule recall and
@@ -214,7 +214,7 @@ flowchart TB
 
 | Layer | What it tests | How | Result |
 |---|---|---|---|
-| Checks | The six checks in `calc/` | Replay past corrections and past invoices (`npm run eval`) | each correction caught, clean invoices pass |
+| Checks | The six checks in `src/calc/` | Replay past corrections and past invoices (`npm run eval`) | each correction caught, clean invoices pass |
 | Learning | Did it learn the right workflow? | 8 recording variants, graders, gate (`npm run eval:skill`) | gate decides the active version |
 | End to end | The whole review | Live review runs against the expected outcome (`npm run demo`) | recommendation and decision flow as expected |
 
@@ -267,7 +267,6 @@ the app.
 | `npm run eval` | Replay past corrections through the checks |
 | `npm run agent -- <invoice_id>` | Route and review one invoice (app must be running) |
 | `npm run demo` | End-to-end check of one review, including the UI decision |
-| `npx tsx demo/video/film.ts --phase post` | Re-render the product demo's diagrams and captions from the saved take |
 
 ## Stack
 
@@ -283,15 +282,22 @@ the app.
 
 ## Repo map
 
-| Path | Contents |
-|---|---|
-| `extension/` | The recorder |
-| `lib/speech/`, `app/api/stt/` | Transcription and speech-to-click alignment |
-| `learn/skill/`, `lib/skills/`, `skills/` | The learner and learned workflow versions |
-| `evals/`, `lib/evals/` | Skill evals, graders, gate |
-| `agent/` | Router, harness, browser driver, evidence re-check, receipt enforcement |
-| `calc/` | The six checks |
-| `app/`, `components/` | Bill Pay UI, API routes, fixture vendor portal |
-| `contracts/` | Zod schemas shared by everything |
-| `demo/video/` | Product demo video and its pipeline |
-| `docs/` | Technical deep dive, handoff, design notes |
+```
+src/          the app and engine
+  app/          Bill Pay UI, API routes, fixture vendor portal (Next.js App Router)
+  components/   UI components
+  agent/        router, harness, browser driver, evidence re-check, receipt enforcement
+  learn/        the learner (recording to workflow and skill versions)
+  calc/         the six checks (plain code, no LLM)
+  workflows/    workflow definitions (invoice review)
+  contracts/    Zod schemas and engine interfaces shared by everything
+  config/       engine and provider config
+  lib/          storage, speech, skills, evals and shared helpers
+extension/    the Chrome recorder (Manifest V3)
+evals/        skill eval cases, recordings and harness
+data/         seed data (read-only at runtime)
+rules/  skills/  receipts/  runs/   learned rules, skill versions, receipts, per-run artifacts
+samples/      sample receipt, invoice and calc report
+scripts/      setup, end-to-end check, artifact guard
+docs/         technical deep dive, handoff, design notes, build board, product demo video
+```

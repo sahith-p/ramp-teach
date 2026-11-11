@@ -1,8 +1,8 @@
 # data/ — the synthetic world (seed data, read-only at runtime)
 
 All data here is **synthetic**. Halcyon Staffing Group and every person named are fictional.
-This is an unofficial demo inspired by Ramp's design. Load these files through `lib/data.ts`
-(validated against `@/contracts`). Paths are in `lib/paths.ts`.
+This is an unofficial demo inspired by Ramp's design. Load these files through `src/lib/data.ts`
+(validated against `@/contracts`). Paths are in `src/lib/paths.ts`.
 
 | File | Shape | What it is |
 |---|---|---|
@@ -13,7 +13,7 @@ This is an unofficial demo inspired by Ramp's design. Load these files through `
 | `corrections.json` | `Correction[]` | What AP reviewers caught on past invoices, one per affected invoice, covering all six `CHECK_NAMES` |
 | `bills.json` | `Bill[]` | Seed for `runtime/bills.json`: one bill per invoice (`bill_<invoice_id>`, amount = invoice total). Past bills are `approved`, corrected ones `disputed`, `bill_HSG-1011` is `pending` |
 | `recording.sample.json` | `Recording` | An AP specialist verifying HSG-1010 in the fixture portal (`http://localhost:3000/portal/...`), with DOM steps and narration stating the review rules and open questions. Password recorded as `[redacted]` |
-| `answer_key.json` | `AnswerKey` | **Tests and `scripts/demo.ts` only.** Never read by `agent/`, `learn/`, the provider, or the review prompt |
+| `answer_key.json` | `AnswerKey` | **Tests and `scripts/demo.ts` only.** Never read by `src/agent/`, `src/learn/`, the provider, or the review prompt |
 
 ## Rate card (USD/hour)
 Senior Recruiter 95 · Recruiting Coordinator 62 · Sourcer 70 · Data Analyst 88.
@@ -34,5 +34,5 @@ E-103 Priya Natarajan (Sourcer) · E-104 Sam Okafor (Data Analyst) · E-105 Elen
 
 ## Self-check
 `npx vitest run data` (`data/__tests__/data.test.ts`) parses every file with the frozen schemas. It then
-re-runs the six checks inline (independent of `calc/`) and asserts that each invoice fails exactly the checks its
+re-runs the six checks inline (independent of `src/calc/`) and asserts that each invoice fails exactly the checks its
 corrections or the answer key name, and nothing else.

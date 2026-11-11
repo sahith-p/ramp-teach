@@ -4,7 +4,7 @@ This pins the cross-lane details the frozen contracts do not: the synthetic worl
 fixture routes and page markers, and module entry points. Lanes build against THIS document so
 they can work in parallel. If you need something changed, post a QUESTION in your outbox.
 
-## 1. The synthetic world (data lane writes it; everyone else reads it via `lib/data.ts`)
+## 1. The synthetic world (data lane writes it; everyone else reads it via `src/lib/data.ts`)
 
 **Vendor**: `Halcyon Staffing Group` (vendor_id `V-HSG`). Fictional. Contract `C-HSG-2026`,
 effective 2026-01-01 → 2026-12-31, USD, net 30.
@@ -55,7 +55,7 @@ above 40 h — billable at 1.5×?). Password inputs are recorded as `[redacted]`
 All on the Next app at `BASE_URL` (default `http://localhost:3000`). Every page shows the global demo
 banner (layout) plus a fixture label, e.g. "Fixture vendor portal — synthetic data".
 
-Vendor timecard portal (`app/portal/**`, `app/api/portal/**`):
+Vendor timecard portal (`src/app/portal/**`, `src/app/api/portal/**`):
 - `GET /portal/login` — form with `input[name=username]`, `input[name=password]` (type password),
   button text `Sign in`. Shows demo creds on the page: username `ap.reviewer`, password `demo-only`.
   Form posts to `POST /api/portal/login` → sets cookie `portal_session` and 303-redirects to
@@ -73,29 +73,29 @@ Vendor timecard portal (`app/portal/**`, `app/api/portal/**`):
   `[data-field="status"]`, `[data-field="approved_by"]`. Human-readable label next to each.
   Unknown employee/week → a page saying "No timecard found" with `[data-field="approved_hours"]` absent.
 
-Bill inbox (`app/bills/**`, `app/api/bills/**`):
+Bill inbox (`src/app/bills/**`, `src/app/api/bills/**`):
 - `GET /bills` — bill list (bill id, vendor, amount, status badge, receipt attached?).
 - `GET /bills/<bill_id>` — bill detail; if a receipt is attached, shows its recommendation, human
   decision and a link to `/receipts/<invoice_id>`. A human-only `Attach receipt` button (when a
   receipt file exists and none is attached) calls `POST /api/bills/<bill_id>/attach` `{receipt_id}`.
-- State via `lib/store/bills.ts` (runtime/bills.json). The agent never calls these.
+- State via `src/lib/store/bills.ts` (runtime/bills.json). The agent never calls these.
 
 ## 3. Receipt UI + decision API (ui lane)
 - `GET /` — five-stage overview (RECORD → LEARN → VERIFY → RECEIPT → DECIDE+ATTACH) with links.
-- `GET /receipts` — list of receipts from `lib/store/receipts.ts`.
+- `GET /receipts` — list of receipts from `src/lib/store/receipts.ts`.
 - `GET /receipts/<invoice_id>` — the review page (docs/design.md). Every check shows its evidence
   pointer as a link: `fixture:/x` → `/x`; `data/…`, `rules/…`, `calc:<check>` → an evidence viewer page
   under `/receipts/<invoice_id>/evidence?p=<pointer>` that renders the file/JSON fragment read-only
   (only from `data/`, `rules/`, `runs/<invoice_id>/`).
 - `POST /api/decisions` JSON `{ invoice_id, decision: "approve"|"dispute", decided_by, note? }` →
-  appends `receipts/decisions.jsonl` (lib/store/decisions), sets the receipt's human fields
-  (lib/store/receipts), attaches the receipt to `bill_<invoice_id>` with status `approved`/`disputed`
-  (lib/store/bills `attachReceipt`). Returns `{ decision, receipt, bill }`. 400 on invalid input,
+  appends `receipts/decisions.jsonl` (src/lib/store/decisions), sets the receipt's human fields
+  (src/lib/store/receipts), attaches the receipt to `bill_<invoice_id>` with status `approved`/`disputed`
+  (src/lib/store/bills `attachReceipt`). Returns `{ decision, receipt, bill }`. 400 on invalid input,
   404 if no receipt.
 - `GET /api/receipts/<invoice_id>` — receipt JSON.
 
 ## 4. Module entry points
-- **calc** (`calc/index.ts`): `runCalc(input: { invoice: Invoice; vendor: VendorProfile;
+- **calc** (`src/calc/index.ts`): `runCalc(input: { invoice: Invoice; vendor: VendorProfile;
   timecards: Timecard[] | null; invoicePath: string }): CalcReport` — all six CHECK_NAMES in order.
   `timecards === null` ⇒ `hours_match_timecards` is `unverified`. Per-check functions exported too.
   `hours_match_timecards` compares EACH labor line's quantity to the approved hours for that
@@ -103,18 +103,18 @@ Bill inbox (`app/bills/**`, `app/api/bills/**`):
   employee has no timecard for that week fails. Evidence pointers in findings: `data/…` paths
   (e.g. `data/vendor.json#contract.rate_card.Senior Recruiter`, `<invoicePath>#line_items[2]`);
   for hours, `fixture:/portal/employees/<id>?week=<date>`. No LLM, no network, no fs writes.
-- **learn** (`learn/**`, `workflows/invoice-review/learn.ts`, `workflows/invoice-review/evals.ts`):
-  `workflows/invoice-review/learn.ts` exports `invoiceReviewLearn` =
+- **learn** (`src/learn/**`, `src/workflows/invoice-review/learn.ts`, `src/workflows/invoice-review/evals.ts`):
+  `src/workflows/invoice-review/learn.ts` exports `invoiceReviewLearn` =
   `{ recordingPath, specPath, distillHints, deterministicDistill }` (shape of `WorkflowDefinition.learn`).
-  `npm run learn` (learn/cli.ts) writes `rules/workflow_spec.json`, `rules/learn_meta.json` (LearnMeta),
-  `rules/evals.json`, and traces to `learn/trace.jsonl`. `npm run eval` (learn/run-evals.ts) runs every
+  `npm run learn` (src/learn/cli.ts) writes `rules/workflow_spec.json`, `rules/learn_meta.json` (LearnMeta),
+  `rules/evals.json`, and traces to `src/learn/trace.jsonl`. `npm run eval` (src/learn/run-evals.ts) runs every
   eval case through calc and exits non-zero on any failure (the eval harness may use data/timecards.json
   as the stand-in for portal evidence — documented).
-- **agent** (`agent/**`, `workflows/registry.ts`, `workflows/invoice-review/**` except learn/evals):
+- **agent** (`src/agent/**`, `src/workflows/registry.ts`, `src/workflows/invoice-review/**` except learn/evals):
   `npm run agent -- HSG-1011` (needs the Next app running at BASE_URL) writes `runs/HSG-1011/calc.json`,
   `runs/HSG-1011/evidence.json`, `runs/HSG-1011/screenshots/*.png`, `receipts/HSG-1011.json`, and appends
-  `agent/trace.jsonl`. It never attaches, approves, or decides. `workflows/invoice-review/index.ts`
+  `src/agent/trace.jsonl`. It never attaches, approves, or decides. `src/workflows/invoice-review/index.ts`
   sets `learn: invoiceReviewLearn` imported from `./learn`.
-- **Model calls**: only via `agent/providers/index.ts getProvider()` (null ⇒ labeled offline mode).
-  Cache every model output with `lib/cache.ts` (spending guardrail). Model `claude-opus-5-5`.
+- **Model calls**: only via `src/agent/providers/index.ts getProvider()` (null ⇒ labeled offline mode).
+  Cache every model output with `src/lib/cache.ts` (spending guardrail). Model `claude-opus-5-5`.
   Browser loop capped at `engineConfig.browser.maxTurns` (25).

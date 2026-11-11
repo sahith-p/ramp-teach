@@ -10,7 +10,7 @@ import { ROOT } from "@/lib/paths";
 
 export class LearnerMissingError extends Error {}
 
-const CANDIDATES = ["learn/skill/index.ts", "learn/skill/index.js"];
+const CANDIDATES = ["src/learn/skill/index.ts", "src/learn/skill/index.js"];
 
 export async function loadLearner(root: string = ROOT): Promise<LearnSkillFn> {
   const file = CANDIDATES.map((f) => path.join(root, f)).find((f) => fs.existsSync(f));

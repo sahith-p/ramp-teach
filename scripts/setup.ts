@@ -64,19 +64,22 @@ async function main() {
   } else add("ffmpeg", /libx264/.test(ff.stdout) ? "ok" : "warn", /libx264/.test(ff.stdout) ? "with libx264" : "found, but without libx264");
 
   // 5. Lausanne cache for the video renderers (optional; renderers fall back to assets.ramp.com)
+  // The video tooling is kept outside the repo; this step runs only where it is present.
   const lausanne = path.join(ROOT, "demo", "video", "assets", "fonts", "lausanne");
   const haveFonts = [300, 400, 700].every((w) => fs.existsSync(path.join(lausanne, `TWKLausanne-${w}.woff2`)));
-  if (haveFonts) add("lausanne font", "ok", "cached for the video renderers");
+  if (!fs.existsSync(path.join(ROOT, "demo", "video", "fetch-fonts.ts"))) {
+    // nothing to do without the video tooling
+  } else if (haveFonts) add("lausanne font", "ok", "cached for the video renderers");
   else {
     const r = run("npx", ["tsx", "demo/video/fetch-fonts.ts"], { NODE_USE_ENV_PROXY: "1", NODE_NO_WARNINGS: "1" });
     add("lausanne font", r.status === 0 ? "ok" : "warn", r.status === 0 ? "downloaded to the local cache" : "could not download; renderers will load it online");
   }
 
   // 6. Anthropic API key (presence, source, and a free check against the API)
-  const { resolveAnthropicKey, anthropicBaseUrl, engineConfig } = await import("../config/engine");
+  const { resolveAnthropicKey, anthropicBaseUrl, engineConfig } = await import("../src/config/engine");
   const cred = resolveAnthropicKey();
   if (!cred) {
-    add("api key", "warn", "not found: everything runs in labeled offline mode; the film script refuses to shoot");
+    add("api key", "warn", "not found: everything runs in labeled offline mode");
     manual.push(
       [
         "Give the project an Anthropic API key (never commit it or paste it into chat). Pick one:",
@@ -143,7 +146,7 @@ async function main() {
   console.log(`\n${bad ? `${bad} problem(s) found.` : "Setup done."} Real Claude calls: ${cred ? "available" : "NOT available (offline mode)"}.`);
   console.log("\nMANUAL STEPS FOR A HUMAN" + (manual.length ? ":" : ": none"));
   manual.forEach((m, i) => console.log(`${i + 1}. ${m}`));
-  console.log("\nNext: read docs/HANDOFF.md §3 to run the app, demo/video/PIPELINE.md to make the film.");
+  console.log("\nNext: read docs/HANDOFF.md §3 to run the app.");
   process.exit(bad ? 1 : 0);
 }
 
