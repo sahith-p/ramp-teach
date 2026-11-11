@@ -50,7 +50,7 @@ flowchart LR
   subgraph APP["Ramp Teach app, Next.js 16"]
     API["API routes<br/>/api/stt, /api/learn<br/>/api/dash/deliver, /api/decisions"]:::app
     LEARN["Learning job<br/>learn/skill"]:::app
-    SKILL["Learned workflow<br/>skills/halcyon-invoice-review/v1"]:::key
+    SKILL["Learned workflow<br/>skills/&lt;workflow&gt;/v&lt;n&gt;"]:::key
     ROUTER["Router<br/>agent/router.ts"]:::app
     HARNESS["Agent harness<br/>agent/providers/browser-loop.ts"]:::app
     CALC["Checks<br/>calc/, TypeScript"]:::app
@@ -59,7 +59,7 @@ flowchart LR
 
   subgraph SANDBOX["Agent sandbox"]
     CHROMIUM["Headless Chromium<br/>Playwright, fresh profile per run"]:::app
-    PORTAL["Vendor portal<br/>fixture"]:::app
+    PORTAL["Vendor portal"]:::app
   end
 
   subgraph EXTERNAL["External APIs"]
@@ -110,7 +110,7 @@ sequenceDiagram
   participant A as /api/stt
   participant E as ElevenLabs Scribe v2
 
-  P->>C: click "View timecard"
+  P->>C: click on a link or field
   C->>W: rt:capture {event, url, target}
   W->>W: buildStep(): selector, redaction, coalesce inputs<br/>session kept in chrome.storage.local
   S->>S: mic via MediaRecorder, live words
@@ -122,14 +122,14 @@ sequenceDiagram
   S->>S: Send to Ramp: POST /api/learn
 ```
 
-What one recorded moment looks like (from the film take):
+What a recorded moment looks like:
 
-| t | kind | detail |
-|---|---|---|
-| 0:12 | click | `a[href="/portal/employees/E-101?week=2026-10-11"]` "View timecard" |
-| 0:14 | click | `[data-field="approved_hours"]` "40" |
-| 0:14 | say | "Maya is approved for 40 hours. Billed hours can't go over that." linked to the click above |
-| 0:05 | type | `input[name="password"]` `[redacted]` |
+| kind | detail |
+|---|---|
+| click | `a[href="/portal/employees/<employee_id>?week=<date>"]` "View timecard" |
+| click | `[data-field="approved_hours"]` with the value shown on the page |
+| say | "Billed hours can't go over the approved hours." linked to the click above |
+| type | `input[name="password"]` `[redacted]` |
 
 - **Element identity:** `[data-field]`, then `tag[name]`, `#id`, `a[href]`, then a short CSS path.
 - **Privacy:** passwords are redacted in the page and again in the worker, before anything is sent.
@@ -160,11 +160,11 @@ flowchart LR
   G -->|fail| B["blocked"]:::code
 ```
 
-One worked example:
+How one rule is learned:
 
 | Recording | Claim (cited) | Learned rule | Where the proof lives |
 |---|---|---|---|
-| click `[data-field="approved_hours"]` "40" and "Billed hours can't go over that." | "Billed hours can't go over that" from sentence u5, step #16 | For each labor line, billed hours must not exceed the approved hours on that employee's timecard for the same week. | `/portal/employees/<employee_id>?week=<YYYY-MM-DD>`, field `approved_hours` |
+| a click on the timecard's approved-hours field, and the sentence "Billed hours can't go over that." | the quoted words, cited to the sentence and the click | Billed hours on each labor line must not exceed the approved hours on that employee's timecard for the same week. | the timecard page pattern and its `approved_hours` field |
 
 | Learned from the recording | Written by engineers |
 |---|---|
@@ -187,17 +187,17 @@ flowchart TB
   classDef person fill:#f4f2f0,color:#1a1919,stroke:#1a1919
 
   INV["New invoice in Bill Pay"]:::code --> JEV["Jev routes it<br/>Choice across workflows + fit"]:::claude
-  JEV -->|"Halcyon review v1"| LOOP
+  JEV -->|"matching workflow"| LOOP
   JEV -->|"no fit"| MANUAL["Manual review"]:::person
 
   subgraph LOOP["Agent harness"]
     direction LR
     M["Claude<br/>claude-opus-5-5"]:::claude -->|"tool call"| T["Playwright<br/>headless Chromium"]:::code
     T -->|"page outline, text, result"| M
-    M -->|"record_evidence"| F["Sourced fact<br/>approved_hours = 38<br/>/portal/employees/E-104?week=2026-10-18"]:::key
+    M -->|"record_evidence"| F["Sourced fact<br/>value + the page it came from"]:::key
   end
 
-  F --> CHK["calc/ checks<br/>hours: billed 44 h vs approved 38 h<br/>credit 6 h x $88 = $528"]:::code
+  F --> CHK["calc/ checks<br/>pass or fail per rule<br/>credit amounts"]:::code
   CHK --> RCPT["Claude writes the receipt"]:::claude
   RCPT --> ENF["enforce.ts<br/>results and amounts must match code"]:::code
   ENF --> YOU["You: Approve or Dispute"]:::person
@@ -209,17 +209,15 @@ flowchart TB
 - **Signs in from a vault:** the harness fills the portal login; the model never sees the password.
 - **Guardrails:** localhost portal only (checked in the toolset and the driver), no scripts, no uploads, 25-turn cap,
   task budget. The agent never approves, pays or attaches.
-- **HSG-1011 in the film take:** 8 model turns, 12 facts, 44.8 s end to end, 9 Claude calls, about $0.18. Three
-  problems: a rate above contract ($400), a week billed twice ($2,520), hours over the timecard ($528). Credit
-  $3,448. Dispute. The clean HSG-1012 passes all six checks and is approved.
+- **Output:** a receipt with each check, its source and the credit to request, recommending approve or dispute.
 
 ### How we know it's right
 
 | Layer | What it tests | How | Result |
 |---|---|---|---|
-| Checks | The six checks in `calc/` | Replay 7 past corrections and 10 past invoices (`npm run eval`) | 7/7, precision 10/10 |
+| Checks | The six checks in `calc/` | Replay past corrections and past invoices (`npm run eval`) | each correction caught, clean invoices pass |
 | Learning | Did it learn the right workflow? | 8 recording variants, graders, gate (`npm run eval:skill`) | gate decides the active version |
-| End to end | The whole review | Live runs of HSG-1011 and HSG-1012 against the expected outcome (`npm run demo`, the film take) | dispute and approve as expected |
+| End to end | The whole review | Live review runs against the expected outcome (`npm run demo`) | recommendation and decision flow as expected |
 
 ---
 
@@ -228,8 +226,8 @@ flowchart TB
 ```mermaid
 flowchart LR
   classDef f fill:#ffffff,color:#1a1919,stroke:#c9c6c2
-  RUN["run HSG-1011"]:::f --> ROUTE["route<br/>model, choice, fit"]:::f
-  RUN --> TURN["model turn x8<br/>tokens, cost, request ID, note"]:::f
+  RUN["agent run"]:::f --> ROUTE["route<br/>model, choice, fit"]:::f
+  RUN --> TURN["each model turn<br/>tokens, cost, request ID, note"]:::f
   TURN --> TOOL["tool calls<br/>input, result, page, screenshot"]:::f
   RUN --> CHECK["calc + evidence re-check"]:::f
   RUN --> SYN["receipt synthesis"]:::f
@@ -268,7 +266,7 @@ the app.
 | `npm run skill:learn -- --recording <file>` | Learn a workflow version from a recording |
 | `npm run eval:skill -- --yes` | Skill evals and the promotion gate (prints a cost estimate first) |
 | `npm run eval` | Replay past corrections through the checks |
-| `npm run agent -- HSG-1011` | Route and review one invoice (app must be running) |
+| `npm run agent -- <invoice_id>` | Route and review one invoice (app must be running) |
 | `npm run demo` | End-to-end check of one review, including the UI decision |
 | `npx tsx demo/video/film.ts --phase post` | Re-render the film's diagrams and captions from the saved take |
 
