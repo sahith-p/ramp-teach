@@ -4,6 +4,7 @@
  * These five shapes come straight from the project spec.
  */
 import { z } from "zod";
+import { RecordingAudioSchema, SpeechTranscriptSchema } from "./pillars";
 
 /* ---------------------------------- Invoice --------------------------------- */
 
@@ -94,6 +95,9 @@ export const RecordingSchema = z.object({
   started_at: z.string(),
   steps: z.array(RecordingStepSchema),
   transcript: z.array(z.string()),
+  /** Optional (pillars.ts, approved 2026-11-11): the saved audio and the word-timed transcript. */
+  audio: RecordingAudioSchema.optional(),
+  speech: SpeechTranscriptSchema.optional(),
 });
 export type Recording = z.infer<typeof RecordingSchema>;
 
