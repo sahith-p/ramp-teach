@@ -4,16 +4,31 @@
   "short_name": "Teach Recorder",
   "version": "0.1.0",
   "description": "Unofficial demo inspired by Ramp's design. Records a reviewer's clicks, inputs and narration on localhost fixture pages only. Synthetic data only; passwords are always redacted.",
-  "permissions": ["storage", "sidePanel", "activeTab", "scripting", "downloads", "tabs"],
-  "host_permissions": ["http://localhost/*", "http://127.0.0.1/*"],
+  "permissions": [
+    "storage",
+    "sidePanel",
+    "activeTab",
+    "scripting",
+    "downloads",
+    "tabs"
+  ],
+  "host_permissions": [
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ],
   "background": {
     "service_worker": "background.js",
     "type": "module"
   },
   "content_scripts": [
     {
-      "matches": ["http://localhost/*", "http://127.0.0.1/*"],
-      "js": ["content.js"],
+      "matches": [
+        "http://localhost/*",
+        "http://127.0.0.1/*"
+      ],
+      "js": [
+        "content.js"
+      ],
       "run_at": "document_idle",
       "all_frames": false
     }
@@ -22,6 +37,16 @@
     "default_path": "sidepanel.html"
   },
   "action": {
-    "default_title": "Ramp Teach Recorder (demo) — open side panel"
+    "default_title": "Ramp Teach Recorder",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   }
 }

@@ -21,6 +21,7 @@ import { execFileSync, spawn, type ChildProcess } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { chromium, type Page } from "playwright";
+import { DIAGRAMS, renderDiagram } from "./diagrams";
 
 const ROOT = process.cwd();
 const args = process.argv.slice(2);
@@ -385,7 +386,7 @@ function assemble() {
 /* =============================== outro =============================== */
 
 export const OUTRO_TAGLINE = "Show it once. Ramp Teach handles the rest.";
-const OUTRO_SECONDS = 5;
+const OUTRO_SECONDS = 4;
 
 /** Ramp-style outro: logo + divider + "Teach" in Lausanne, tagline, lemon sweep. Rendered frame by frame (deterministic). */
 async function outro() {
@@ -396,11 +397,11 @@ async function outro() {
   const html = `<!doctype html><html><head><meta charset="utf-8"><style>
     @font-face { font-family: Lausanne; font-weight: 300; src: url("https://assets.ramp.com/fonts/lausanne/lausanne-300/TWKLausanne-300.woff2") format("woff2"); }
     @font-face { font-family: Lausanne; font-weight: 400; src: url("https://assets.ramp.com/fonts/lausanne/lausanne-400/TWKLausanne-400.woff2") format("woff2"); }
-    html,body { margin:0; width:${W}px; height:${H}px; background: rgb(244,242,240); overflow:hidden; font-family: Lausanne, Inter, sans-serif; color: rgb(26,25,25); }
+    html,body { margin:0; width:${W}px; height:${H}px; background: #121211; overflow:hidden; font-family: Lausanne, Inter, sans-serif; color: #fff; }
     .stage { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:44px; }
     .lockup { display:flex; align-items:center; gap:34px; }
     .logo { height:92px; width:auto; opacity:0; transform: translateY(26px); animation: up .75s ${ease} .15s forwards; }
-    .div { width:2px; height:96px; background: rgb(210,206,203); transform: scaleY(0); transform-origin: top; animation: grow .5s ${ease} .55s forwards; }
+    .div { width:2px; height:96px; background: rgb(80,77,74); transform: scaleY(0); transform-origin: top; animation: grow .5s ${ease} .55s forwards; }
     .teach { font-size:96px; font-weight:400; letter-spacing:-.02em; line-height:1; opacity:0; transform: translateX(-18px); animation: slide .65s ${ease} .7s forwards; }
     .tag { position:relative; font-size:38px; font-weight:300; color: rgb(71,69,67); opacity:0; transform: translateY(14px); animation: up .6s ${ease} 1.35s forwards; }
     .bar { position:absolute; left:0; right:0; bottom:-14px; height:6px; background: rgb(228,242,34); transform: scaleX(0); transform-origin:left; animation: sweep .7s ${ease} 1.65s forwards; }
@@ -413,7 +414,6 @@ async function outro() {
       <svg class="logo" viewBox="0 0 227 61" fill="currentColor" aria-label="Ramp"><path d="${WORD}"/><path d="${MARK}"/></svg>
       <span class="div"></span><span class="teach">Teach</span>
     </div>
-    <div class="tag">${OUTRO_TAGLINE}<span class="bar"></span></div>
   </div></body></html>`;
   const dir = path.join(WORK, "outro");
   fs.rmSync(dir, { recursive: true, force: true });
@@ -432,6 +432,17 @@ async function outro() {
   await browser.close();
   execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-framerate", "30", "-i", path.join(dir, "f%04d.png"), "-c:v", "libx264", "-preset", "medium", "-crf", "14", "-pix_fmt", "yuv420p", path.join(WORK, "outro.mp4")]);
   console.log(`outro: ${frames} frames, Lausanne loaded: ${fontOk}`);
+}
+
+/* ============================== diagrams ============================== */
+
+async function diagrams() {
+  const src = fs.readFileSync(path.join(ROOT, "components", "dash", "RampLogo.tsx"), "utf8");
+  const logos = { word: /const WORD = "([^"]+)"/.exec(src)![1], mark: /const MARK = "([^"]+)"/.exec(src)![1] };
+  for (const d of DIAGRAMS) {
+    await renderDiagram(d, path.join(WORK, `diag-${d.id}.mp4`), WORK, logos);
+    console.log(`diagram ${d.id}: ${d.duration}s`);
+  }
 }
 
 /* ============================== captions ============================== */
@@ -504,16 +515,53 @@ async function captions() {
     graph += `[${last}][c${i}]overlay=0:0:eof_action=pass[v${i}];`;
     last = `v${i}`;
   });
-  // Cut just before the take's own end fade, then crossfade (0.6 s) into the Ramp-style outro.
-  const cut = out(marks.end - 2.9);
-  const XF = 0.6;
-  const outroIdx = lines.length + 1;
-  inputs.push("-i", path.join(WORK, "outro.mp4"));
-  graph += `[${last}]trim=0:${cut.toFixed(3)},setpts=PTS-STARTPTS,fps=30,format=yuv420p,settb=AVTB[main];`;
-  graph += `[${outroIdx}:v]fps=30,format=yuv420p,settb=AVTB[out1];`;
-  graph += `[main][out1]xfade=transition=fade:duration=${XF}:offset=${(cut - XF).toFixed(3)}[final]`;
-  execFileSync("ffmpeg", ["-y", "-loglevel", "error", ...inputs, "-filter_complex", graph, "-map", "[final]", "-c:v", "libx264", "-preset", "slow", "-crf", "24", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-an", OUT]);
+  // Captioned main (high quality); compose() cuts it and crossfades in the diagrams and the outro.
+  const captioned = path.join(WORK, "captioned.mp4");
+  graph = graph.replace(/;$/, "");
+  execFileSync("ffmpeg", ["-y", "-loglevel", "error", ...inputs, "-filter_complex", graph, "-map", `[${last}]`, "-c:v", "libx264", "-preset", "medium", "-crf", "14", "-pix_fmt", "yuv420p", "-an", captioned]);
 
+  // ---- compose: main | record diagram | main | check diagram | main | system diagram | outro ----
+  const XF = 0.5;
+  const cuts = [out(marks.record_end + 0.1), out(marks.learn_done + 5.9), out(marks.end - 2.9)];
+  const dur = (f: string) => Number(probe(f));
+  const diag = DIAGRAMS.map((d) => ({ d, file: path.join(WORK, `diag-${d.id}.mp4`), len: dur(path.join(WORK, `diag-${d.id}.mp4`)) }));
+  const outroFile = path.join(WORK, "outro.mp4");
+  const segs: { kind: "main" | "diag" | "outro"; file?: string; a?: number; b?: number; len: number; diagIdx?: number }[] = [
+    { kind: "main", a: 0, b: cuts[0], len: cuts[0] },
+    { kind: "diag", diagIdx: 0, len: diag[0].len },
+    { kind: "main", a: cuts[0], b: cuts[1], len: cuts[1] - cuts[0] },
+    { kind: "diag", diagIdx: 1, len: diag[1].len },
+    { kind: "main", a: cuts[1], b: cuts[2], len: cuts[2] - cuts[1] },
+    { kind: "diag", diagIdx: 2, len: diag[2].len },
+    { kind: "outro", len: dur(outroFile) },
+  ];
+  const starts: number[] = [];
+  segs.forEach((g, i) => starts.push(i === 0 ? 0 : starts[i - 1] + segs[i - 1].len - XF));
+  const cin = ["-i", captioned, ...diag.flatMap((x) => ["-i", x.file]), "-i", outroFile];
+  let cg = `[0:v]split=3[m0][m1][m2];`;
+  let mi = 0;
+  segs.forEach((g, i) => {
+    const norm = "fps=30,format=yuv420p,settb=AVTB,setpts=PTS-STARTPTS";
+    if (g.kind === "main") cg += `[m${mi++}]trim=${g.a!.toFixed(3)}:${g.b!.toFixed(3)},${norm}[g${i}];`;
+    else if (g.kind === "diag") cg += `[${g.diagIdx! + 1}:v]${norm}[g${i}];`;
+    else cg += `[${diag.length + 1}:v]${norm}[g${i}];`;
+  });
+  let acc = "g0";
+  let accLen = segs[0].len;
+  for (let i = 1; i < segs.length; i++) {
+    const outLabel = i === segs.length - 1 ? "final" : `x${i}`;
+    cg += `[${acc}][g${i}]xfade=transition=fade:duration=${XF}:offset=${(accLen - XF).toFixed(3)}[${outLabel}];`;
+    acc = outLabel;
+    accLen += segs[i].len - XF;
+  }
+  cg = cg.replace(/;$/, "");
+  execFileSync("ffmpeg", ["-y", "-loglevel", "error", ...cin, "-filter_complex", cg, "-map", "[final]", "-c:v", "libx264", "-preset", "slow", "-crf", "24", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-an", OUT]);
+  // main-output time -> final time
+  const fin = (t: number) => {
+    const k = t < cuts[0] ? 0 : t < cuts[1] ? 2 : t < cuts[2] ? 4 : -1;
+    if (k < 0) return starts[6];
+    return starts[k] + (t - segs[k].a!);
+  };
   // Voice-over script (.srt): the captions plus the narration lines said during recording (times from the recording).
   const rec = readJson<{ steps: { ts: string; kind: string; detail: { text?: string } }[] }>(path.join(WORK, "film-recording.json"));
   const said = rec.steps
@@ -522,8 +570,8 @@ async function captions() {
       const ft = (Date.parse(s.ts) - Date.parse(t0)) / 1000;
       return { from: out(ft), to: out(ft) + 2.8, text: s.detail.text ?? "" };
     });
-  const outroStart = cut - XF + 1.35;
-  const all = [...lines, ...said, { from: outroStart, to: outroStart + 3.4, text: OUTRO_TAGLINE }].sort((x, y) => x.from - y.from);
+  const diagLines = diag.flatMap((x, i) => x.d.captions.map((c) => ({ from: starts[1 + i * 2] + c.t0, to: starts[1 + i * 2] + c.t1, text: c.text })));
+  const all = [...[...lines, ...said].map((l) => ({ from: fin(l.from), to: fin(l.to), text: l.text })), ...diagLines].sort((x, y) => x.from - y.from);
   all.forEach((l, i) => {
     if (all[i + 1]) l.to = Math.min(l.to, all[i + 1].from - 0.1);
   });
@@ -571,8 +619,9 @@ function restore() {
 (async () => {
   if (PHASE === "all" || PHASE === "shoot") await shoot();
   if (PHASE === "all" || PHASE === "assemble") assemble();
-  if (PHASE === "all" || PHASE === "assemble" || PHASE === "captions" || PHASE === "outro") {
+  if (["all", "assemble", "captions", "outro", "diagrams"].includes(PHASE)) {
     if (PHASE !== "captions" || !fs.existsSync(path.join(WORK, "outro.mp4"))) await outro();
+    if (PHASE === "diagrams" || PHASE === "all" || DIAGRAMS.some((d) => !fs.existsSync(path.join(WORK, `diag-${d.id}.mp4`)))) await diagrams();
     await captions();
   }
   if (PHASE === "all" || PHASE === "restore") restore();

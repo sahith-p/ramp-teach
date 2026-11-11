@@ -1,0 +1,266 @@
+{
+  "session_id": "rec_20261111T012236Z_i83o",
+  "started_at": "2026-11-11T01:22:36.422Z",
+  "steps": [
+    {
+      "ts": "2026-11-11T01:22:36.435Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in · Halcyon Staffing client portal"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:38.847Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in · Halcyon Staffing client portal",
+        "text": "I'm checking this month's invoice from Halcyon Staffing."
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:39.875Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in · Halcyon Staffing client portal",
+        "selector": "input[name=\"username\"]"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:40.755Z",
+      "kind": "dom",
+      "detail": {
+        "event": "input",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in · Halcyon Staffing client portal",
+        "selector": "input[name=\"username\"]",
+        "value": "ap.reviewer"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:41.405Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in · Halcyon Staffing client portal",
+        "selector": "input[name=\"password\"]"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:41.982Z",
+      "kind": "dom",
+      "detail": {
+        "event": "input",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in · Halcyon Staffing client portal",
+        "selector": "input[name=\"password\"]",
+        "value": "[redacted]"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:42.830Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in · Halcyon Staffing client portal",
+        "selector": "main > div > form > button",
+        "text": "Sign in"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:42.832Z",
+      "kind": "dom",
+      "detail": {
+        "event": "submit",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in · Halcyon Staffing client portal",
+        "selector": "div:nth-of-type(2) > main > div > form"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:43.054Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices · Halcyon Staffing client portal"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:43.545Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices · Halcyon Staffing client portal",
+        "text": "Every rate on it has to match our contract."
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:45.625Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices · Halcyon Staffing client portal",
+        "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+        "text": "HSG-1010"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:46.105Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice · Halcyon Staffing client portal"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:46.215Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice · Halcyon Staffing client portal",
+        "text": "And nobody should be billed twice for the same week."
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:48.988Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice · Halcyon Staffing client portal",
+        "text": "Then I check each person's hours against their timecard."
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:49.579Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice · Halcyon Staffing client portal",
+        "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:50.106Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+        "title": "Timecards · Halcyon Staffing client portal"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:50.987Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+        "title": "Timecards · Halcyon Staffing client portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "40"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:50.994Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+        "title": "Timecards · Halcyon Staffing client portal",
+        "text": "Maya is approved for 40 hours. Billed hours can't go over that."
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:54.514Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice · Halcyon Staffing client portal"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:56.056Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice · Halcyon Staffing client portal",
+        "selector": "a[href=\"/portal/employees/E-104?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:56.508Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+        "title": "Timecards · Halcyon Staffing client portal"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:57.483Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+        "title": "Timecards · Halcyon Staffing client portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "36"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:22:57.488Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+        "title": "Timecards · Halcyon Staffing client portal",
+        "text": "Sam is approved for 36."
+      }
+    },
+    {
+      "ts": "2026-11-11T01:23:00.432Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice · Halcyon Staffing client portal"
+      }
+    },
+    {
+      "ts": "2026-11-11T01:23:00.699Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice · Halcyon Staffing client portal",
+        "text": "If anything is off, I dispute it and ask for a credit."
+      }
+    }
+  ],
+  "transcript": [
+    "I'm checking this month's invoice from Halcyon Staffing.",
+    "Every rate on it has to match our contract.",
+    "And nobody should be billed twice for the same week.",
+    "Then I check each person's hours against their timecard.",
+    "Maya is approved for 40 hours. Billed hours can't go over that.",
+    "Sam is approved for 36.",
+    "If anything is off, I dispute it and ask for a credit."
+  ]
+}
