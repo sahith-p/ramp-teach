@@ -47,12 +47,13 @@
   iframe { border:0; height:100%; background:#fff; }
   #app { flex:1; }
   /* Chrome side panel: inset rounded card on the frame color, with Chrome's header */
-  #panel { width:0; overflow:hidden; background:#dfe3e8; transition: width .55s cubic-bezier(.2,.8,.2,1); }
-  #panel.open { width:384px; }
-  #panel .card { margin:0 8px 8px 6px; height:calc(100% - 8px); background:#fff; border-radius:12px; overflow:hidden; display:flex; flex-direction:column; width:370px; }
-  #panel .phead { height:40px; display:flex; align-items:center; gap:6px; padding:0 6px 0 12px; border-bottom:1px solid #e6e9ed; font: 500 13px/1 -apple-system, "SF Pro Text", Inter, sans-serif; color:#1f1f1f; }
+  #panel { width:0; overflow:hidden; background:#fff; transition: width .55s cubic-bezier(.2,.8,.2,1); }
+  #panel.open { width:388px; }
+  #panel .card { margin:8px 8px 8px 6px; height:calc(100% - 16px); width:374px; background:#fff; border-radius:12px; overflow:hidden;
+    display:flex; flex-direction:column; box-shadow: 0 0 0 1px #e3e6ea, 0 1px 3px rgba(60,64,67,.12); }
+  #panel .phead { height:40px; flex:none; display:flex; align-items:center; gap:6px; padding:0 6px 0 12px; border-bottom:1px solid #e9ecef; font: 500 13px/1 -apple-system, "SF Pro Text", Inter, sans-serif; color:#1f1f1f; }
   #panel .phead .sp { flex:1; display:flex; align-items:center; gap:6px; }
-  #panelframe { width:370px; flex:1; }
+  #panelframe { width:100%; flex:1; }
   #agentwin { opacity:0; transform: scale(.96); pointer-events:none; }
   #agentwin.on { opacity:1; transform:none; }
 

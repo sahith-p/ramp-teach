@@ -1,0 +1,40 @@
+{
+  "vendor": "Halcyon Staffing",
+  "proof_sources": [
+    {
+      "app": "Halcyon Staffing client portal",
+      "location": "/portal/invoices/<invoice_id>",
+      "fields": [
+        "line description",
+        "quantity",
+        "unit_rate",
+        "amount",
+        "total"
+      ]
+    },
+    {
+      "app": "Halcyon Staffing client portal",
+      "location": "/portal/employees/<employee_id>?week=<YYYY-MM-DD>",
+      "fields": [
+        "approved_hours"
+      ]
+    },
+    {
+      "app": "Vendor contract",
+      "location": "data/vendor.json#contract",
+      "fields": [
+        "rate card"
+      ]
+    }
+  ],
+  "rules": [
+    "Every labor line's hourly rate must equal the contract rate card rate for that line's role.",
+    "No employee may be billed more than once for the same week ending date.",
+    "Billed hours on each labor line must not exceed the approved_hours on that employee's timecard for the same week.",
+    "If any check fails, dispute the invoice and request a credit."
+  ],
+  "open_questions": [
+    "The demonstrator did not state the contract rates per role; what are the rate card values?",
+    "The demonstrator did not say which non-labor charges are allowed or their caps; what does the contract allow?"
+  ]
+}

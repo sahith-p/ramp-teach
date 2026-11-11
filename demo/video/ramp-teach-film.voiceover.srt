@@ -1,95 +1,95 @@
 1
-00:00:00,400 --> 00:00:07,163
+00:00:00,400 --> 00:00:07,087
 I'm about to record myself checking an invoice from our staffing vendor, so Ramp can learn how I review it.
 
 2
-00:00:07,666 --> 00:00:10,466
+00:00:07,604 --> 00:00:10,404
 I'm checking this month's invoice from Halcyon Staffing.
 
 3
-00:00:12,459 --> 00:00:15,110
+00:00:12,302 --> 00:00:14,872
 Every rate on it has to match our contract.
 
 4
-00:00:15,210 --> 00:00:17,999
+00:00:14,972 --> 00:00:17,645
 And nobody should be billed twice for the same week.
 
 5
-00:00:18,099 --> 00:00:20,132
+00:00:17,745 --> 00:00:19,651
 Then I check each person's hours against their timecard.
 
 6
-00:00:20,232 --> 00:00:23,032
+00:00:19,751 --> 00:00:22,551
 Maya is approved for 40 hours. Billed hours can't go over that.
 
 7
-00:00:26,782 --> 00:00:29,582
+00:00:26,245 --> 00:00:29,045
 Sam is approved for 36.
 
 8
-00:00:29,976 --> 00:00:32,776
+00:00:29,456 --> 00:00:32,256
 If anything is off, I dispute it and ask for a credit.
 
 9
-00:00:37,246 --> 00:00:40,646
+00:00:36,600 --> 00:00:40,000
 When I'm done, I send the recording straight to Ramp.
 
 10
-00:00:40,846 --> 00:00:44,442
+00:00:40,200 --> 00:00:43,660
 I sign in, and Ramp Teach starts learning from what I just did.
 
 11
-00:00:44,842 --> 00:00:52,458
+00:00:44,060 --> 00:00:51,159
 A few seconds later it has the rules, written from my clicks and what I said.
 
 12
-00:00:52,858 --> 00:00:57,907
+00:00:51,559 --> 00:00:56,644
 Now a new invoice from the same vendor lands in Bill Pay.
 
 13
-00:00:58,307 --> 00:01:00,475
+00:00:57,044 --> 00:00:59,103
 The agent picks it up on its own.
 
 14
-00:01:00,875 --> 00:01:12,275
+00:00:59,503 --> 00:01:10,903
 It opens the vendor portal and checks each timecard, the same way I did.
 
 15
-00:01:12,475 --> 00:01:24,275
+00:01:11,103 --> 00:01:22,903
 Every step it takes shows up on the bill as it happens.
 
 16
-00:01:24,475 --> 00:01:36,603
+00:01:23,103 --> 00:01:28,576
 It checks billed hours, rates and duplicate lines against the contract.
 
 17
-00:01:36,903 --> 00:01:44,059
+00:01:28,876 --> 00:01:38,988
 Then it writes up what it found.
 
 18
-00:01:44,359 --> 00:01:49,759
+00:01:39,288 --> 00:01:44,688
 Three problems: a rate above contract, a line billed twice, and hours over the timecard. $3,448 to credit back.
 
 19
-00:01:49,959 --> 00:01:54,008
+00:01:44,888 --> 00:01:48,854
 So I dispute it. The agent never approves or pays anything on its own.
 
 20
-00:01:54,408 --> 00:02:01,599
+00:01:49,254 --> 00:01:56,472
 Next, a clean invoice from the same vendor.
 
 21
-00:02:01,799 --> 00:02:07,669
+00:01:56,672 --> 00:02:03,340
 Same review, sped up.
 
 22
-00:02:07,789 --> 00:02:10,589
+00:02:03,460 --> 00:02:06,260
 Everything checks out, so it's ready to approve.
 
 23
-00:02:10,789 --> 00:02:17,701
+00:02:06,460 --> 00:02:13,329
 One click from me, and it moves on to payment.
 
 24
-00:02:18,101 --> 00:02:21,567
+00:02:13,729 --> 00:02:17,100
 Show it once. Ramp Teach handles the rest.
