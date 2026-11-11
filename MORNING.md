@@ -23,11 +23,12 @@ Every ticket is DONE (`board/tickets.md`). Nothing is BLOCKED. **Outstanding:** 
 
 ## Demo videos
 
-- **Product film for voice-over: `demo/video/ramp-teach-film.mp4`** (142 s, 1080p, 5.7 MB):
+- **Product film for voice-over: `demo/video/ramp-teach-film.mp4`** (192 s, 1080p, 8.1 MB):
   - Recording with the real Recorder extension, with subtitles.
   - **Send to Ramp**, then Ramp Teach inside the Ramp-style dashboard learns the rules (a live Claude call).
   - An invoice arrives and the agent reviews it live, with its own browser in a second window: "Needs a second look", then Dispute.
   - A clean invoice arrives: "Looks good", then Approve.
+  - Four technical diagrams (recorder, agent, review, trace with every Claude request ID) and a dark Ramp-style outro.
   - Cursor, narration and the clicks are scripted. Details and live-vs-staged table: `demo/video/README.md`.
 - Earlier walkthrough with honesty captions: `demo/video/ramp-teach-walkthrough.mp4`.
 

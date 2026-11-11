@@ -5,53 +5,54 @@
     {
       "name": "line_amounts_correct",
       "expected": "Each line amount = quantity × unit rate (Lines 1-5)",
-      "actual": "Line 1 $3,800.00, Line 2 $2,356.00, Line 3 $2,800.00, Line 4 $3,168.00, Line 5 $250.00; all match",
+      "actual": "All 5 lines match, e.g. Line 1: 40 h × 95.00/h = $3,800.00",
       "result": "pass",
       "evidence": "calc:line_amounts_correct"
     },
     {
       "name": "total_matches_line_items",
-      "expected": "Invoice total = sum of Lines 1-5 ($12,374.00)",
+      "expected": "Total = sum of Lines 1-5 = $12,374.00",
       "actual": "Invoice total $12,374.00",
       "result": "pass",
       "evidence": "calc:total_matches_line_items"
     },
     {
       "name": "rate_matches_contract",
-      "expected": "Contract rates: Senior Recruiter 95.00/h, Recruiting Coordinator 62.00/h, Sourcer 70.00/h, Data Analyst 88.00/h",
-      "actual": "Line 1 95.00/h, Line 2 62.00/h, Line 3 70.00/h, Line 4 88.00/h",
+      "expected": "Rate card: 95.00/h, 62.00/h, 70.00/h, 88.00/h (Lines 1-4)",
+      "actual": "Billed 95.00/h, 62.00/h, 70.00/h, 88.00/h (Lines 1-4)",
       "result": "pass",
       "evidence": "calc:rate_matches_contract"
     },
     {
       "name": "no_duplicate_lines",
-      "expected": "Each employee billed once for week ending 2026-10-25",
-      "actual": "Lines 1-4 bill 4 distinct employees (Chen, Alvarez, Natarajan, Okafor)",
+      "expected": "One labor line per employee-week (Lines 1-4)",
+      "actual": "4 distinct employees, week ending 2026-10-25",
       "result": "pass",
       "evidence": "calc:no_duplicate_lines"
     },
     {
       "name": "no_unknown_charges",
-      "expected": "Non-labor charges allowed by contract; Job board posting cap $400.00",
-      "actual": "Line 5 Job board posting $250.00",
+      "expected": "Job board posting allowed, cap $400.00 (Line 5)",
+      "actual": "Job board posting $250.00 (Line 5)",
       "result": "pass",
       "evidence": "calc:no_unknown_charges"
     },
     {
       "name": "hours_match_timecards",
-      "expected": "Approved hours: E-101 40 h, E-102 38 h, E-103 40 h, E-104 36 h",
-      "actual": "Line 1 40 h, Line 2 38 h, Line 3 40 h, Line 4 36 h",
+      "expected": "Approved hours: 40 h, 38 h, 40 h, 36 h (Lines 1-4)",
+      "actual": "Billed hours: 40 h, 38 h, 40 h, 36 h (Lines 1-4)",
       "result": "pass",
       "evidence": "calc:hours_match_timecards"
     }
   ],
   "recommendation": "approve",
   "reasons": [
-    "All six checks pass: rates, hours, totals and the $250.00 job board charge match the contract and approved timecards.",
-    "No credit memo needed; invoice HSG-1012 for $12,374.00 is ready for human approval."
+    "All six checks pass: rates, hours, line math, total, duplicates and non-labor charges match the contract and approved timecards.",
+    "Billed hours for all four employees match approved timecards for week ending 2026-10-25.",
+    "No credit memo is needed; invoice total $12,374.00 is supported."
   ],
   "mode": "real",
   "human_decision": "approve",
   "decided_by": "alex@northwind.test",
-  "decided_at": "2026-11-11T01:25:06.918Z"
+  "decided_at": "2026-11-11T03:25:50.788Z"
 }

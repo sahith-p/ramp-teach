@@ -5,6 +5,7 @@
  */
 import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
+import { parseBetaMessage } from "@anthropic-ai/sdk/lib/beta-parser";
 import type {
   AIProvider,
   BrowserTaskRequest,
@@ -35,17 +36,25 @@ export class AnthropicProvider implements AIProvider {
   }
 
   async generateStructured<T>(req: StructuredRequest<T>): Promise<StructuredResult<T>> {
-    const res = await this.client.beta.messages.parse({
+    const betas = ["server-side-fallback-2026-07-01"];
+    const params = {
       model: this.model,
       max_tokens: req.maxTokens ?? 16000,
       thinking: { type: "adaptive" },
       output_config: { effort: engineConfig.effort, format: betaZodOutputFormat(req.schema as never) },
       // Refusal fallback opt-in: on a safety decline the API retries on a recommended model.
-      betas: ["server-side-fallback-2026-07-01"],
+      betas,
       fallbacks: "default",
       system: req.system,
       messages: [{ role: "user", content: req.prompt }],
-    } as never);
+    } as never;
+    // Same request as `beta.messages.parse()`, but via `create().withResponse()`: parse() returns a rebuilt
+    // object that drops the SDK's non-enumerable `_request_id`, so structured calls were logged without one.
+    const { data, request_id } = await this.client.beta.messages
+      .create(params, { headers: { "anthropic-beta": [...betas, "structured-outputs-2025-12-15"].toString() } })
+      .withResponse();
+    const parsed = parseBetaMessage(data as never, params, { logger: console });
+    const res = Object.assign(parsed, { _request_id: request_id ?? null });
     const msg = res as unknown as {
       stop_reason: string;
       stop_details?: { category?: string | null; explanation?: string | null } | null;

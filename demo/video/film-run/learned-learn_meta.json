@@ -1,10 +1,10 @@
 {
   "mode": "real",
   "model": "claude-opus-5-5",
-  "recording_path": "runtime/recordings/rec_20261111T012236Z_i83o.json",
-  "generated_at": "2026-11-11T01:23:18.322Z",
+  "recording_path": "runtime/recordings/rec_20261111T032319Z_ixfg.json",
+  "generated_at": "2026-11-11T03:23:59.808Z",
   "provenance": {
-    "session_id": "rec_20261111T012236Z_i83o",
+    "session_id": "rec_20261111T032319Z_ixfg",
     "capture": "mv3_extension",
     "operator": "scripted_playwright",
     "role": "primary",
