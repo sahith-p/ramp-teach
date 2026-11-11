@@ -375,10 +375,102 @@ function assemble() {
   ].join(";");
   const a = waits[0]?.[0] ?? 0;
   const b = waits[0]?.[1] ?? 0;
-  execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-i", film, "-i", path.join(agentDir, agentWebm), "-filter_complex", graph, "-map", "[out]", "-c:v", "libx264", "-preset", "slow", "-crf", "24", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-an", OUT]);
-  const d = Number(probe(OUT));
+  const mid = path.join(WORK, "assembled.mp4"); // high quality; the captions phase makes the final file
+  execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-i", film, "-i", path.join(agentDir, agentWebm), "-filter_complex", graph, "-map", "[out]", "-c:v", "libx264", "-preset", "medium", "-crf", "14", "-pix_fmt", "yuv420p", "-an", mid]);
+  const d = Number(probe(mid));
   console.log(`wrote ${path.relative(ROOT, OUT)}: ${(fs.statSync(OUT).size / 1e6).toFixed(2)} MB, ${d.toFixed(1)} s (agent overlay ${on.toFixed(1)}-${off.toFixed(1)} s, offset ${offset.toFixed(2)} s; wait ${a.toFixed(1)}-${b.toFixed(1)} s at ${SPEED}x)`);
-  writeJson(path.join(WORK, "assemble.json"), { offset, on, off, a, b, SPEED, start, rect, out_duration: d });
+  writeJson(path.join(WORK, "assemble.json"), { offset, on, off, a, b, SPEED, start, rect, out_duration: d, waits });
+}
+
+/* ============================== captions ============================== */
+
+/**
+ * Voice-over captions for the whole film (the narration lines during recording are already in the take, said by
+ * the stage). Times are relative to the take's marks; the speed-up is mapped out. Same look as the stage subtitles.
+ */
+function voiceover(m: Record<string, number>): [number, number, string][] {
+  return [
+    [m.start + 0.3, m.record_start + 0.2, "I'm about to record myself checking an invoice from our staffing vendor, so Ramp can learn how I review it."],
+    [m.record_end + 0.2, m.record_end + 3.6, "When I'm done, I send the recording straight to Ramp."],
+    [m.record_end + 3.8, m.learn_start + 0.2, "I sign in, and Ramp Teach starts learning from what I just did."],
+    [m.learn_start + 0.6, m.learn_done + 5.6, "A few seconds later it has the rules, written from my clicks and what I said."],
+    [m.learn_done + 6.0, m.deliver_1011 + 1.6, "Now a new invoice from the same vendor lands in Bill Pay."],
+    [m.deliver_1011 + 2.0, m.agent_on + 0.2, "The agent picks it up on its own."],
+    [m.agent_on + 0.6, m.agent_on + 12, "It opens the vendor portal and checks each timecard, the same way I did."],
+    [m.agent_on + 12.2, m.agent_on + 24, "Every step it takes shows up on the bill as it happens."],
+    [m.agent_on + 24.2, m.agent_off, "It checks billed hours, rates and duplicate lines against the contract."],
+    [m.agent_off + 0.3, m.result_1011 + 0.2, "Then it writes up what it found."],
+    [m.result_1011 + 0.5, m.result_1011 + 5.9, "Three problems: a rate above contract, a line billed twice, and hours over the timecard. $3,448 to credit back."],
+    [m.result_1011 + 6.1, m.deliver_1012 - 0.2, "So I dispute it. The agent never approves or pays anything on its own."],
+    [m.deliver_1012 + 0.2, m.fast_start + 0.3, "Next, a clean invoice from the same vendor."],
+    [m.fast_start + 0.5, m.fast_end - 0.4, "Same review, sped up."],
+    [m.fast_end - 0.2, m.fast_end + 2.6, "Everything checks out, so it's ready to approve."],
+    [m.fast_end + 2.8, m.end - 4.0, "One click from me, and it moves on to payment."],
+    [m.end - 3.6, m.end, "Show it once. Ramp Teach handles the rest."],
+  ];
+}
+
+const srtTime = (t: number) => {
+  const ms = Math.max(0, Math.round(t * 1000));
+  const h = Math.floor(ms / 3600000), mi = Math.floor((ms % 3600000) / 60000), se = Math.floor((ms % 60000) / 1000);
+  return `${String(h).padStart(2, "0")}:${String(mi).padStart(2, "0")}:${String(se).padStart(2, "0")},${String(ms % 1000).padStart(3, "0")}`;
+};
+
+async function captions() {
+  const { t0, marks } = readJson<{ t0: string; marks: Record<string, number> }>(path.join(WORK, "marks.json"));
+  const asm = readJson<{ start: number; out_duration: number; waits: [number, number][]; SPEED: number }>(path.join(WORK, "assemble.json"));
+  // film time -> output time (drop pre-roll, compress the sped-up waits)
+  const out = (t: number) => {
+    let o = t - asm.start;
+    for (const [x, y] of asm.waits) if (t > x) o -= (Math.min(t, y) - x) * (1 - 1 / asm.SPEED);
+    return Math.max(0, Math.min(asm.out_duration, o));
+  };
+  const lines = voiceover(marks).map(([a, b, text]) => ({ from: out(a), to: out(b), text }));
+
+  // Render each caption as a transparent full-frame PNG in the stage's subtitle style.
+  const dir = path.join(WORK, "captions");
+  fs.rmSync(dir, { recursive: true, force: true });
+  fs.mkdirSync(dir, { recursive: true });
+  const browser = await chromium.launch();
+  const page = await browser.newPage({ viewport: { width: W, height: H } });
+  for (const [i, l] of lines.entries()) {
+    await page.setContent(
+      `<!doctype html><html><body style="margin:0;background:transparent;width:${W}px;height:${H}px;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased">` +
+        `<div style="position:absolute;left:50%;bottom:46px;transform:translateX(-50%);max-width:1300px;width:max-content;background:rgba(18,18,18,.84);color:#fff;font-size:30px;line-height:1.35;font-weight:500;text-align:center;padding:14px 28px;border-radius:14px">${l.text.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</div></body></html>`,
+    );
+    await page.screenshot({ path: path.join(dir, `c${i}.png`), omitBackground: true });
+  }
+  await browser.close();
+
+  // Overlay with soft fades (0.3 s), like the stage subtitles.
+  const inputs = ["-i", path.join(WORK, "assembled.mp4")];
+  let graph = "";
+  let last = "0:v";
+  lines.forEach((l, i) => {
+    const d = Math.max(0.6, l.to - l.from);
+    inputs.push("-loop", "1", "-t", d.toFixed(2), "-i", path.join(dir, `c${i}.png`));
+    graph += `[${i + 1}:v]format=rgba,fade=in:st=0:d=0.3:alpha=1,fade=out:st=${(d - 0.3).toFixed(2)}:d=0.3:alpha=1,setpts=PTS-STARTPTS+${l.from.toFixed(3)}/TB[c${i}];`;
+    graph += `[${last}][c${i}]overlay=0:0:eof_action=pass[v${i}];`;
+    last = `v${i}`;
+  });
+  graph = graph.replace(/;$/, "");
+  execFileSync("ffmpeg", ["-y", "-loglevel", "error", ...inputs, "-filter_complex", graph, "-map", `[${last}]`, "-c:v", "libx264", "-preset", "slow", "-crf", "24", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-an", OUT]);
+
+  // Voice-over script (.srt): the captions plus the narration lines said during recording (times from the recording).
+  const rec = readJson<{ steps: { ts: string; kind: string; detail: { text?: string } }[] }>(path.join(WORK, "film-recording.json"));
+  const said = rec.steps
+    .filter((s) => s.kind === "narration")
+    .map((s) => {
+      const ft = (Date.parse(s.ts) - Date.parse(t0)) / 1000;
+      return { from: out(ft), to: out(ft) + 2.8, text: s.detail.text ?? "" };
+    });
+  const all = [...lines, ...said].sort((x, y) => x.from - y.from);
+  all.forEach((l, i) => {
+    if (all[i + 1]) l.to = Math.min(l.to, all[i + 1].from - 0.1);
+  });
+  const srt = all.map((l, i) => `${i + 1}\n${srtTime(l.from)} --> ${srtTime(l.to)}\n${l.text}\n`).join("\n");
+  fs.writeFileSync(OUT.replace(/\.mp4$/, ".voiceover.srt"), srt);
+  console.log(`wrote ${path.relative(ROOT, OUT)}: ${(fs.statSync(OUT).size / 1e6).toFixed(2)} MB, ${Number(probe(OUT)).toFixed(1)} s, ${lines.length} voice-over captions; script ${path.relative(ROOT, OUT.replace(/\.mp4$/, ".voiceover.srt"))}`);
 }
 
 /* =============================== restore =============================== */
@@ -420,6 +512,7 @@ function restore() {
 (async () => {
   if (PHASE === "all" || PHASE === "shoot") await shoot();
   if (PHASE === "all" || PHASE === "assemble") assemble();
+  if (PHASE === "all" || PHASE === "assemble" || PHASE === "captions") await captions();
   if (PHASE === "all" || PHASE === "restore") restore();
 })().catch((e) => {
   console.error(e instanceof Error ? e.stack : e);

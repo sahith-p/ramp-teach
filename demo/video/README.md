@@ -2,8 +2,10 @@
 
 ## Product film (for voice-over): [ramp-teach-film.mp4](ramp-teach-film.mp4)
 
-141.6 s · 1920×1080 · H.264 · 5.7 MB · no audio. Made for a voice-over: the only on-screen text besides the app itself
-is the narrator's lines as subtitles while recording.
+141.6 s · 1920×1080 · H.264 · 6.3 MB · no audio. Made for a voice-over. Captions run throughout: the voice-over
+script for each scene, plus the narrator's lines while recording. The script with timings is in
+[ramp-teach-film.voiceover.srt](ramp-teach-film.voiceover.srt). The captions are added in post (`--phase captions`)
+from the take's timestamps, in the same style as the recorded subtitles.
 
 **What happens**
 1. **Record:** a reviewer checks past invoice HSG-1010 on the vendor's portal with the Ramp Teach Recorder side panel
