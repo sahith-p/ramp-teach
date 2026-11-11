@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "@fontsource-variable/inter";
-@import "@fontsource-variable/newsreader";
 
 /* Design tokens — see docs/design.md. Unofficial demo inspired by Ramp's design. */
 @theme {
@@ -17,7 +16,7 @@
   --color-warn: #a15c07;
 
   --font-sans: "Inter Variable", "Archivo", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Newsreader Variable", "Source Serif 4", ui-serif, Georgia, serif;
+  --font-display: "Inter Variable", ui-sans-serif, system-ui, sans-serif; /* no serif anywhere */
 
   --radius-card: 14px;
 }
