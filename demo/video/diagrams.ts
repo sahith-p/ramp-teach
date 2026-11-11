@@ -432,22 +432,9 @@ export function disputeFacts(): { fails: number; credit: string | null } | null 
 /* ================================================================== beat 0: intro */
 
 function introBody(logos: Logos): string {
-  const steps = ["Reviewer shows the check once", "Ramp learns the workflow", "Next invoice arrives with evidence"];
-  const bw = 440, gap = 92, x0 = (W - (bw * 3 + gap * 2)) / 2, y = 560, bh = 92;
-  const boxes = steps
-    .map((s, i) => {
-      const x = x0 + i * (bw + gap);
-      const t = 2.1 + i * 0.28;
-      const key = i === 2;
-      return `<div class="o node" style="${box(x, y, bw, bh)}justify-content:center;font-size:23px;color:rgb(150,145,140);${at(t - 0.12, 0.25)}"><span style="animation: lit .22s ease ${t}s forwards">${esc(s)}</span></div>
-        ${key ? `<div class="o" style="${box(x, y, bw, bh)}border:1px solid ${LEMON};border-radius:12px;box-sizing:border-box;${at(t, 0.22)}"></div>` : ""}`;
-    })
-    .join("");
-  const arrows = [0, 1].map((i) => arrow([x0 + (i + 1) * bw + i * gap + 14, y + bh / 2], [x0 + (i + 1) * (bw + gap) - 14, y + bh / 2], 2.2 + i * 0.28)).join("");
   return `
-    <div style="left:0;top:330px;width:${W}px;display:flex;justify-content:center">${rampLockup(logos, 64, 0.02, 0.5)}</div>
-    <div class="o" style="left:0;top:520px;width:${W}px;text-align:center;font-size:32px;color:rgb(222,218,213);animation: in .28s ${EASE} .4s forwards, out .25s ease 1.95s forwards;transform:translateY(6px)">A staffing invoice lands in Bill Pay. The proof is in a contract and a vendor portal.</div>
-    ${boxes}${svg(arrows)}`;
+    <div style="left:0;top:380px;width:${W}px;display:flex;justify-content:center">${rampLockup(logos, 64, 0.02, 0.5)}</div>
+    <div class="o" style="left:${(W - 1080) / 2}px;top:540px;width:1080px;text-align:center;font-size:30px;line-height:1.5;color:rgb(222,218,213);animation: in .3s ${EASE} .45s forwards;transform:translateY(6px)">Show Ramp how you check a bill once. It learns your steps, checks the next bill the same way, and brings you the proof so you can approve or dispute it.</div>`;
 }
 
 /* ================================================================== beat 2: Recording and Transcription */
@@ -1074,9 +1061,9 @@ export const SECTIONS: Section[] = [
   {
     id: "intro",
     title: null,
-    duration: 5,
+    duration: 6,
     body: introBody,
-    captions: [{ t0: 0.5, t1: 4.9, text: "A reviewer shows the check once; the next invoice arrives with the evidence and a recommendation." }],
+    captions: [],
   },
   {
     id: "record",

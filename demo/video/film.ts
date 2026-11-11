@@ -79,7 +79,7 @@ if (!OFFLINE && ["all", "shoot"].includes(PHASE) && !resolveAnthropicKey()) {
 const BASE = `http://localhost:${PORT}`;
 const WORK = path.join(ROOT, "demo", "video", "work-film");
 // Rehearsals (--offline) never overwrite the committed film, its archived run or the committed master take.
-const OUT = path.join(OFFLINE ? WORK : path.join(ROOT, "demo", "video"), OFFLINE ? "rehearsal.mp4" : "ramp-teach-film.mp4");
+const OUT = path.join(OFFLINE ? WORK : path.join(ROOT, "demo", "video"), OFFLINE ? "rehearsal.mp4" : "ramp-teach-demo.mp4");
 const RUN_OUT = OFFLINE ? path.join(WORK, "rehearsal-run") : path.join(ROOT, "demo", "video", "film-run");
 const MASTER_DIR = OFFLINE ? path.join(WORK, "master") : path.join(ROOT, "demo", "video", "master");
 const MASTER_MP4 = path.join(MASTER_DIR, "take.mp4");
