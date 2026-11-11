@@ -10,8 +10,7 @@
 <p align="center">
   <a href="docs/TECHNICAL.md">How it works</a> &nbsp;&nbsp;
   <a href="docs/HANDOFF.md">Handoff</a> &nbsp;&nbsp;
-  <a href="demo/video/ramp-teach-film.mp4">Product film</a> &nbsp;&nbsp;
-  <a href="demo/video/STORYBOARD.md">Film storyboard</a>
+  <a href="demo/video/ramp-teach-film.mp4">Product demo</a>
 </p>
 
 ---
@@ -268,7 +267,7 @@ the app.
 | `npm run eval` | Replay past corrections through the checks |
 | `npm run agent -- <invoice_id>` | Route and review one invoice (app must be running) |
 | `npm run demo` | End-to-end check of one review, including the UI decision |
-| `npx tsx demo/video/film.ts --phase post` | Re-render the film's diagrams and captions from the saved take |
+| `npx tsx demo/video/film.ts --phase post` | Re-render the product demo's diagrams and captions from the saved take |
 
 ## Stack
 
@@ -294,5 +293,5 @@ the app.
 | `calc/` | The six checks |
 | `app/`, `components/` | Bill Pay UI, API routes, fixture vendor portal |
 | `contracts/` | Zod schemas shared by everything |
-| `demo/video/` | Product film, storyboard and pipeline |
+| `demo/video/` | Product demo video and its pipeline |
 | `docs/` | Technical deep dive, handoff, design notes |
