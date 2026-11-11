@@ -20,6 +20,15 @@ build item recommended before rendering, **[next step]** future, not in the repo
 The next take keeps every Anthropic call live (learning, browser agent, receipt, eval judge). Jev routing and the
 ElevenLabs transcript may come from their demo paths in the take; the screens look the same.
 
+## On-screen text rules (every frame)
+
+- The section title is the only header. No eyebrow or kicker labels, no numbering like "01".
+- Labels are real names, IDs and numbers. Every number carries its unit (one review, whole take).
+- At most about eight words per label; the voice-over carries the explanation.
+- No taglines, no slogans, no filler phrasing ("seamlessly", "powerful", "every claim needs a source").
+- No em dashes, middle dots or decorative symbols in on-screen text; use commas or line breaks.
+- The current `demo/video/diagrams.ts` still has kicker labels like "01 RECORD"; the rebuilt diagrams drop them.
+
 ---
 
 ## 1. Full architecture
@@ -275,7 +284,7 @@ Chrome lit.
 ```
 ┌ Recording and Transcription ─────────────────────────────────────────────────────── [mini-map: Chrome lit] ┐
 │                                                                                                              │
-│  PORTAL EXCERPT (real screenshot)      WHAT THE EXTENSION RECORDED                 ONE RECORDING → RAMP       │
+│  Portal                                Recorded                                    Sent to Ramp               │
 │  ┌──────────────────────────────┐     ┌───────────────────────────────────────┐  ┌──────────────────────┐   │
 │  │ Invoice HSG-1010             │     │ 0:12 click  a[href="/portal/employees/│  │ POST /api/learn      │   │
 │  │ Maya Chen   40 h  [View timecard]──►│      E-101?week=2026-10-11"]          │  │ {                    │   │
@@ -340,15 +349,15 @@ decides.
 ```
 ┌ How Ramp Teach fits together ─────────────────────────────────────────────────────────────────────────────┐
 │                                                                                                             │
-│  REVIEWER'S CHROME            RAMP TEACH APP (Next.js)                 ANTHROPIC                            │
+│  Reviewer's Chrome            Ramp Teach app (Next.js)                 Anthropic                            │
 │  ┌─────────────────┐  recording   ┌──────────────────┐   transcript +  ┌──────────────┐                     │
 │  │ Recorder         │── JSON ────►│ Learning job      │◄── steps ─────►│ Claude       │                     │
 │  │ extension        │             └────────┬─────────┘                 │ claude-opus- │                     │
 │  └─────────────────┘                       ▼                           │ 5-5          │                     │
 │                                ┌─────────────────────┐                 └──────▲───────┘                     │
 │                                │ LEARNED WORKFLOW v1 │                        │ page state ↔ tool call      │
-│  BILL PAY                      └──────────┬──────────┘                        │                             │
-│  ┌─────────────────┐  new invoice ┌───────▼──────────┐   AGENT SANDBOX ┌──────┴────────────────────┐        │
+│  Bill Pay                      └──────────┬──────────┘                        │                             │
+│  ┌─────────────────┐  new invoice ┌───────▼──────────┐   Agent sandbox ┌──────┴────────────────────┐        │
 │  │ Inbox            │────────────►│ Router (Jev)      │──────────────►  │ Agent harness, headless   │        │
 │  └─────────────────┘             └──────────────────┘                 │ Chromium, fresh profile   │        │
 │                                       receipt + evidence ◄────────────│ signs in from the vault    │        │
@@ -386,11 +395,11 @@ Anthropic lit.
 ```
 ┌ Agent Learning ──────────────────────────────────────────────────────────────────── [mini-map: app + Claude] ┐
 │                                                                                                               │
-│  STAGES  segment ─► claims ─► synthesize ─► critique ─► checks ─► package ─► evals ─► v1 active             │
+│          segment ─► claims ─► synthesize ─► critique ─► checks ─► package ─► evals ─► v1 active             │
 │          code       Claude    Claude        Claude      sandbox   Skills API  gate                            │
 │                     +citations structured                                                                     │
 │                                                                                                               │
-│  INPUT (recording)                 CLAIM (Claude, cited)               RULE + WHERE THE PROOF LIVES (skill v1) │
+│  Recording                         Claim                               Rule in skill v1                        │
 │  #16 click [data-field=            "Billed hours can't go over   ─►   r3  For each labor line, billed hours    │
 │      "approved_hours"] "40"         that"  ← u5, step #16              (quantity) must not exceed the          │
 │  u5  "Maya is approved for 40                                          approved_hours on that employee's       │
@@ -398,7 +407,7 @@ Anthropic lit.
 │      go over that."                                                    proof: /portal/employees/<employee_id>  │
 │                                                                               ?week=<YYYY-MM-DD>, approved_hours│
 │                                                                                                               │
-│  LATER, ON A NEW INVOICE ─► agent prompt: "where the proof lives: …/employees/<employee_id>?week=… (approved_   │
+│  New invoice ─►             agent prompt: "where the proof lives: …/employees/<employee_id>?week=… (approved_   │
 │                              hours)" ─► opens E-104, week 2026-10-18                                          │
 │                                                                                                               │
 │  rec_20261111T032319Z_ixfg  ─►  skill v1, claude-opus-5-5, live call, req_011CgvRbJFd3BKVEybzGN8ux          │
@@ -470,7 +479,7 @@ lit.
 ```
 ┌ Agent execution and evaluation ─────────────────────────────────────────── [mini-map: sandbox + Claude lit] ┐
 │                                                                                                               │
-│  TRIGGER                     ┌──────────── AGENT HARNESS (agent/providers/browser-loop.ts) ────────────┐      │
+│                              ┌──────────── AGENT HARNESS (agent/providers/browser-loop.ts) ────────────┐      │
 │  HSG-1011 arrives             │                                                                        │      │
 │  Router (Jev): Halcyon        │        page outline + refs              tool call                     │      │
 │  invoice review, 97%         │   ┌─────────────┐  ───────────►  ┌──────────────────────┐              │      │
@@ -484,7 +493,7 @@ lit.
 │                               │   stop: all tasks recorded, 25-turn cap, task budget                  │      │
 │                               └────────────────────────────────────────────────────────────────────────┘      │
 │                                                                                                               │
-│  CHECKS (TypeScript)              RECEIPT (Claude)                   ENFORCEMENT          YOU                 │
+│  Checks                           Receipt                            Enforcement          You                 │
 │  hours_match_timecards: FAIL ─►  "Sam Okafor billed 44 h vs 38 h ─► checks match calc ─► Dispute             │
 │  line 4, expected 38 h,          approved: 6 h × $88 = $528"       every check has      $3,448 credit       │
 │  actual 44 h                       + $400 + $2,520 = $3,448           a source                                │
@@ -550,7 +559,7 @@ review costs and where the time goes, with a request ID they could look up.
 **Left (0 to 10 s): three test layers, each a card with its real result.**
 
 ```
-  WHAT WE TEST                                 HOW                                    RESULT
+  Tested                                       How                                    Result
   ① The checks                                 Replay 7 past corrections + 10 past    7/7, precision 10/10
      (calc/)                                    invoices through calc/                  npm run eval
      seeded failure: HSG-1007 hours_match_timecards  → fail at line 3  ✓
@@ -570,14 +579,14 @@ review costs and where the time goes, with a request ID they could look up.
 **Right (10 to 20 s): the run you watched, as data.**
 
 ```
-  HSG-1011, trace                                       ONE REVIEW (HSG-1011)
+  HSG-1011 trace                                        HSG-1011
   03:24:37  turn 6  navigate  /portal/employees/E-104…   model turns        8
   03:24:41  turn 7  record_evidence approved_hours = 38   browser actions   31
   03:24:41  evidence  fixture:/portal/employees/E-104…    facts             12
   03:24:51  calc   hours_match_timecards  fail            end to end      44.8 s  (browser 36.7, receipt 7.2)
   03:24:55  receipt  dispute                              Claude calls       9   about $0.18
                                                           req_011CgvRehrHEUCRT6xQj3Nx7 (turn 7)
-  WHOLE TAKE: 19 Claude calls (1 learning + 2 reviews) about $0.36
+  Whole take: 19 Claude calls (1 learning + 2 reviews) about $0.36
 ```
 
 - **Motion:** trace rows tick in (real timestamps), the turn 7 row highlights and its request ID copies into the
@@ -618,14 +627,12 @@ summary to card ②, and add `evidence-check.json` ("12 of 12 checked against th
 **Frame (7 s):**
 
 ```
-  What this demo proves today
-  One recording → a tested workflow → an agent that brings back sourced evidence → a person decides.
+  One recording → a tested workflow → an agent that brings back sourced evidence → a person decides
 
-  Potential next step
-  [Teams icon] Confirm service delivery in an approved channel (#halcyon-ops) and attach the message link to the receipt
+  Next: confirm service delivery in an approved Teams channel and attach the message link to the receipt
 ```
 
-- The next-step line carries a small "Next step" tag. No Slack or Teams code exists in the repo; it would be a new
+- The "Next:" line marks it as a future step. No Slack or Teams code exists in the repo; it would be a new
   workflow step that reads one approved channel through Microsoft Graph and adds the message link as an evidence
   pointer.
 - **VO:** "Today, one recording becomes a tested workflow with evidence behind every recommendation. Next, the same
