@@ -12,8 +12,10 @@ import {
   totalMatchesLineItems,
   type CalcInput,
 } from "./checks";
+import { assignCredits } from "./credits";
 
 export * from "./checks";
+export * from "./credits";
 export * from "./parse";
 
 /** Check name → implementation. Typed as a full Record so a new CHECK_NAME fails to compile here. */
@@ -26,11 +28,16 @@ export const CHECKS: Record<CheckName, (input: CalcInput) => CalcCheckOutput> = 
   hours_match_timecards: hoursMatchTimecards,
 };
 
-/** Run all six checks in CHECK_NAMES order. `now` is injectable for deterministic tests. */
+/**
+ * Run all six checks in CHECK_NAMES order, then attach each failing finding's overbilled `amount` and the
+ * report's `credit_total` (calc/credits.ts). `now` is injectable for deterministic tests.
+ */
 export function runCalc(input: CalcInput, now: Date = new Date()): CalcReport {
+  const { checks, credit_total } = assignCredits(input, CHECK_NAMES.map((name) => CHECKS[name](input)));
   return {
     invoice_id: input.invoice.invoice_id,
     computed_at: now.toISOString(),
-    checks: CHECK_NAMES.map((name) => CHECKS[name](input)),
+    checks,
+    credit_total,
   };
 }

@@ -2,7 +2,11 @@
  * The model-driven browser loop (mode: real). Claude picks every action; this file only executes
  * them on the BrowserDriver and reports results back.
  *
- * Tools: [{ type: "browser_toolset_20260801" } via DriverBrowserToolset, custom `record_evidence`].
+ * Tools: [{ type: "browser_toolset_20260801" } via DriverBrowserToolset, custom `record_evidence`, custom `sign_in`].
+ * - sign_in ({portal}, strict schema): the HARNESS signs in from the server-side credential vault
+ *   (lib/vault.ts via agent/browser/sign-in.ts): it opens the portal's sign-in page, fills username + password
+ *   through the driver and submits. The tool result is only "Signed in as <username>…" or an error; the
+ *   password never reaches the model, onStep, the hooks or the trace.
  * - Member tool_use blocks (toolset_name "browser") run in order through the SDK helper's
  *   toolResult() (echoes toolset_name, renders image / browser_state blocks).
  * - Halt rule: after a failed call in a batch, every later call gets is_error
@@ -42,6 +46,8 @@ import type {
 import { z } from "zod";
 import type { AgentEvidenceFact, BrowserTaskRequest, BrowserTaskResult } from "@/contracts";
 import { fixturePointerFor } from "@/agent/browser/url-policy";
+import { signInToPortal } from "@/agent/browser/sign-in";
+import { getPortal, portalIds, type Credential } from "@/lib/vault";
 import { DriverBrowserToolset } from "./browser-toolset";
 
 export const NOT_EXECUTED = "Not executed: an earlier action in this turn failed.";
@@ -149,6 +155,8 @@ export interface BrowserLoopRequest extends BrowserTaskRequest {
   repoRoot?: string;
   /** Task budget in tokens; undefined ⇒ defaultTaskBudget(); null ⇒ none. */
   taskBudget?: number | null;
+  /** Vault lookup for sign_in (default lib/vault getCredential). Tests inject one. */
+  getCredential?: (portalId: string) => Credential | null;
 }
 
 /** onStep widened with progress notes ("note"). The frozen union has action/result/evidence/text. */
@@ -179,6 +187,29 @@ export const RECORD_EVIDENCE_TOOL = {
   eager_input_streaming: true,
 };
 
+/** Custom tool: harness-side sign-in from the credential vault. The model names the portal; nothing else. */
+export function signInTool(portals: string[] = portalIds()) {
+  return {
+    name: "sign_in",
+    description:
+      "Sign in to a portal with a credential from the server-side vault. The harness opens the portal's sign-in page, " +
+      "fills the username and password itself and submits; you never see or type the password. Returns " +
+      '"Signed in as <username>" (and the page you are now on) or an error. Use this instead of typing credentials ' +
+      "into a sign-in form. Portals: " +
+      portals.map((p) => `"${p}" (${getPortal(p)?.label ?? p}, sign-in page ${getPortal(p)?.loginPath ?? "?"})`).join(", ") +
+      ".",
+    input_schema: {
+      type: "object" as const,
+      properties: { portal: { type: "string", enum: portals, description: "Portal id" } },
+      required: ["portal"],
+      additionalProperties: false,
+    },
+    strict: true,
+  };
+}
+
+const SignInInput = z.object({ portal: z.string().min(1) }).strict();
+
 const RecordInput = z.object({
   key: z.string().min(1),
   value: z.union([z.number(), z.string()]),
@@ -193,6 +224,7 @@ export function traceInput(name: string, input: unknown): Record<string, unknown
   const o = { ...(input as Record<string, unknown>) };
   if (name === "type" && typeof o.text === "string") o.text = `[${o.text.length} chars]`;
   if (name === "form_input" && o.value !== undefined) o.value = "[value redacted in trace]";
+  if (name === "sign_in") return { portal: o.portal }; // portal only (the username shows in the result)
   return o;
 }
 
@@ -323,7 +355,7 @@ export async function runBrowserLoop(
   let jsonRetries = 0;
 
   const system = [{ type: "text", text: req.system, cache_control: { type: "ephemeral" } }];
-  const tools = [toolset.toJSON(), RECORD_EVIDENCE_TOOL];
+  const tools = [toolset.toJSON(), RECORD_EVIDENCE_TOOL, signInTool()];
   const messages: BetaMessageParam[] = [
     {
       role: "user",
@@ -392,6 +424,29 @@ export async function runBrowserLoop(
     facts.set(dedupeKey, fact);
     req.onStep({ kind: "evidence", detail: { ...fact } });
     return { type: "tool_result", tool_use_id: block.id, content: `Recorded ${key}=${JSON.stringify(value)} for ${JSON.stringify(subject_ref)} from ${source}.` };
+  }
+
+  async function handleSignIn(block: BetaToolUseBlock): Promise<BetaToolResultBlockParam> {
+    const parsed = SignInInput.safeParse(block.input);
+    if (!parsed.success) {
+      return { type: "tool_result", tool_use_id: block.id, is_error: true, content: `sign_in takes {"portal": one of ${JSON.stringify(portalIds())}}.` };
+    }
+    let baseUrl: string;
+    try {
+      baseUrl = new URL(req.startUrl).origin;
+    } catch {
+      baseUrl = req.allowedOrigins[0] ?? "";
+    }
+    const r = await signInToPortal(req.driver, { baseUrl, portal: parsed.data.portal, ...(req.getCredential ? { getCredential: req.getCredential } : {}) });
+    // Only the portal, the username and the landing page go back: never the password.
+    if (!r.ok) return { type: "tool_result", tool_use_id: block.id, is_error: true, content: r.error };
+    return {
+      type: "tool_result",
+      tool_use_id: block.id,
+      content: r.alreadySignedIn
+        ? `Already signed in to ${r.portal} as ${r.username}. Now on ${r.landed}.`
+        : `Signed in as ${r.username} (${r.portal}). Now on ${r.landed}.`,
+    };
   }
 
   loop: while (turns < req.maxTurns) {
@@ -509,6 +564,9 @@ export async function runBrowserLoop(
         r = await handleRecord(block);
         const src = fixturePointerFor((await currentUrl()) ?? "");
         shot = src && !r.is_error ? (shotBySource.get(src) ?? null) : null;
+      } else if (block.name === "sign_in") {
+        r = await handleSignIn(block);
+        if (!r.is_error) shot = await stepScreenshot(step);
       } else {
         r = { type: "tool_result", tool_use_id: block.id, is_error: true, content: `Unknown tool "${block.name}".` };
       }

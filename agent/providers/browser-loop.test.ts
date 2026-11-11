@@ -135,6 +135,7 @@ describe("runBrowserLoop (fake client, fake driver — no network)", () => {
     expect((first.tools as Array<{ type?: string; name?: string }>).map((t) => t.type ?? t.name)).toEqual([
       "browser_toolset_20260801",
       "record_evidence",
+      "sign_in",
     ]);
     expect(first.thinking).toEqual({ type: "adaptive", display: "updates" });
     expect(first.output_config).toEqual({ effort: "medium", task_budget: { type: "tokens", total: 60000 } });

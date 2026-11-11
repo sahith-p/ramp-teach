@@ -25,9 +25,10 @@ import {
   type WorkflowSpec,
 } from "@/contracts";
 import { invoicePathFor, loadInvoice, loadVendor } from "@/lib/data";
-import { cents, fmtMoney } from "@/lib/money";
+import { fmtMoney } from "@/lib/money";
 import { laborLines, runCalc } from "@/calc";
 import { parseDataFields } from "@/agent/browser/outline";
+import { signInToPortal } from "@/agent/browser/sign-in";
 import { fixturePointerFor } from "@/agent/browser/url-policy";
 import * as learnModule from "./learn";
 
@@ -97,26 +98,6 @@ function lineLabel(i: number | null): string {
   return i === null ? "Invoice" : `Line ${i + 1}`;
 }
 
-/** Dollar impact of one finding, when it can be computed from the invoice + contract + evidence. */
-function findingImpact(s: InvoiceSubject, check: string, lineIndex: number | null, evidence: EvidenceBundle | null): number | null {
-  if (lineIndex === null) return null;
-  const li = s.invoice.line_items[lineIndex];
-  if (!li) return null;
-  const labor = laborLines([li], s.vendor)[0];
-  if (check === "rate_matches_contract" && labor) {
-    const rate = s.vendor.contract.rate_card.find((r) => r.role.toLowerCase() === labor.role.toLowerCase());
-    return rate ? cents(li.quantity * (li.unit_rate - rate.bill_rate)) : null;
-  }
-  if (check === "no_duplicate_lines") return li.amount;
-  if (check === "hours_match_timecards" && labor?.employee && evidence) {
-    const tc = evidence.timecards.find(
-      (t) => t.employee_id === labor.employee!.employee_id && t.week_ending === labor.week_ending && t.status === "approved",
-    );
-    return tc ? cents(Math.max(0, li.quantity - tc.approved_hours) * li.unit_rate) : null;
-  }
-  return null;
-}
-
 function mockCheck(c: CalcCheckOutput): ReceiptCheck {
   const rule = RULE_TEXT[c.check] ?? c.check;
   if (c.result === "fail" && c.findings.length > 0) {
@@ -131,26 +112,23 @@ function mockCheck(c: CalcCheckOutput): ReceiptCheck {
   return { name: c.check, expected: rule, actual: c.summary, result: c.result, evidence: `calc:${c.check}` };
 }
 
-export function invoiceMockReceipt(s: InvoiceSubject, calc: CalcReport, evidence: EvidenceBundle | null, spec: WorkflowSpec): Receipt {
+export function invoiceMockReceipt(s: InvoiceSubject, calc: CalcReport, _evidence: EvidenceBundle | null, spec: WorkflowSpec): Receipt {
   const checks = calc.checks.map(mockCheck);
   const failing = calc.checks.filter((c) => c.result === "fail");
   const unverified = calc.checks.filter((c) => c.result === "unverified");
   const reasons: string[] = [];
-  let credit = 0;
-  let creditKnown = true;
+  const money = (n: number) => fmtMoney(n, s.invoice.currency);
+  // Dollar amounts come from calc (finding.amount, credit_total): this mapper copies them, never computes them.
   for (const c of failing) {
     for (const f of c.findings) {
-      const impact = findingImpact(s, c.check, f.line_index, evidence);
-      if (impact === null) creditKnown = false;
-      else credit += impact;
-      reasons.push(`${f.message}${impact !== null ? ` Impact: ${fmtMoney(impact, s.invoice.currency)}.` : ""}`);
+      reasons.push(`${f.message}${f.amount !== undefined && f.amount > 0 ? ` Impact: ${money(f.amount)}.` : ""}`);
     }
   }
   if (failing.length > 0) {
     reasons.push(
-      creditKnown
-        ? `Dispute and request a credit memo for ${fmtMoney(cents(credit), s.invoice.currency)}.`
-        : "Dispute and request a credit memo for the overbilled amounts.",
+      calc.credit_total !== undefined && calc.credit_total > 0
+        ? `Dispute and request a credit memo for ${money(calc.credit_total)}.`
+        : "Dispute the failing checks with the vendor (calc found no overbilled amount to credit).",
     );
   }
   for (const c of unverified) reasons.push(`${c.check} not verified: ${c.summary}`);
@@ -221,22 +199,21 @@ export function collectInvoiceAgentEvidence(s: InvoiceSubject, facts: AgentEvide
 
 /* ------------------------- scripted Playwright steps ----------------------- */
 
-const DEMO_USER = "ap.reviewer"; // demo credentials displayed on the fixture login page (not secrets)
-const DEMO_PASS = "demo-only";
+/** The vendor portal's id in the credential vault (lib/vault.ts). */
+export const PORTAL_ID = "halcyon";
 
+/** Sign in from the credential vault (same harness routine as the browser loop's sign_in tool). */
 async function scriptedLogin(driver: BrowserDriver, baseUrl: string, ctx: RunContext): Promise<void> {
-  await driver.navigate(`${baseUrl}${PORTAL_LOGIN_PATH}`);
-  if (new URL(await driver.currentUrl()).pathname !== PORTAL_LOGIN_PATH) return; // already signed in
-  const user = (await driver.find("username")).find((r) => r.role.startsWith("textbox"));
-  const pass = (await driver.find("password")).find((r) => r.role.includes("password"));
-  const submit = (await driver.find("Sign in")).find((r) => r.role === "button");
-  if (!user || !pass || !submit) throw new Error("scripted login: sign-in form fields not found on /portal/login");
-  await driver.formInput(user.ref, DEMO_USER);
-  await driver.formInput(pass.ref, DEMO_PASS);
-  await driver.click({ type: "ref", ref: submit.ref });
-  const after = new URL(await driver.currentUrl());
-  if (after.pathname === PORTAL_LOGIN_PATH) throw new Error("scripted login: still on the sign-in page after submitting");
-  ctx.trace("scripted.login", "scripted", "evidence", { landed: after.pathname });
+  const r = await signInToPortal(driver, { baseUrl, portal: PORTAL_ID });
+  if (!r.ok) throw new Error(`scripted login: ${r.error}`);
+  // Portal + username only: the password never reaches the trace.
+  ctx.trace("scripted.login", "scripted", "evidence", {
+    portal: r.portal,
+    username: r.username,
+    credential_source: r.source,
+    landed: r.landed,
+    already_signed_in: r.alreadySignedIn,
+  });
 }
 
 export async function invoiceScriptedEvidence(
@@ -310,8 +287,11 @@ export const INVOICE_SYNTHESIS_INSTRUCTIONS = [
   "- Evidence: for a failing check cite its specific finding pointer (rate card entry, invoice line, or the fixture:/portal/employees/… timecard page);",
   "  for a passing or unverified check cite calc:<check>.",
   "- Recommendation: dispute if any check fails (ask for a credit memo); review if any check is unverified; approve only if every check passes.",
-  "- Reasons: one short sentence per failing finding with its dollar impact (rate: hours × (billed − contract rate); duplicate: the duplicate line amount;",
-  "  hours: (billed − approved hours) × rate) computed from the subject record, then the total credit memo to request, then at most one\n  relevant open question from the learned spec (omit it if the spec has none).",
+  "- Dollar amounts are computed by code: each failing finding in the calc report carries `amount` (overbilled dollars) and the report",
+  "  carries `credit_total`. COPY them; never compute, round, re-derive or sum amounts yourself, and state no other credit figure.",
+  "- Reasons: one short sentence per failing finding citing its line and its `amount` (as $1,234.00), then one sentence requesting a",
+  "  credit memo for exactly `credit_total` (skip it if credit_total is 0), then at most one relevant open question from the learned spec",
+  "  (omit it if the spec has none).",
 ].join("\n");
 
 export const invoiceReviewWorkflow: WorkflowDefinition<InvoiceSubject> = {

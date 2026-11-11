@@ -14,7 +14,7 @@
  *  (d) calc        def.deterministicChecks(subject, evidence)          → runs/<id>/calc.json   [deterministic]
  *  (e) synthesis   provider ? ONE generateStructured call (cached via lib/cache)  [real]
  *                  : def.mockReceipt                                               [mock]
- *  (f) post-pass   agent/enforce.ts: calc-authoritative results, evidence pointers must resolve,
+ *  (f) post-pass   agent/enforce.ts: calc-authoritative results, evidence pointers must resolve, dollar figures = calc amounts,
  *                  human fields null → receipts/<id>.json
  *
  * Observability (contracts/pillars.ts):
@@ -52,9 +52,10 @@ import { cacheKey, cached } from "@/lib/cache";
 import { P, ROOT } from "@/lib/paths";
 import { trace as writeTrace } from "@/lib/trace";
 import { writeReceipt } from "@/lib/store/receipts";
+import { getPortal, portalIds } from "@/lib/vault";
 import { PlaywrightDriver } from "./browser/playwright-driver";
 import { checkUrl, fixturePointerFor, normalizeOrigin } from "./browser/url-policy";
-import { enforceReceipt } from "./enforce";
+import { enforceReceipt, numbersIn } from "./enforce";
 import { evidenceTargets, runEvidenceCheck, summarizeEvidenceCheck } from "./evidence-check";
 import { LiveStatusWriter, startLiveView } from "./live";
 import type { BrowserLoopRequest, LoopStep, ModelTurnInfo, ToolCallInfo } from "./providers/browser-loop";
@@ -153,7 +154,8 @@ export function browserSystemPrompt(allowedOrigins: string[]): string {
     "Rules:",
     `- Only visit pages on ${allowedOrigins.join(", ")}. Any other URL is refused.`,
     "- Read only. Never approve, pay, dispute, attach, upload, or change anything. The only form you may submit is a sign-in form.",
-    "- If a page asks you to sign in, use the demo credentials displayed on that sign-in page.",
+    "- If a page asks you to sign in, call the sign_in tool with the portal id: the harness signs in from a server-side",
+    "  credential vault. Never type a username or password yourself (you are not given the password).",
     "- Prefer read_page (filter \"interactive\" to find links/inputs), find, and get_page_text over screenshots; they are cheaper and exact.",
     "  Take a screenshot only if the text tools are not enough.",
     "- Be efficient: you have a limited number of turns. Batch independent actions in one turn when the order is safe",
@@ -177,6 +179,15 @@ export function composeBrowserTask(summary: SubjectSummary, tasks: EvidenceTask[
     lines.push("Learned from the recorded reviewer session (where the proof lives):");
     for (const s of spec.proof_sources) lines.push(`- ${s.app}: ${s.location} (fields: ${s.fields.join(", ") || "n/a"})`);
     lines.push("");
+  }
+  const portals = portalIds().map((id) => getPortal(id)!);
+  if (portals.length > 0) {
+    lines.push(
+      "Signing in: use the sign_in tool, not form_input, for any sign-in page:",
+      ...portals.map((p) => `- sign_in {"portal":"${p.id}"} for the ${p.label} (sign-in page ${p.loginPath})`),
+      "It fills the username and password from the vault and tells you where you landed.",
+      "",
+    );
   }
   lines.push("Sub-tasks:");
   tasks.forEach((t, i) => {
@@ -209,6 +220,8 @@ const SYNTHESIS_SYSTEM = [
   "The deterministic calc results you are given are authoritative: copy each check's result exactly (pass/fail/unverified).",
   "Every check must cite exactly ONE evidence pointer copied verbatim from the allowed list. Never invent pointers or URLs.",
   "Write expected/actual as short, specific, human-readable strings. Reasons are short sentences a busy approver can act on.",
+  "Dollar amounts are computed by code (each failing finding's amount and the report's credit_total): copy them exactly, never compute",
+  "your own. A post-pass checks every dollar figure in the reasons against them.",
 ].join("\n");
 
 /** Strip volatile fields so the synthesis prompt (and its cache key) is stable across runs. */
@@ -256,8 +269,11 @@ export function synthesisPrompt(args: {
       : []),
     `Checks, in this order: ${args.calc.checks.map((c) => c.check).join(", ")}.`,
     "",
-    "Deterministic calc report (authoritative):",
+    "Deterministic calc report (authoritative; finding.amount = overbilled dollars computed by code):",
     JSON.stringify(stableCalc(args.calc), null, 1),
+    ...(args.calc.credit_total !== undefined
+      ? ["", `Credit total computed by code (credit_total, copy exactly): ${args.calc.credit_total.toFixed(2)}`]
+      : []),
     "",
     "Browser evidence gathered (mode per item):",
     JSON.stringify(stableEvidence(args.evidence), null, 1),
@@ -676,7 +692,7 @@ export async function runWorkflow<S>(def: WorkflowDefinition<S>, subjectId: stri
   draft = { ...draft, mode: synthesisMode };
 
   /* (f) post-pass */
-  const enforced = enforceReceipt(draft, { calc, visitedFixtures: visited, repoRoot });
+  const enforced = enforceReceipt(draft, { calc, visitedFixtures: visited, repoRoot, referenceAmounts: numbersIn(subject) });
   for (const n of enforced.notes) t("synthesis", "deterministic", "receipt.enforce", { note: n });
   const receipt = enforced.receipt;
   const receiptPath = (opts.persistReceipt ?? writeReceipt)(receipt);

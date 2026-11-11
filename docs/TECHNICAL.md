@@ -109,6 +109,10 @@ by a Playwright driver:
 - Progress notes between tool calls (thinking display `updates`) are shown live in the bill page.
 - A **task budget** lets the agent pace itself; turns are streamed.
 - Facts are saved only through `record_evidence`, each with the page it came from.
+- Sign-in goes through the `sign_in` tool: the harness fills the portal's form from a server-side credential vault
+  (`lib/vault.ts`: `RAMP_TEACH_VAULT_<PORTAL>_USERNAME` / `_PASSWORD`, or gitignored `runtime/vault.json`; the local
+  fixture portal falls back to its public demo login). The model never sees the password; traces keep portal and
+  username only. The scripted path signs in the same way.
 - Guardrails: localhost pages only (checked in the toolset and again in the driver), no scripts, no uploads, a 25-turn
   cap. The agent never approves, pays or attaches; people decide through `POST /api/decisions`.
 
@@ -116,7 +120,10 @@ by a Playwright driver:
 page (`[data-field=…]`) and compared; mismatches and missing fields are flagged, with a crop of the field.
 
 **Checks and receipt.** The six checks are plain code (`calc/`, never a model). Claude writes the receipt from the
-check results and evidence; a post-pass makes the numbers match the code.
+check results and evidence; a post-pass makes the numbers match the code. Credits are code too: `calc/credits.ts` puts
+an overbilled `amount` on every failing finding and a `credit_total` on the report (HSG-1011: $400 + $2,520 + $528 =
+$3,448); Claude is told to copy them, and `agent/enforce.ts` replaces or flags any dollar figure in the reasons that
+is not one of them and makes the credit-memo line state `credit_total`.
 
 ## 4. Observability
 

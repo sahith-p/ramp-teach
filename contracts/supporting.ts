@@ -122,6 +122,12 @@ export const CalcFindingSchema = z.object({
   message: z.string(),
   /** Evidence pointer for this finding (contracts/evidence.ts), usually data/... */
   evidence: z.string(),
+  /**
+   * Overbilled dollars attributed to this finding, computed by calc (deterministic, 2 decimals, >= 0).
+   * Definitions live in calc/credits.ts. Additive + optional: approved by the project owner in chat
+   * 2026-11-11 (storyboard pre-render item 1, "code computes credits").
+   */
+  amount: z.number().optional(),
 });
 export type CalcFinding = z.infer<typeof CalcFindingSchema>;
 
@@ -137,6 +143,11 @@ export const CalcReportSchema = z.object({
   invoice_id: z.string(),
   computed_at: z.string(),
   checks: z.array(CalcCheckOutputSchema),
+  /**
+   * Total credit to request = sum of the failing findings' `amount`s (calc/credits.ts). 0 when nothing fails.
+   * Additive + optional: approved by the project owner in chat 2026-11-11 (storyboard pre-render item 1).
+   */
+  credit_total: z.number().optional(),
 });
 export type CalcReport = z.infer<typeof CalcReportSchema>;
 

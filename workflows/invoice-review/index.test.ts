@@ -11,7 +11,9 @@ import { loadTimecards } from "@/lib/data";
 import { ROOT } from "@/lib/paths";
 import { invoiceReviewWorkflow as wf } from "./index";
 import { getWorkflow } from "@/workflows/registry";
-import { runWorkflow } from "@/agent/engine";
+import { runWorkflow, synthesisPrompt } from "@/agent/engine";
+import { enforceAmounts, numbersIn } from "@/agent/enforce";
+import { runCalc } from "@/calc";
 import { startPortalStub } from "@/agent/test-fixtures/portal-stub";
 
 const spec: WorkflowSpec = { vendor: "Halcyon Staffing Group", proof_sources: [], rules: [], open_questions: ["Is overtime above 40 h billable at 1.5×?"] };
@@ -90,6 +92,31 @@ describe("invoice-review workflow definition", () => {
     expect(byName.line_amounts_correct.evidence).toBe("calc:line_amounts_correct");
     expect(r.reasons.join(" ")).toContain("$3,448.00");
     expect(r.reasons.join(" ")).toContain("overtime");
+    for (const amt of ["$400.00", "$2,520.00", "$528.00"]) expect(r.reasons.join(" ")).toContain(`Impact: ${amt}`);
+    expect(calc.credit_total).toBe(3448);
+  });
+
+  it("mock receipts copy calc's amounts: the amount post-pass changes nothing on any invoice", () => {
+    const ids = ["HSG-1001", "HSG-1002", "HSG-1003", "HSG-1004", "HSG-1005", "HSG-1006", "HSG-1007", "HSG-1009", "HSG-1011", "HSG-1012", "OFS-2201"];
+    const tcs = loadTimecards();
+    for (const id of ids) {
+      const s = wf.loadSubject(id);
+      const ev: EvidenceBundle = { ...portalBundle(), invoice_id: id, items: [], timecards: tcs };
+      const calc = runCalc({ invoice: s.invoice, vendor: s.vendor, timecards: tcs, invoicePath: s.invoicePath });
+      const r = wf.mockReceipt(s, calc, ev, spec);
+      const out = enforceAmounts(r.reasons, calc, numbersIn(s));
+      expect(out.issues, id).toEqual([]);
+      expect(out.reasons, id).toEqual(r.reasons);
+    }
+  });
+
+  it("synthesis instructions + prompt hand Claude the code-computed amounts to copy", () => {
+    const s = subject();
+    const calc = wf.deterministicChecks(s, portalBundle());
+    const prompt = synthesisPrompt({ summary: wf.summarize(s), subject: s, calc, evidence: portalBundle(), spec, instructions: wf.synthesisInstructions, pointers: [] });
+    expect(prompt).toContain("Credit total computed by code (credit_total, copy exactly): 3448.00");
+    for (const a of ['"amount": 400', '"amount": 2520', '"amount": 528']) expect(prompt).toContain(a);
+    expect(wf.synthesisInstructions).toMatch(/COPY them; never compute/);
   });
 
   it("collectAgentEvidence keeps facts read on the right timecard page and rejects others", () => {
