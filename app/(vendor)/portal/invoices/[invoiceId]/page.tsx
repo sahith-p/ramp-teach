@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { loadInvoice, loadVendor } from "@/lib/data";
 import { fmtMoney } from "@/lib/money";
-import { Card } from "@/components/ui/Card";
 import { requirePortalSession } from "@/components/fixtures/require-session";
 import { invoiceWeekEnding, portalLines } from "@/components/fixtures/portal-data";
-import { Field, PageTitle, PortalHeader, Table, link, td, tdMoney, th, thMoney } from "@/components/fixtures/FixtureChrome";
+import { Field, PageTitle, PortalShell, Table, plink, td, tdMoney, th, thMoney } from "@/components/fixtures/FixtureChrome";
 
-export const metadata = { title: "Invoice · Fixture vendor portal" };
+export const metadata = { title: "Invoice · Halcyon Staffing client portal" };
 
 export default async function PortalInvoice({ params }: { params: Promise<{ invoiceId: string }> }) {
   await requirePortalSession();
@@ -16,16 +15,15 @@ export default async function PortalInvoice({ params }: { params: Promise<{ invo
 
   if (!invoice) {
     return (
-      <div>
-        <PortalHeader />
+      <PortalShell>
         <PageTitle>Invoice not found</PageTitle>
         <p className="text-sm text-ink-muted">
-          No invoice with id <code>{id}</code>.{" "}
-          <Link href="/portal/invoices" className={link}>
+          No invoice <code>{id}</code>.{" "}
+          <Link href="/portal/invoices" className={plink}>
             Back to invoices
           </Link>
         </p>
-      </div>
+      </PortalShell>
     );
   }
 
@@ -34,34 +32,30 @@ export default async function PortalInvoice({ params }: { params: Promise<{ invo
   const cur = invoice.currency;
 
   return (
-    <div>
-      <PortalHeader />
-      <p className="mb-2 text-sm">
-        <Link href="/portal/invoices" className={link}>
-          ← All invoices
+    <PortalShell>
+      <p className="mb-3 text-sm">
+        <Link href="/portal/invoices" className={plink}>
+          ← Invoices
         </Link>
       </p>
-      <PageTitle sub={invoice.vendor}>Invoice {invoice.invoice_id}</PageTitle>
+      <PageTitle>Invoice {invoice.invoice_id}</PageTitle>
 
-      <Card title="Invoice details" className="mb-6">
-        <dl className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
-          <Field label="Invoice ID" field="invoice_id">{invoice.invoice_id}</Field>
-          <Field label="Vendor" field="vendor">{invoice.vendor}</Field>
-          <Field label="Week ending" field="week_ending">{invoiceWeekEnding(invoice)}</Field>
-          <Field label="Issue date" field="issue_date">{invoice.issue_date}</Field>
-          <Field label="Due date" field="due_date">{invoice.due_date}</Field>
-          <Field label="Currency" field="currency">{cur}</Field>
-        </dl>
-      </Card>
+      <dl className="mb-8 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
+        <Field label="Invoice ID" field="invoice_id">{invoice.invoice_id}</Field>
+        <Field label="Vendor" field="vendor">{invoice.vendor}</Field>
+        <Field label="Week ending" field="week_ending">{invoiceWeekEnding(invoice)}</Field>
+        <Field label="Issue date" field="issue_date">{invoice.issue_date}</Field>
+        <Field label="Due date" field="due_date">{invoice.due_date}</Field>
+        <Field label="Currency" field="currency">{cur}</Field>
+      </dl>
 
-      <h2 className="mb-3 text-lg font-semibold tracking-tight">Line items</h2>
       <Table caption={`Line items for invoice ${invoice.invoice_id}`}>
         <thead>
           <tr>
             <th scope="col" className={thMoney}>#</th>
             <th scope="col" className={th}>Description</th>
             <th scope="col" className={th}>Employee</th>
-            <th scope="col" className={thMoney}>Hours / qty</th>
+            <th scope="col" className={thMoney}>Qty</th>
             <th scope="col" className={thMoney}>Rate</th>
             <th scope="col" className={thMoney}>Amount</th>
             <th scope="col" className={th}>Timecard</th>
@@ -88,7 +82,7 @@ export default async function PortalInvoice({ params }: { params: Promise<{ invo
               <td className={tdMoney}>{fmtMoney(l.item.amount, cur)}</td>
               <td className={td}>
                 {l.timecardHref ? (
-                  <Link href={l.timecardHref} className={`${link} whitespace-nowrap`}>
+                  <Link href={l.timecardHref} className={`${plink} whitespace-nowrap`}>
                     View timecard
                   </Link>
                 ) : (
@@ -110,6 +104,6 @@ export default async function PortalInvoice({ params }: { params: Promise<{ invo
           </tr>
         </tfoot>
       </Table>
-    </div>
+    </PortalShell>
   );
 }

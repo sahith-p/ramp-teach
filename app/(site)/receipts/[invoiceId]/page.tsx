@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Card } from "@/components/ui/Card";
 import { loadReview } from "@/components/receipt/load";
 import { ReceiptView } from "@/components/receipt/ReceiptView";
 
@@ -18,22 +17,16 @@ export default async function ReceiptPage({ params }: Props) {
   const data = loadReview(invoiceId);
   if (!data) {
     return (
-      <div className="space-y-6">
-        <h1 className="font-display text-4xl tracking-tight">No receipt for {invoiceId}</h1>
-        <Card>
-          <p className="text-sm text-ink-muted">
-            Receipts are written by the agent to <code className="font-mono text-xs">receipts/&lt;invoice_id&gt;.json</code>. Run{" "}
-            <code className="font-mono text-xs">npm run demo</code> to produce one.
-          </p>
-          <div className="mt-4 flex gap-4 text-sm">
-            <Link href="/receipts" className="font-medium underline underline-offset-4">
-              All receipts
-            </Link>
-            <Link href="/receipts/sample" className="font-medium underline underline-offset-4">
-              View the sample receipt
-            </Link>
-          </div>
-        </Card>
+      <div className="space-y-4">
+        <h1 className="text-3xl font-semibold tracking-tight">No receipt for {invoiceId}</h1>
+        <div className="flex gap-4 text-sm">
+          <Link href="/receipts" className="font-medium underline underline-offset-4">
+            All receipts
+          </Link>
+          <Link href="/receipts/sample" className="font-medium underline underline-offset-4">
+            Sample receipt
+          </Link>
+        </div>
       </div>
     );
   }

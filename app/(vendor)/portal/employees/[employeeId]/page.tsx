@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { loadTimecards, loadVendor } from "@/lib/data";
-import { Card } from "@/components/ui/Card";
 import { requirePortalSession } from "@/components/fixtures/require-session";
 import {
   findEmployeeById,
@@ -9,40 +8,36 @@ import {
   timecardHref,
   timecardsForEmployee,
 } from "@/components/fixtures/portal-data";
-import { Field, PageTitle, PortalHeader, Table, link, td, tdMoney, th, thMoney } from "@/components/fixtures/FixtureChrome";
+import { Field, PageTitle, PortalShell, Table, plink, td, tdMoney, th, thMoney } from "@/components/fixtures/FixtureChrome";
 
-export const metadata = { title: "Employee timecards · Fixture vendor portal" };
+export const metadata = { title: "Timecards · Halcyon Staffing client portal" };
 
 function NoTimecard({ employeeId, week, known }: { employeeId: string; week?: string; known: boolean }) {
   return (
-    <div>
-      <PortalHeader />
+    <PortalShell>
       <PageTitle>No timecard found</PageTitle>
-      <Card>
-        <p className="text-sm" data-testid="no-timecard">
-          No timecard found for employee <code>{employeeId}</code>
-          {week ? (
-            <>
-              {" "}
-              for the week ending <code>{week}</code>
-            </>
-          ) : null}
-          .{" "}
-          {known ? "The portal has no approved timecard on record for that week." : "This employee is not on the roster."}
-        </p>
-        <p className="mt-4 text-sm">
-          {known ? (
-            <Link href={`/portal/employees/${employeeId}`} className={link}>
-              See all timecards for {employeeId}
-            </Link>
-          ) : (
-            <Link href="/portal/employees" className={link}>
-              Back to employees
-            </Link>
-          )}
-        </p>
-      </Card>
-    </div>
+      <p className="text-sm" data-testid="no-timecard">
+        No timecard found for <code>{employeeId}</code>
+        {week ? (
+          <>
+            {" "}
+            for the week ending <code>{week}</code>
+          </>
+        ) : null}
+        .{known ? "" : " Not on the roster."}
+      </p>
+      <p className="mt-4 text-sm">
+        {known ? (
+          <Link href={`/portal/employees/${employeeId}`} className={plink}>
+            All timecards for {employeeId}
+          </Link>
+        ) : (
+          <Link href="/portal/employees" className={plink}>
+            Back to employees
+          </Link>
+        )}
+      </p>
+    </PortalShell>
   );
 }
 
@@ -68,37 +63,33 @@ export default async function PortalEmployee({
     const tc = findTimecard(timecards, employee.employee_id, week);
     if (!tc) return <NoTimecard employeeId={employee.employee_id} week={week} known />;
     return (
-      <div>
-        <PortalHeader />
-        <p className="mb-2 text-sm">
-          <Link href={`/portal/employees/${employee.employee_id}`} className={link}>
-            ← All timecards for {employee.name}
+      <PortalShell>
+        <p className="mb-3 text-sm">
+          <Link href={`/portal/employees/${employee.employee_id}`} className={plink}>
+            ← {employee.name}
           </Link>
         </p>
-        <PageTitle sub={`Week ending ${tc.week_ending}`}>Timecard: {employee.name}</PageTitle>
-        <Card title="Approved timecard" className="max-w-3xl">
-          <dl className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            <Field label="Employee ID" field="employee_id">{employee.employee_id}</Field>
-            <Field label="Employee name" field="employee_name">{employee.name}</Field>
-            <Field label="Role" field="role">{employee.role}</Field>
-            <Field label="Week ending" field="week_ending">{tc.week_ending}</Field>
-            <Field label="Approved hours" field="approved_hours">{tc.approved_hours}</Field>
-            <Field label="Status" field="status">{tc.status}</Field>
-            <Field label="Approved by" field="approved_by">{tc.approved_by}</Field>
-          </dl>
-        </Card>
-      </div>
+        <PageTitle>Timecard</PageTitle>
+        <dl className="grid max-w-2xl grid-cols-1 gap-6 rounded-md border border-line p-6 sm:grid-cols-2">
+          <Field label="Employee ID" field="employee_id">{employee.employee_id}</Field>
+          <Field label="Employee name" field="employee_name">{employee.name}</Field>
+          <Field label="Role" field="role">{employee.role}</Field>
+          <Field label="Week ending" field="week_ending">{tc.week_ending}</Field>
+          <Field label="Approved hours" field="approved_hours">{tc.approved_hours}</Field>
+          <Field label="Status" field="status">{tc.status}</Field>
+          <Field label="Approved by" field="approved_by">{tc.approved_by}</Field>
+        </dl>
+      </PortalShell>
     );
   }
 
   /* ------------------------------ employee weeks list ----------------------------- */
   const cards = timecardsForEmployee(timecards, employee.employee_id);
   return (
-    <div>
-      <PortalHeader />
-      <p className="mb-2 text-sm">
-        <Link href="/portal/employees" className={link}>
-          ← All employees
+    <PortalShell>
+      <p className="mb-3 text-sm">
+        <Link href="/portal/employees" className={plink}>
+          ← Employees
         </Link>
       </p>
       <PageTitle sub={`${employee.employee_id} · ${employee.role}`}>{employee.name}</PageTitle>
@@ -118,7 +109,7 @@ export default async function PortalEmployee({
             {cards.map((c) => (
               <tr key={c.week_ending} data-week={c.week_ending}>
                 <th scope="row" className={`${td} text-left font-medium`}>
-                  <Link href={timecardHref(employee.employee_id, c.week_ending)} className={link}>
+                  <Link href={timecardHref(employee.employee_id, c.week_ending)} className={plink}>
                     {c.week_ending}
                   </Link>
                 </th>
@@ -130,6 +121,6 @@ export default async function PortalEmployee({
           </tbody>
         </Table>
       )}
-    </div>
+    </PortalShell>
   );
 }

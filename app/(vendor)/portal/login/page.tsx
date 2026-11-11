@@ -1,10 +1,8 @@
-import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
-import { PageTitle, PortalHeader } from "@/components/fixtures/FixtureChrome";
+import { PageTitle, PortalShell } from "@/components/fixtures/FixtureChrome";
 import { DEMO_PASSWORD, DEMO_USERNAME } from "@/components/fixtures/session";
 import { firstParam } from "@/components/fixtures/portal-data";
 
-export const metadata = { title: "Sign in · Fixture vendor portal" };
+export const metadata = { title: "Sign in · Halcyon Staffing client portal" };
 
 export default async function PortalLogin({
   searchParams,
@@ -12,53 +10,34 @@ export default async function PortalLogin({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const error = firstParam((await searchParams).error) === "1";
-  const input = "w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-ink";
+  const input = "w-full rounded-md border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-[#123c4a]";
   return (
-    <div>
-      <PortalHeader signedIn={false} />
-      <div className="mx-auto max-w-md">
-        <PageTitle sub="Client access to invoices and approved timecards.">Sign in</PageTitle>
-        <Card>
-          {error && (
-            <p
-              role="alert"
-              data-testid="login-error"
-              className="mb-4 rounded-lg border border-fail/30 bg-fail/5 px-3 py-2 text-sm text-fail"
-            >
-              Incorrect username or password. Use the demo credentials below.
-            </p>
-          )}
-          <form action="/api/portal/login" method="post" className="flex flex-col gap-4">
-            <label className="flex flex-col gap-1 text-sm">
-              <span className="font-medium">Username</span>
-              <input name="username" type="text" autoComplete="username" required className={input} />
-            </label>
-            <label className="flex flex-col gap-1 text-sm">
-              <span className="font-medium">Password</span>
-              <input name="password" type="password" autoComplete="current-password" required className={input} />
-            </label>
-            <Button type="submit" variant="primary">
-              Sign in
-            </Button>
-          </form>
-        </Card>
-        <section
-          aria-label="Demo credentials"
-          className="mt-6 rounded-[var(--radius-card)] border border-line bg-wash p-4 text-sm"
-        >
-          <h2 className="mb-2 font-medium">Demo credentials (fixture only)</h2>
-          <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
-            <dt className="text-ink-muted">Username</dt>
-            <dd>
-              <code data-testid="demo-username">{DEMO_USERNAME}</code>
-            </dd>
-            <dt className="text-ink-muted">Password</dt>
-            <dd>
-              <code data-testid="demo-password">{DEMO_PASSWORD}</code>
-            </dd>
-          </dl>
-        </section>
+    <PortalShell signedIn={false}>
+      <div className="mx-auto mt-6 max-w-sm">
+        <PageTitle>Sign in</PageTitle>
+        {error && (
+          <p role="alert" data-testid="login-error" className="mb-4 rounded-md border border-fail/30 bg-fail/5 px-3 py-2 text-sm text-fail">
+            Wrong username or password.
+          </p>
+        )}
+        <form action="/api/portal/login" method="post" className="flex flex-col gap-4">
+          <label className="flex flex-col gap-1 text-sm">
+            <span>Username</span>
+            <input name="username" type="text" autoComplete="username" required className={input} />
+          </label>
+          <label className="flex flex-col gap-1 text-sm">
+            <span>Password</span>
+            <input name="password" type="password" autoComplete="current-password" required className={input} />
+          </label>
+          <button type="submit" className="mt-2 rounded-md bg-[#123c4a] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#0d2e39]">
+            Sign in
+          </button>
+        </form>
+        <p aria-label="Demo credentials" className="mt-6 text-sm text-ink-muted">
+          Demo login: <code data-testid="demo-username" className="text-ink">{DEMO_USERNAME}</code> /{" "}
+          <code data-testid="demo-password" className="text-ink">{DEMO_PASSWORD}</code>
+        </p>
       </div>
-    </div>
+    </PortalShell>
   );
 }
