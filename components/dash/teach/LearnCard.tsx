@@ -1,13 +1,23 @@
 "use client";
 /** A workflow being learned from a recording sent with Send to Ramp: its stages, live from the learn job. */
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import type { LearnView } from "./server";
 import { fmtDuration, STAGE_LABEL } from "./logic";
 import { BTN, CheckIcon, MUTED, Pill, Spinner } from "../ui";
 
 export function LearnCard({ initial, recording }: { initial: LearnView | null; recording?: string }) {
   const [v, setV] = useState(initial);
+  const router = useRouter();
+  // When the job finishes (running, or not yet seen, to done), refresh the server components so the Workflows
+  // table under the card shows the new version without a navigation.
+  const lastStatus = useRef(initial?.status ?? null);
+  useEffect(() => {
+    const status = v?.status ?? null;
+    if (status === "done" && lastStatus.current !== "done") router.refresh();
+    lastStatus.current = status;
+  }, [v?.status, router]);
   useEffect(() => {
     let alive = true;
     const id = setInterval(async () => {
