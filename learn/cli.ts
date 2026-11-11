@@ -10,6 +10,8 @@
  *
  * Flags: --offline            force deterministic mode (no API call) even when credentials exist.
  *        --recording <path>   use one specific listed recording (repo-relative).
+ *        --recording-file <runtime/recordings/*.json> --operator human|scripted_playwright
+ *                             a recording sent from the Recorder extension ("Send to Ramp").
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -36,11 +38,29 @@ async function main() {
   const t = (step: string, mode: TraceMode, detail: Record<string, unknown> = {}) =>
     trace({ run_id: runId, stage: "learn", mode, step, detail }, TRACE_FILE);
 
-  const ri = process.argv.indexOf("--recording");
-  const requested = ri >= 0 ? process.argv[ri + 1] : null;
-  const source = requested
-    ? invoiceReviewRecordings.find((r) => r.path === requested)
-    : invoiceReviewRecordings.find((r) => fs.existsSync(path.join(ROOT, r.path)));
+  const argOf = (f: string) => {
+    const i = process.argv.indexOf(f);
+    return i >= 0 ? process.argv[i + 1] ?? null : null;
+  };
+  const requested = argOf("--recording");
+  const uploaded = argOf("--recording-file");
+  const operator = argOf("--operator") === "scripted_playwright" ? "scripted_playwright" : "human";
+  if (uploaded && !/^runtime\/recordings\/[A-Za-z0-9_.-]+\.json$/.test(uploaded)) throw new Error("--recording-file must be runtime/recordings/<name>.json");
+  const source = uploaded
+    ? {
+        path: uploaded,
+        provenance: {
+          capture: "mv3_extension" as const,
+          operator: operator as "human" | "scripted_playwright",
+          role: "primary" as const,
+          note:
+            "Sent from the Ramp Teach Recorder (MV3 extension) with Send to Ramp. " +
+            (operator === "human" ? "Performed by a person." : "Performed by a scripted Playwright operator (demo film), not a person."),
+        },
+      }
+    : requested
+      ? invoiceReviewRecordings.find((r) => r.path === requested)
+      : invoiceReviewRecordings.find((r) => fs.existsSync(path.join(ROOT, r.path)));
   if (!source) {
     throw new Error(
       requested

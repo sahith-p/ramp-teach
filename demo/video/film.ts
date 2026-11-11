@@ -46,6 +46,10 @@ const TRACKED = [
   "runs/HSG-1011/calc.json",
   "runs/HSG-1011/evidence.json",
   "agent/trace.jsonl",
+  "rules/workflow_spec.json",
+  "rules/learn_meta.json",
+  "rules/evals.json",
+  "learn/trace.jsonl",
 ];
 const NEW_OUTPUTS = ["receipts/HSG-1012.json", "runs/HSG-1012"];
 
@@ -141,6 +145,8 @@ async function shoot() {
     }
     const panel = () => page.frameLocator("#panelframe");
     async function toPanel(sel: string) {
+      await panel().locator(sel).first().scrollIntoViewIfNeeded();
+      await sleep(250);
       const box = await panel().locator(sel).first().boundingBox();
       if (!box) throw new Error(`no panel element ${sel}`);
       await S("move", box.x + box.width / 2, box.y + box.height / 2);
@@ -204,30 +210,33 @@ async function shoot() {
     await sleep(300);
     await toPanel("#btn-stop");
     await sleep(900);
-    await toPanel("#btn-export");
     writeJson(path.join(WORK, "film-recording.json"), await page.evaluate(() => (window as any).__ext.recording()));
     mark("record_end");
-    await sleep(1600);
 
-    /* ---------- Scene 2: the learned workflow ---------- */
+    /* ---------- Scene 2: Send to Ramp -> sign in -> Ramp Teach learns (live) ---------- */
+    await toPanel("#btn-send");
+    await sleep(1400);
     await page.evaluate(() => (window as any).stage.closePanel());
-    await S("go", "/learn");
-    await sleep(1800);
-    await page.frameLocator("#app").locator("body").evaluate(() => window.scrollTo({ top: 300, behavior: "smooth" }));
-    await sleep(3200);
-    mark("learn_end");
-
-    /* ---------- Scene 3: the dashboard, an invoice arrives ---------- */
-    await S("fadeOut", 700);
-    await S("go", "/login");
-    await S("fadeIn", 700);
+    await frame().locator('input[name="email"]').waitFor({ timeout: 10000 });
+    await sleep(600);
     await to('input[name="email"]');
-    await type("alex@northwind.test", 55);
+    await type("alex@northwind.test", 50);
     await to('input[name="password"]');
-    await type("northwind", 50);
+    await type("northwind", 45);
     await toAndWait('button:has-text("Continue")');
+    mark("learn_start");
+    for (let i = 0; i < 240; i++) {
+      const j = await fetch(`${BASE}/api/learn`).then((r) => r.json());
+      if (j.job?.status !== "running") break;
+      await sleep(500);
+    }
+    mark("learn_done");
+    await sleep(3200);
+    await to("ol li:nth-child(3)", { click: false, ms: 900 });
+    await sleep(1800);
+    await toAndWait('a[href="/bills"]');
     await S("move", 1100, 520, 800);
-    await sleep(1600);
+    await sleep(1400);
 
     await post("/api/dash/deliver", { invoice_id: "HSG-1011" });
     mark("deliver_1011");
@@ -339,27 +348,31 @@ function assemble() {
   const dur = Number(probe(film));
   const on = marks.agent_on + 0.6;
   const off = marks.agent_off;
-  const a = marks.fast_start + 0.5;
-  const b = marks.fast_end - 0.3;
   const SPEED = 5;
   const start = Math.max(0, marks.start - 0.1); // drop pre-roll before the first painted frame
-
-  const base = [
+  // Waits to compress (only when there is a real wait).
+  const waits = [
+    [marks.learn_start + 1.2, marks.learn_done - 0.4],
+    [marks.fast_start + 0.5, marks.fast_end - 0.3],
+  ].filter(([x, y]) => y - x > 2);
+  const parts: string[] = [];
+  let cursor = start;
+  waits.forEach(([x, y]) => {
+    parts.push(`${cursor.toFixed(2)}:${x.toFixed(2)}:1`, `${x.toFixed(2)}:${y.toFixed(2)}:${SPEED}`);
+    cursor = y;
+  });
+  parts.push(`${cursor.toFixed(2)}:${dur.toFixed(2)}:1`);
+  const graph = [
     `[1:v]setpts=PTS-STARTPTS+${offset.toFixed(3)}/TB,scale=${rect.w}:${rect.h}[ag]`,
-    `[0:v][ag]overlay=${rect.x}:${rect.y}:eof_action=pass:enable='between(t,${on.toFixed(2)},${off.toFixed(2)})',fps=30,format=yuv420p`,
-  ];
-  // Speed up the second review's wait only when there is a real wait to compress.
-  const graph =
-    b - a > 2
-      ? [
-          base[0],
-          base[1] + `,split=3[s1][s2][s3]`,
-          `[s1]trim=${start.toFixed(2)}:${a.toFixed(2)},setpts=PTS-STARTPTS[p1]`,
-          `[s2]trim=${a.toFixed(2)}:${b.toFixed(2)},setpts=(PTS-STARTPTS)/${SPEED}[p2]`,
-          `[s3]trim=${b.toFixed(2)}:${dur.toFixed(2)},setpts=PTS-STARTPTS[p3]`,
-          `[p1][p2][p3]concat=n=3:v=1:a=0,fps=30[out]`,
-        ].join(";")
-      : [base[0], base[1] + `,trim=${start.toFixed(2)}:${dur.toFixed(2)},setpts=PTS-STARTPTS[out]`].join(";");
+    `[0:v][ag]overlay=${rect.x}:${rect.y}:eof_action=pass:enable='between(t,${on.toFixed(2)},${off.toFixed(2)})',fps=30,format=yuv420p,split=${parts.length}${parts.map((_, i) => `[s${i}]`).join("")}`,
+    ...parts.map((p, i) => {
+      const [x, y, sp] = p.split(":");
+      return `[s${i}]trim=${x}:${y},setpts=(PTS-STARTPTS)/${sp}[p${i}]`;
+    }),
+    `${parts.map((_, i) => `[p${i}]`).join("")}concat=n=${parts.length}:v=1:a=0,fps=30[out]`,
+  ].join(";");
+  const a = waits[0]?.[0] ?? 0;
+  const b = waits[0]?.[1] ?? 0;
   execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-i", film, "-i", path.join(agentDir, agentWebm), "-filter_complex", graph, "-map", "[out]", "-c:v", "libx264", "-preset", "slow", "-crf", "24", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-an", OUT]);
   const d = Number(probe(OUT));
   console.log(`wrote ${path.relative(ROOT, OUT)}: ${(fs.statSync(OUT).size / 1e6).toFixed(2)} MB, ${d.toFixed(1)} s (agent overlay ${on.toFixed(1)}-${off.toFixed(1)} s, offset ${offset.toFixed(2)} s; wait ${a.toFixed(1)}-${b.toFixed(1)} s at ${SPEED}x)`);

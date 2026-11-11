@@ -14,7 +14,10 @@
       onChanged: { addListener: function (fn) { ext.listen(fn); } },
     },
     downloads: { download: function () { return Promise.resolve(1); } },
+    tabs: { create: function (o) { return Promise.resolve(window.parent.stage.openInMain(o && o.url)); } },
   };
+  // The film's operator is scripted, not a person: say so in what the panel sends.
+  window.__RT_OPERATOR = "scripted_playwright";
   function FakeRecognition() { this.continuous = false; this.interimResults = false; this.lang = "en-US"; }
   FakeRecognition.prototype.start = function () { var self = this; ext.addRecognizer(self); setTimeout(function () { self.onstart && self.onstart(); }, 50); };
   FakeRecognition.prototype.stop = function () { ext.removeRecognizer(this); this.onend && this.onend(); };

@@ -14,8 +14,8 @@ function Field({ name, type, label }: { name: string; type: string; label: strin
   );
 }
 
-export default async function DashLogin({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
-  const { error } = await searchParams;
+export default async function DashLogin({ searchParams }: { searchParams: Promise<{ error?: string; next?: string }> }) {
+  const { error, next } = await searchParams;
   return (
     <div className="font-ramp relative min-h-screen bg-white px-6">
       <div className="absolute left-14 top-9">
@@ -23,6 +23,7 @@ export default async function DashLogin({ searchParams }: { searchParams: Promis
       </div>
       <div className="flex min-h-screen items-center justify-center">
         <form action="/api/dash/login" method="post" className="w-full max-w-[576px]">
+          <input type="hidden" name="next" value={next ?? "/bills"} />
           <h1 className="mb-5 text-[28px] font-normal tracking-[-0.01em]">Welcome to Ramp</h1>
           {error && <p className="mb-3 text-sm text-fail">Enter your email and password.</p>}
           <div className="space-y-4">

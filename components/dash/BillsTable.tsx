@@ -70,16 +70,16 @@ export function BillsTable({ initial, activeBillId }: { initial: DashBill[]; act
       </div>
 
       <div className="-mx-14 min-h-[calc(100vh-240px)] bg-[rgb(250,249,248)] px-14 pb-16 pt-6">
-      <div className="border border-[rgb(234,231,228)] bg-white px-4">
+      <div className="overflow-hidden border border-[rgb(234,231,228)] bg-white">
       <table className="w-full text-[14px]">
         <thead>
           <tr className="text-left text-[13px] text-[rgb(110,106,104)]">
-            <th className="py-3 pl-2 font-normal">Vendor</th>
+            <th className="py-3 pl-5 font-normal">Vendor</th>
             <th className="py-3 font-normal">Invoice</th>
             <th className="py-3 font-normal">Invoice date</th>
             <th className="py-3 font-normal">Due date</th>
             <th className="py-3 pr-6 text-right font-normal">Amount</th>
-            <th className="py-3 font-normal">Status</th>
+            <th className="py-3 pr-5 font-normal">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -96,7 +96,7 @@ export function BillsTable({ initial, activeBillId }: { initial: DashBill[]; act
               data-bill={b.bill_id}
               className={`border-t border-[rgb(234,231,228)] transition-colors duration-[1200ms] ${fresh.has(b.bill_id) ? "bg-[#f4f8c7]" : b.bill_id === activeBillId ? "bg-[#f6f6f2]" : "hover:bg-[#fafaf7]"} ${fresh.has(b.bill_id) ? "animate-[rowin_.5s_ease-out]" : ""}`}
             >
-              <td className="py-3 pl-2">
+              <td className="py-3 pl-5">
                 <Link href={`/bills/${b.bill_id}`} className="flex items-center gap-3 font-normal">
                   <VendorAvatar name={b.vendor} />
                   {b.vendor}
@@ -106,7 +106,7 @@ export function BillsTable({ initial, activeBillId }: { initial: DashBill[]; act
               <td className="py-3 text-ink-muted">{fmtDate(b.issue_date)}</td>
               <td className="py-3 text-ink-muted">{fmtDate(b.due_date)}</td>
               <td className="tabular py-3 pr-6 text-right font-normal">{fmtMoney(b.amount, b.currency)}</td>
-              <td className="py-3">
+              <td className="py-3 pr-5">
                 <StatusPill status={b.status} />
               </td>
             </tr>

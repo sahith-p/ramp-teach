@@ -5,11 +5,11 @@ type Item = { label: string; href?: string; icon: keyof typeof ICONS; children?:
 
 /** Same groups and order as Ramp's sidebar. Only Bill Pay > Bills is live in this demo. */
 const GROUPS: Item[][] = [
-  [{ label: "Home", icon: "home" }],
+  [{ label: "Home", icon: "home" }, { label: "Ramp Teach", icon: "spark", href: "/agents" }],
   [
     { label: "Cards and expenses", icon: "card" },
     { label: "Travel", icon: "travel" },
-    { label: "Bill Pay", icon: "bill", children: [{ label: "Bills", href: "/bills", active: true }, { label: "Vendor credits" }] },
+    { label: "Bill Pay", icon: "bill", children: [{ label: "Bills", href: "/bills" }, { label: "Vendor credits" }] },
     { label: "Procurement", icon: "cart" },
     { label: "Banking", icon: "bank" },
     { label: "AI spend", icon: "dollar" },
@@ -24,6 +24,7 @@ const GROUPS: Item[][] = [
 
 const ICONS = {
   home: <path d="M2.5 7 7 3.2 11.5 7v4.8H2.5V7Z" />,
+  spark: <path d="M7 1.8 8.2 5.8 12.2 7 8.2 8.2 7 12.2 5.8 8.2 1.8 7 5.8 5.8Z" />,
   card: <><rect x="1.8" y="3.5" width="10.4" height="7.5" rx="1" /><path d="M1.8 6h10.4" /></>,
   travel: <path d="M2 8.5 12 4l-2.3 7-2.2-2.5L5 10V8.2" />,
   bill: <><path d="M3 1.8h5.5L11 4.3v7.9H3V1.8Z" /><path d="M5 6.5h4M5 8.8h4" /></>,
@@ -46,7 +47,7 @@ function Icon({ name }: { name: keyof typeof ICONS }) {
 
 const row = "flex h-8 items-center gap-2.5 px-2 text-[15px] text-[rgb(26,25,25)]";
 
-export function Sidebar() {
+export function Sidebar({ active }: { active: "bills" | "teach" }) {
   return (
     <aside className="font-ramp sticky top-0 flex h-screen w-[216px] shrink-0 flex-col bg-[rgb(244,242,240)]">
       <div className="px-2 pb-2 pt-2">
@@ -69,7 +70,7 @@ export function Sidebar() {
                   </div>
                   {it.children.map((c) =>
                     c.href ? (
-                      <Link key={c.label} href={c.href} className={`mx-1 flex h-8 items-center px-6 text-[15px] ${c.active ? "bg-[rgb(250,249,248)] text-[rgb(26,25,25)]" : "text-[rgb(110,106,104)]"}`}>
+                      <Link key={c.label} href={c.href} className={`mx-1 flex h-8 items-center px-6 text-[15px] ${active === "bills" && c.href === "/bills" ? "bg-[rgb(250,249,248)] text-[rgb(26,25,25)]" : "text-[rgb(110,106,104)]"}`}>
                         {c.label}
                       </Link>
                     ) : (
@@ -78,6 +79,13 @@ export function Sidebar() {
                       </span>
                     ),
                   )}
+                </li>
+              ) : it.href ? (
+                <li key={it.label}>
+                  <Link href={it.href} className={`${row} ${active === "teach" && it.href === "/agents" ? "bg-[rgb(234,231,228)]" : ""}`}>
+                    <Icon name={it.icon} />
+                    {it.label}
+                  </Link>
                 </li>
               ) : (
                 <li key={it.label} className={`${row} cursor-default`}>

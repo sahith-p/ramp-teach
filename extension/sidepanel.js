@@ -15,6 +15,7 @@ const btnStop = /** @type {HTMLButtonElement} */ ($("btn-stop"));
 const btnNarrate = /** @type {HTMLButtonElement} */ ($("btn-narrate"));
 const btnMic = /** @type {HTMLButtonElement} */ ($("btn-mic"));
 const btnExport = /** @type {HTMLButtonElement} */ ($("btn-export"));
+const btnSend = /** @type {HTMLButtonElement} */ ($("btn-send"));
 const btnClear = /** @type {HTMLButtonElement} */ ($("btn-clear"));
 const narration = /** @type {HTMLTextAreaElement} */ ($("narration"));
 
@@ -78,6 +79,7 @@ function render() {
   btnNarrate.disabled = !recording;
   btnMic.disabled = !recording;
   btnExport.disabled = !session || session.steps.length === 0;
+  btnSend.disabled = recording || !session || session.steps.length === 0;
   btnClear.disabled = !session;
 
   const steps = session?.steps ?? [];
@@ -151,6 +153,34 @@ btnExport.addEventListener("click", async () => {
     say(`Exported via browser download (${String(/** @type {Error} */ (err)?.message ?? err)}).`);
   } finally {
     setTimeout(() => URL.revokeObjectURL(url), 30_000);
+  }
+});
+
+/* Send to Ramp: upload the recording to the local Ramp Teach app (same localhost origin it was recorded on),
+   which starts LEARN, then open its Ramp Teach page. */
+btnSend.addEventListener("click", async () => {
+  const res = await send({ type: "rt:export" });
+  const rec = res?.ok ? res.recording : session ? toRecording(session) : null;
+  const pageUrl = session?.last_page?.url ?? "";
+  let origin = "";
+  try {
+    origin = new URL(pageUrl).origin;
+  } catch {}
+  if (!rec || !origin) return say("Nothing to send.", true);
+  // Who performed the session. A person by default; the demo film's stage marks its scripted operator.
+  const operator = /** @type {any} */ (window).__RT_OPERATOR === "scripted_playwright" ? "scripted_playwright" : "human";
+  try {
+    const r = await fetch(`${origin}/api/learn`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ recording: rec, operator }) });
+    if (!r.ok) return say(`Ramp Teach said no (${r.status}).`, true);
+    say("Sent to Ramp Teach. Learning from your recording.");
+    const url = `${origin}/agents`;
+    try {
+      await chrome.tabs.create({ url });
+    } catch {
+      window.open(url, "_blank");
+    }
+  } catch (err) {
+    say(`Could not reach Ramp Teach: ${String(/** @type {Error} */ (err)?.message ?? err)}`, true);
   }
 });
 
