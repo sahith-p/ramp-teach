@@ -27,6 +27,12 @@
   .tab::before { left:-10px; background: radial-gradient(circle at 0 0, transparent 9.5px, #fff 10px); }
   .tab::after { right:-10px; background: radial-gradient(circle at 100% 0, transparent 9.5px, #fff 10px); }
   .tab .ttl { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .tab.bg { background:transparent; color:#474747; }
+  .tab.bg::before, .tab.bg::after { display:none; }
+  .tab.bg + .tab { margin-left:0; }
+  .tab.bg::selection { background:transparent; }
+  .tab.fresh { animation: tabin .22s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes tabin { from { width:0; opacity:0; } to { width:248px; opacity:1; } }
   .tab .fav { width:16px; height:16px; flex:none; display:flex; align-items:center; justify-content:center; }
   .tab .x { width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#474747; flex:none; }
   .newtab { margin-left:2px; margin-bottom:3px; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#474747; }
@@ -249,7 +255,21 @@ window.stage = {
   say(text) { $("sub").textContent = text; $("sub").classList.add("on"); window.__ext.speak(text); },
   async unsay() { $("sub").classList.remove("on"); await sleep(350); },
   /** chrome.tabs.create from the extension: the film keeps one window, so open it in the main tab. */
-  async openInMain(url) { try { const u = new URL(url); app.src = u.pathname + u.search; } catch { app.src = url; } return { id: 1 }; },
+  async openInMain(url) {
+    // chrome.tabs.create: a new tab opens next to the current one and becomes active.
+    const cur = $("title").closest(".tab");
+    if (cur && !document.querySelector(".tab.fresh")) {
+      const fresh = cur.cloneNode(true);
+      cur.classList.add("bg");
+      cur.querySelector("#title").removeAttribute("id");
+      cur.querySelector("#fav").removeAttribute("id");
+      fresh.classList.add("fresh");
+      fresh.querySelector(".ttl").textContent = "New Tab";
+      cur.after(fresh);
+    }
+    try { const u = new URL(url); app.src = u.pathname + u.search; } catch { app.src = url; }
+    return { id: 2 };
+  },
   async openPanel() { $("panelframe").src = "/stage-ext/sidepanel.html"; await new Promise((r) => $("panelframe").addEventListener("load", r, { once: true })); $("panel").classList.add("open"); await sleep(650); },
   closePanel() { $("panel").classList.remove("open"); },
   rect(id) { const r = $(id).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; },

@@ -394,9 +394,9 @@ async function shoot() {
       /* ---------- Scene 2: Send to Ramp -> Bill Pay > Workflows learns the workflow (live) ---------- */
       await toPanel("#btn-send");
       await frame().locator('[data-testid="learn-card"]').waitFor({ timeout: 20000 });
-      await sleep(900); // Send to Ramp has landed in Bill Pay > Workflows (the overview cuts in at learn_start)
+      await sleep(1400); // Send to Ramp opened Bill Pay > Workflows in a new tab; let it settle
       await page.evaluate(() => (window as any).stage.closePanel());
-      await sleep(600);
+      await sleep(1600); // the panel slides shut and the page sits before the overview cuts in at learn_start
       mark("learn_start");
       await to('[data-testid="learn-card"] li[data-stage="segment"]', { click: false, ms: 900 });
       let version = 0;

@@ -1061,7 +1061,7 @@ export const SECTIONS: Section[] = [
   {
     id: "intro",
     title: null,
-    duration: 6,
+    duration: 8,
     body: introBody,
     captions: [],
   },
