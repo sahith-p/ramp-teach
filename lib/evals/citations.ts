@@ -34,7 +34,16 @@ export function gradeCitations(skill: Pick<SkillVersion, "rules">, rec: Recordin
       const tag = `citation ${i + 1}`;
       const quote = c.quote.trim();
       if (!quote && c.step_index == null && !c.selector) problems.push(`${tag} points at nothing`);
-      if (quote) {
+      // A "shown" citation (no utterance) quotes the clicked element's text or selector, not spoken words.
+      const step = c.step_index != null ? rec.steps[c.step_index] : undefined;
+      const shownOk =
+        !c.utterance_id &&
+        step?.kind === "dom" &&
+        !!quote &&
+        (containsQuote(step.detail.text ?? "", quote) || normSel(step.detail.selector ?? "") === normSel(quote));
+      if (quote && shownOk) {
+        /* step citation: checked below against the step */
+      } else if (quote) {
         if (!containsQuote(transcriptText, quote)) problems.push(`${tag} quote not in transcript: "${quote}"`);
         if (c.utterance_id) {
           const u = utterances.get(c.utterance_id);

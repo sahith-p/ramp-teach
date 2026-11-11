@@ -11,7 +11,9 @@ export default async function PortalInvoice({ params }: { params: Promise<{ invo
   await requirePortalSession();
   const { invoiceId } = await params;
   const id = decodeURIComponent(invoiceId);
-  const invoice = loadInvoice(id);
+  const found = loadInvoice(id);
+  // Halcyon's portal only shows Halcyon's own invoices.
+  const invoice = found && found.vendor === loadVendor().vendor ? found : null;
 
   if (!invoice) {
     return (

@@ -49,7 +49,7 @@ Return rules, a portal map, the vendor and open questions.
   (how to gather evidence). source "said" if the reviewer said it, "shown" if it comes only from a field they opened or
   inspected without talking about it, "both" if both. Every rule MUST carry at least one citation: copy the exact words
   from the utterance (with its id and the step it links to), or for a shown rule the step index and the element's text.
-- portal_map: each page where evidence is read (skip the sign-in page), with the fields read there and their selectors
+- portal_map: each page the workflow goes through, in order: the sign-in page with its input field names (never values), then each page where evidence is read, with the fields read there and their selectors
   from the recorded steps.
 - Only use what the recording supports. Never invent values, pages, fields or rules. Rules must be general, not facts
   about the specific item reviewed.`;

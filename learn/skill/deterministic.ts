@@ -102,7 +102,17 @@ export function portalMapFromSteps(seg: Segmented): PortalPage[] {
         : null;
     if (entry && entry.name && !page.fields.some((f) => f.name === entry.name)) page.fields.push(entry);
   }
-  return pages.map((p) => map.get(p)!);
+  // Pages where the reviewer typed into named fields (e.g. the sign-in page): field names only, never values.
+  const typed = new Map<string, PortalPage>();
+  for (const s of seg.steps) {
+    if (s.kind !== "dom" || !s.page || !s.selector || (s.event !== "input" && s.event !== "change")) continue;
+    const name = /\[name="([^"]+)"\]/.exec(s.selector)?.[1];
+    if (!name || map.has(s.page)) continue;
+    const page = typed.get(s.page) ?? { page: s.page, fields: [] };
+    if (!page.fields.some((f) => f.name === name)) page.fields.push({ name, selector: `input[name="${name}"]` });
+    typed.set(s.page, page);
+  }
+  return [...typed.values(), ...pages.map((p) => map.get(p)!)];
 }
 
 /** Fields the reviewer opened/inspected on screen (clicked data-field elements) that no utterance mentions. */

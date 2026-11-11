@@ -31,7 +31,7 @@ function deps(over: Partial<RunDeps> = {}) {
     },
     applyGate: async (...args) => {
       applied.push(args);
-      return { status: args[2] ? "active" : "blocked", activated: !!args[2], via: "local helper" };
+      return { status: args[2] ? "active" : "blocked", activated: !!args[2], via: "lib/skills/status.ts", synced: [] };
     },
     now: () => new Date("2026-11-11T12:00:00.000Z"),
     ...over,

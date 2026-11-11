@@ -60,7 +60,7 @@ describe("learner adapter", () => {
   });
 });
 
-describe("gate application (local helper)", () => {
+describe("gate application", () => {
   async function withRoot() {
     const root = mkTmp();
     process.env.RAMP_TEACH_ROOT = root;
@@ -77,7 +77,8 @@ describe("gate application (local helper)", () => {
   it("pass: status active, eval_run_id set, version made active", async () => {
     const { mod, read, active } = await withRoot();
     const r = await mod.applyGateToSkill("halcyon-invoice-review", 2, true, "eval_x");
-    expect(r).toEqual({ status: "active", activated: true, via: "local helper" });
+    expect(r).toMatchObject({ status: "active", activated: true, via: "lib/skills/status.ts" });
+    expect(r.synced.map((f) => path.basename(f))).toEqual(["workflow_spec.json", "learn_meta.json"]);
     expect(read()).toMatchObject({ status: "active", eval_run_id: "eval_x" });
     expect(JSON.parse(fs.readFileSync(active, "utf8"))).toEqual({ version: 2 });
   });
@@ -89,6 +90,6 @@ describe("gate application (local helper)", () => {
   });
   it("missing skill.json is an error", async () => {
     const { mod } = await withRoot();
-    await expect(mod.applyGateToSkill("halcyon-invoice-review", 9, true, "e")).rejects.toThrow(/not found/);
+    await expect(mod.applyGateToSkill("halcyon-invoice-review", 9, true, "e")).rejects.toThrow(/no skill.json|not found/);
   });
 });

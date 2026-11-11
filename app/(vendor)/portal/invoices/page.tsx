@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { loadAllInvoices } from "@/lib/data";
+import { loadAllInvoices, loadVendor } from "@/lib/data";
 import { fmtMoney } from "@/lib/money";
 import { requirePortalSession } from "@/components/fixtures/require-session";
 import { invoiceWeekEnding } from "@/components/fixtures/portal-data";
@@ -9,7 +9,9 @@ export const metadata = { title: "Invoices · Halcyon Staffing client portal" };
 
 export default async function PortalInvoices() {
   await requirePortalSession();
-  const invoices = loadAllInvoices();
+  // This is Halcyon's portal: only Halcyon's own invoices.
+  const vendor = loadVendor().vendor;
+  const invoices = loadAllInvoices().filter((inv) => inv.vendor === vendor);
   return (
     <PortalShell>
       <PageTitle>Invoices</PageTitle>
