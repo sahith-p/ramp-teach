@@ -150,6 +150,8 @@ cloud sessions; don't reinstall), system fonts are optional (Inter and JetBrains
 
 ## 7. Current state (2026-11-11)
 
+- Branches: work happens on `claude/pensive-turing-jh6orb`; `main` was fast-forwarded to it on 2026-11-11 at the
+  user's request. Keep `main` a fast-forward of the work branch (no force pushes).
 - All build tickets done; 171 tests pass; artifact guard OK.
 - Walkthrough video: `demo/video/ramp-teach-walkthrough.mp4` (done).
 - **Product film:** the committed `ramp-teach-film.mp4` is the previous cut (138.8 s, no diagrams, light outro).
