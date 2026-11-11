@@ -66,6 +66,7 @@ async function startServer(): Promise<ChildProcess> {
   if (await up()) throw new Error(`something is already serving ${BASE}; stop it so the film server can start with film env`);
   const child = spawn("npx", ["next", "start", "-p", PORT], {
     cwd: ROOT,
+    detached: true, // own process group, so the real next-server child stops with it
     stdio: ["ignore", fs.openSync(path.join(WORK, "next.log"), "w"), fs.openSync(path.join(WORK, "next.log"), "a")],
     env: {
       ...process.env,
@@ -262,9 +263,9 @@ async function shoot() {
     await sleep(900);
     await to('[data-testid="agent-review"] li:nth-child(3)', { click: false, ms: 700 });
     await sleep(1200);
-    await to('button:has-text("Dispute")');
+    await to('[data-testid="bill-drawer"] footer button:has-text("Dispute")');
     await sleep(2200);
-    await to('[aria-label="Close"] svg');
+    await to('[data-testid="bill-drawer"] header a[aria-label="Close"]');
     await sleep(1200);
 
     /* ---------- Scene 4: a clean invoice ---------- */
@@ -283,11 +284,11 @@ async function shoot() {
     }
     mark("fast_end");
     await sleep(2000);
-    await to('button:has-text("Approve")');
+    await to('[data-testid="bill-drawer"] footer button:has-text("Approve")');
     await sleep(2200);
-    await to('[aria-label="Close"] svg');
+    await to('[data-testid="bill-drawer"] header a[aria-label="Close"]');
     await sleep(900);
-    await to('button:has-text("Approved")');
+    await to('button:has-text("Payment required")');
     await sleep(2600);
     await S("fadeOut", 1000, "Ramp Teach");
     await sleep(1800);
@@ -306,8 +307,12 @@ async function shoot() {
     writeJson(path.join(WORK, "marks.json"), { t0: new Date(t0).toISOString(), marks });
     console.log("shot film.webm", marks);
   } finally {
-    server.kill();
-    await sleep(800);
+    try {
+      process.kill(-server.pid!, "SIGTERM"); // whole group: npx + next-server
+    } catch {
+      server.kill();
+    }
+    await sleep(1200);
   }
 }
 
@@ -333,14 +338,22 @@ function assemble() {
   const SPEED = 5;
   const start = Math.max(0, marks.start - 0.1); // drop pre-roll before the first painted frame
 
-  const graph = [
+  const base = [
     `[1:v]setpts=PTS-STARTPTS+${offset.toFixed(3)}/TB,scale=${rect.w}:${rect.h}[ag]`,
-    `[0:v][ag]overlay=${rect.x}:${rect.y}:eof_action=pass:enable='between(t,${on.toFixed(2)},${off.toFixed(2)})',fps=30,format=yuv420p,split=3[s1][s2][s3]`,
-    `[s1]trim=${start.toFixed(2)}:${a.toFixed(2)},setpts=PTS-STARTPTS[p1]`,
-    `[s2]trim=${a.toFixed(2)}:${b.toFixed(2)},setpts=(PTS-STARTPTS)/${SPEED}[p2]`,
-    `[s3]trim=${b.toFixed(2)}:${dur.toFixed(2)},setpts=PTS-STARTPTS[p3]`,
-    `[p1][p2][p3]concat=n=3:v=1:a=0,fps=30[out]`,
-  ].join(";");
+    `[0:v][ag]overlay=${rect.x}:${rect.y}:eof_action=pass:enable='between(t,${on.toFixed(2)},${off.toFixed(2)})',fps=30,format=yuv420p`,
+  ];
+  // Speed up the second review's wait only when there is a real wait to compress.
+  const graph =
+    b - a > 2
+      ? [
+          base[0],
+          base[1] + `,split=3[s1][s2][s3]`,
+          `[s1]trim=${start.toFixed(2)}:${a.toFixed(2)},setpts=PTS-STARTPTS[p1]`,
+          `[s2]trim=${a.toFixed(2)}:${b.toFixed(2)},setpts=(PTS-STARTPTS)/${SPEED}[p2]`,
+          `[s3]trim=${b.toFixed(2)}:${dur.toFixed(2)},setpts=PTS-STARTPTS[p3]`,
+          `[p1][p2][p3]concat=n=3:v=1:a=0,fps=30[out]`,
+        ].join(";")
+      : [base[0], base[1] + `,trim=${start.toFixed(2)}:${dur.toFixed(2)},setpts=PTS-STARTPTS[out]`].join(";");
   execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-i", film, "-i", path.join(agentDir, agentWebm), "-filter_complex", graph, "-map", "[out]", "-c:v", "libx264", "-preset", "slow", "-crf", "24", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-an", OUT]);
   const d = Number(probe(OUT));
   console.log(`wrote ${path.relative(ROOT, OUT)}: ${(fs.statSync(OUT).size / 1e6).toFixed(2)} MB, ${d.toFixed(1)} s (agent overlay ${on.toFixed(1)}-${off.toFixed(1)} s, offset ${offset.toFixed(2)} s; wait ${a.toFixed(1)}-${b.toFixed(1)} s at ${SPEED}x)`);

@@ -1,2 +1,4 @@
 {"invoice_id":"HSG-1011","receipt_id":"rcpt_HSG-1011","bill_id":"bill_HSG-1011","decision":"dispute","decided_by":"Demo reviewer (scripted stand-in for a human)","decided_at":"2026-11-09T09:04:47.225Z"}
 {"invoice_id":"HSG-1011","receipt_id":"rcpt_HSG-1011","bill_id":"bill_HSG-1011","decision":"dispute","decided_by":"Demo reviewer (scripted stand-in for a human)","decided_at":"2026-11-09T09:46:06.810Z"}
+{"invoice_id":"HSG-1011","receipt_id":"rcpt_HSG-1011","bill_id":"bill_HSG-1011","decision":"dispute","decided_by":"alex@northwind.test","decided_at":"2026-11-11T00:34:27.977Z"}
+{"invoice_id":"HSG-1012","receipt_id":"rcpt_HSG-1012","bill_id":"bill_HSG-1012","decision":"approve","decided_by":"alex@northwind.test","decided_at":"2026-11-11T00:34:42.159Z"}

@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { RampLogo } from "@/components/dash/RampLogo";
 
-export const metadata: Metadata = { title: "Sign in · Ramp Teach" };
+export const metadata: Metadata = { title: "Ramp Login Page" };
 
 function Field({ name, type, label }: { name: string; type: string; label: string }) {
   return (
-    <label className="block border border-[#8a8a8a] px-3 pb-2 pt-1.5 focus-within:border-ink">
-      <span className="block text-[11px] text-ink-muted">
+    <label className="block border border-[rgb(110,106,104)] px-3 pb-2 pt-2 focus-within:border-[rgb(26,25,25)]">
+      <span className="block text-[12px] leading-4 text-[rgb(71,69,67)]">
         {label} <span aria-hidden>*</span>
       </span>
-      <input name={name} type={type} autoComplete="off" className="w-full bg-transparent text-[15px] outline-none" />
+      <input name={name} type={type} autoComplete="off" className="mt-0.5 w-full bg-transparent text-[16px] outline-none" />
     </label>
   );
 }
@@ -16,19 +17,24 @@ function Field({ name, type, label }: { name: string; type: string; label: strin
 export default async function DashLogin({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const { error } = await searchParams;
   return (
-    <div className="relative min-h-[calc(100vh-44px)] bg-white px-6">
-      <div className="absolute left-14 top-9 text-[22px] font-medium tracking-tight">ramp teach</div>
-      <div className="flex min-h-[calc(100vh-44px)] items-center justify-center">
+    <div className="font-ramp relative min-h-screen bg-white px-6">
+      <div className="absolute left-14 top-9">
+        <RampLogo height={24} />
+      </div>
+      <div className="flex min-h-screen items-center justify-center">
         <form action="/api/dash/login" method="post" className="w-full max-w-[576px]">
-          <h1 className="mb-5 text-[28px] font-normal tracking-tight">Welcome to Ramp Teach</h1>
+          <h1 className="mb-5 text-[28px] font-normal tracking-[-0.01em]">Welcome to Ramp</h1>
           {error && <p className="mb-3 text-sm text-fail">Enter your email and password.</p>}
-          <div className="space-y-3">
+          <div className="space-y-4">
             <Field name="email" type="email" label="Email address" />
             <Field name="password" type="password" label="Password" />
           </div>
-          <button type="submit" className="mt-4 w-full bg-accent py-4 text-[15px] text-ink hover:brightness-95">
+          <button type="submit" className="mt-4 h-14 w-full bg-[rgb(228,242,34)] text-[16px] font-normal text-[rgb(26,25,25)] hover:brightness-95">
             Continue
           </button>
+          <p className="mt-3 text-[16px] text-[rgb(71,69,67)]">
+            Looking to get started with Ramp for your business? <span className="underline underline-offset-4">Sign up ↗</span>
+          </p>
         </form>
       </div>
     </div>

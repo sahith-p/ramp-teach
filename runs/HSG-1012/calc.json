@@ -1,0 +1,42 @@
+{
+  "invoice_id": "HSG-1012",
+  "computed_at": "2026-11-11T00:34:35.646Z",
+  "checks": [
+    {
+      "check": "line_amounts_correct",
+      "result": "pass",
+      "findings": [],
+      "summary": "All 5 line amounts equal quantity × unit rate to the cent."
+    },
+    {
+      "check": "total_matches_line_items",
+      "result": "pass",
+      "findings": [],
+      "summary": "Invoice total $12,374.00 equals the sum of 5 line amounts."
+    },
+    {
+      "check": "rate_matches_contract",
+      "result": "pass",
+      "findings": [],
+      "summary": "All 4 labor lines bill the contract rate-card rate for their role."
+    },
+    {
+      "check": "no_duplicate_lines",
+      "result": "pass",
+      "findings": [],
+      "summary": "All 4 labor lines bill distinct employee-weeks."
+    },
+    {
+      "check": "no_unknown_charges",
+      "result": "pass",
+      "findings": [],
+      "summary": "All 1 non-labor charge are allowed by the contract and within their caps."
+    },
+    {
+      "check": "hours_match_timecards",
+      "result": "pass",
+      "findings": [],
+      "summary": "All 4 labor lines bill hours at or below the approved timecard hours for that employee-week."
+    }
+  ]
+}

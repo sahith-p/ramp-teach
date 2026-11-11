@@ -5,17 +5,21 @@ import { useEffect, useRef, useState } from "react";
 import type { DashBill, DashStatus } from "@/lib/dash";
 import { fmtDate, fmtMoney, StatusPill, VendorAvatar } from "./ui";
 
-type Tab = "review" | "approved" | "disputed" | "all";
-const TABS: { key: Tab; label: string; match: (s: DashStatus) => boolean }[] = [
-  { key: "review", label: "For review", match: (s) => s === "new" || s === "reviewing" || s === "needs_review" || s === "ready" || s === "failed" },
-  { key: "approved", label: "Approved", match: (s) => s === "approved" },
-  { key: "disputed", label: "Disputed", match: (s) => s === "disputed" },
-  { key: "all", label: "All", match: () => true },
+type Tab = "all" | "drafts" | "approval" | "payment" | "inflight" | "history";
+const review = (s: DashStatus) => s === "new" || s === "reviewing" || s === "needs_review" || s === "ready" || s === "failed";
+/** Ramp's Bill Pay tabs. Approved bills that arrived in this session need payment; older decided bills are history. */
+const TABS: { key: Tab; label: string; match: (b: DashBill) => boolean; count?: boolean }[] = [
+  { key: "all", label: "All bills", match: () => true, count: true },
+  { key: "drafts", label: "Drafts", match: () => false, count: true },
+  { key: "approval", label: "For approval", match: (b) => review(b.status), count: true },
+  { key: "payment", label: "Payment required", match: (b) => b.status === "approved" && !!b.arrived_at, count: true },
+  { key: "inflight", label: "In-flight", match: () => false, count: true },
+  { key: "history", label: "History", match: (b) => (b.status === "approved" && !b.arrived_at) || b.status === "disputed" },
 ];
 
 export function BillsTable({ initial, activeBillId }: { initial: DashBill[]; activeBillId?: string }) {
   const [bills, setBills] = useState(initial);
-  const [tab, setTab] = useState<Tab>("review");
+  const [tab, setTab] = useState<Tab>("approval");
   const [toast, setToast] = useState<string | null>(null);
   const [fresh, setFresh] = useState<Set<string>>(new Set());
   const known = useRef(new Set(initial.map((b) => b.bill_id)));
@@ -47,27 +51,29 @@ export function BillsTable({ initial, activeBillId }: { initial: DashBill[]; act
     };
   }, []);
 
-  const shown = bills.filter((b) => TABS.find((t) => t.key === tab)!.match(b.status));
-  const count = (t: (typeof TABS)[number]) => bills.filter((b) => t.match(b.status)).length;
+  const shown = bills.filter((b) => TABS.find((t) => t.key === tab)!.match(b));
+  const count = (t: (typeof TABS)[number]) => bills.filter((b) => t.match(b)).length;
 
   return (
     <div className="relative">
-      <div className="flex items-end gap-6 border-b border-line">
+      <div className="-mx-14 mt-7 flex items-end border-b border-[rgb(226,222,219)] px-[42px]">
         {TABS.map((t) => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`-mb-px border-b-2 pb-3 text-sm ${tab === t.key ? "border-ink font-medium text-ink" : "border-transparent text-ink-muted hover:text-ink"}`}
+            className={`-mb-px flex h-12 items-center gap-2 border-b-2 px-4 text-[15px] ${tab === t.key ? "border-[rgb(26,25,25)] text-[rgb(26,25,25)]" : "border-transparent text-[rgb(110,106,104)] hover:text-[rgb(26,25,25)]"}`}
           >
             {t.label}
-            <span className="ml-1.5 rounded-full bg-[#f1f1ee] px-1.5 py-0.5 text-[11px] text-ink-muted">{count(t)}</span>
+            {t.count && <span className="flex h-[18px] min-w-[18px] items-center justify-center rounded-[3px] bg-[rgb(234,231,228)] px-1 text-[12px] text-[rgb(71,69,67)]">{count(t)}</span>}
           </button>
         ))}
       </div>
 
-      <table className="mt-2 w-full text-sm">
+      <div className="-mx-14 min-h-[calc(100vh-240px)] bg-[rgb(250,249,248)] px-14 pb-16 pt-6">
+      <div className="border border-[rgb(234,231,228)] bg-white px-4">
+      <table className="w-full text-[14px]">
         <thead>
-          <tr className="text-left text-xs text-ink-faint">
+          <tr className="text-left text-[13px] text-[rgb(110,106,104)]">
             <th className="py-3 pl-2 font-normal">Vendor</th>
             <th className="py-3 font-normal">Invoice</th>
             <th className="py-3 font-normal">Invoice date</th>
@@ -88,10 +94,10 @@ export function BillsTable({ initial, activeBillId }: { initial: DashBill[]; act
             <tr
               key={b.bill_id}
               data-bill={b.bill_id}
-              className={`border-t border-line transition-colors duration-[1200ms] ${fresh.has(b.bill_id) ? "bg-[#f4f8c7]" : b.bill_id === activeBillId ? "bg-[#f6f6f2]" : "hover:bg-[#fafaf7]"} ${fresh.has(b.bill_id) ? "animate-[rowin_.5s_ease-out]" : ""}`}
+              className={`border-t border-[rgb(234,231,228)] transition-colors duration-[1200ms] ${fresh.has(b.bill_id) ? "bg-[#f4f8c7]" : b.bill_id === activeBillId ? "bg-[#f6f6f2]" : "hover:bg-[#fafaf7]"} ${fresh.has(b.bill_id) ? "animate-[rowin_.5s_ease-out]" : ""}`}
             >
               <td className="py-3 pl-2">
-                <Link href={`/bills/${b.bill_id}`} className="flex items-center gap-3 font-medium">
+                <Link href={`/bills/${b.bill_id}`} className="flex items-center gap-3 font-normal">
                   <VendorAvatar name={b.vendor} />
                   {b.vendor}
                 </Link>
@@ -99,7 +105,7 @@ export function BillsTable({ initial, activeBillId }: { initial: DashBill[]; act
               <td className="py-3 text-ink-muted">{b.invoice_id}</td>
               <td className="py-3 text-ink-muted">{fmtDate(b.issue_date)}</td>
               <td className="py-3 text-ink-muted">{fmtDate(b.due_date)}</td>
-              <td className="tabular py-3 pr-6 text-right font-medium">{fmtMoney(b.amount, b.currency)}</td>
+              <td className="tabular py-3 pr-6 text-right font-normal">{fmtMoney(b.amount, b.currency)}</td>
               <td className="py-3">
                 <StatusPill status={b.status} />
               </td>
@@ -107,6 +113,8 @@ export function BillsTable({ initial, activeBillId }: { initial: DashBill[]; act
           ))}
         </tbody>
       </table>
+      </div>
+      </div>
 
       <div
         className={`pointer-events-none fixed right-6 top-6 z-50 flex items-center gap-3 rounded-xl bg-[#1f1f1f] px-4 py-3 text-sm text-white shadow-lg transition-all duration-500 ${toast ? "translate-y-0 opacity-100" : "-translate-y-3 opacity-0"}`}

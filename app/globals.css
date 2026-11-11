@@ -42,3 +42,9 @@ body {
   from { opacity: 0; transform: translateX(28px); }
   to { opacity: 1; transform: none; }
 }
+
+/* Ramp's Lausanne (served from Ramp's font CDN; Inter if it can't load). Bill Pay + sign-in only. */
+@font-face { font-family: "Lausanne"; font-weight: 300; font-display: swap; src: url("https://assets.ramp.com/fonts/lausanne/lausanne-300/TWKLausanne-300.woff2") format("woff2"); }
+@font-face { font-family: "Lausanne"; font-weight: 400; font-display: swap; src: url("https://assets.ramp.com/fonts/lausanne/lausanne-400/TWKLausanne-400.woff2") format("woff2"); }
+@font-face { font-family: "Lausanne"; font-weight: 700; font-display: swap; src: url("https://assets.ramp.com/fonts/lausanne/lausanne-700/TWKLausanne-700.woff2") format("woff2"); }
+.font-ramp { font-family: Lausanne, "Inter Variable", Inter, Roboto, Arial, sans-serif; font-weight: 300; color: rgb(26, 25, 25); }

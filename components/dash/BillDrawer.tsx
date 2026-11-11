@@ -98,13 +98,13 @@ export function BillDrawer({ billId, initial, user }: { billId: string; initial:
       <Link href="/bills" aria-label="Close" className="absolute inset-0 bg-black/15 transition-opacity" />
       <aside
         data-testid="bill-drawer"
-        className="absolute right-0 top-0 flex h-full w-[600px] max-w-full animate-[drawerin_.35s_cubic-bezier(.2,.8,.2,1)] flex-col border-l border-line bg-white shadow-2xl"
+        className="font-ramp absolute right-0 top-0 flex h-full w-[600px] max-w-full animate-[drawerin_.35s_cubic-bezier(.2,.8,.2,1)] flex-col border-l border-[rgb(226,222,219)] bg-white shadow-2xl"
       >
         <header className="flex items-start justify-between gap-4 border-b border-line px-7 py-5">
           <div className="flex items-center gap-3">
             <VendorAvatar name={bill.vendor} size={40} />
             <div>
-              <div className="text-[15px] font-semibold">{bill.vendor}</div>
+              <div className="text-[16px] font-normal">{bill.vendor}</div>
               <div className="text-sm text-ink-muted">
                 {bill.invoice_id} · Due {fmtDate(bill.due_date)}
               </div>
@@ -119,12 +119,12 @@ export function BillDrawer({ billId, initial, user }: { billId: string; initial:
 
         <div className="flex-1 overflow-y-auto px-7 py-6">
           <div className="flex items-center justify-between">
-            <div className="tabular text-[32px] font-semibold tracking-tight">{fmtMoney(bill.amount, bill.currency)}</div>
+            <div className="tabular text-[32px] font-normal tracking-tight">{fmtMoney(bill.amount, bill.currency)}</div>
             <StatusPill status={bill.status} />
           </div>
 
           {/* Agent review */}
-          <section data-testid="agent-review" className="mt-6 rounded-xl border border-line">
+          <section data-testid="agent-review" className="mt-6 border border-[rgb(226,222,219)]">
             {reviewing && (
               <div className="p-5">
                 <div className="flex items-center gap-2 text-sm font-medium">
@@ -145,7 +145,7 @@ export function BillDrawer({ billId, initial, user }: { billId: string; initial:
               <div className="p-5">
                 {fails.length > 0 ? (
                   <>
-                    <div className="text-[15px] font-semibold">Needs a second look</div>
+                    <div className="text-[17px] font-normal">Needs a second look</div>
                     <div className="mt-0.5 text-sm text-ink-muted">
                       {fails.length} {fails.length === 1 ? "issue" : "issues"} found
                       {creditFrom(receipt) ? ` · ${creditFrom(receipt)} to credit` : ""}
@@ -172,7 +172,7 @@ export function BillDrawer({ billId, initial, user }: { billId: string; initial:
                   </>
                 ) : (
                   <>
-                    <div className="text-[15px] font-semibold">Looks good</div>
+                    <div className="text-[17px] font-normal">Looks good</div>
                     <div className="mt-0.5 text-sm text-ink-muted">All {receipt.checks.length} checks passed</div>
                     <ul className="mt-4 grid grid-cols-2 gap-2">
                       {receipt.checks.map((c) => (
@@ -254,14 +254,14 @@ export function BillDrawer({ billId, initial, user }: { billId: string; initial:
               <button
                 disabled={reviewing || !receipt || pending !== null}
                 onClick={() => decide("dispute")}
-                className="rounded-lg border border-line px-4 py-2 text-sm font-medium hover:bg-[#f6f6f2] disabled:opacity-40"
+                className="h-10 border border-[rgb(210,206,203)] px-4 text-[14px] font-normal text-[rgb(71,69,67)] hover:bg-[rgb(250,249,248)] disabled:opacity-40"
               >
                 {pending === "dispute" ? "Disputing" : "Dispute"}
               </button>
               <button
                 disabled={reviewing || !receipt || pending !== null}
                 onClick={() => decide("approve")}
-                className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-ink hover:brightness-95 disabled:opacity-40"
+                className="h-10 border border-[rgb(228,242,34)] bg-[rgb(228,242,34)] px-4 text-[14px] font-normal text-[rgb(26,25,25)] hover:brightness-95 disabled:opacity-40"
               >
                 {pending === "approve" ? "Approving" : "Approve"}
               </button>
