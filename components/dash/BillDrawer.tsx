@@ -261,7 +261,7 @@ export function BillDrawer({ billId, initial, user }: { billId: string; initial:
               <button
                 disabled={reviewing || !receipt || pending !== null}
                 onClick={() => decide("approve")}
-                className="rounded-lg bg-[#1f1f1f] px-4 py-2 text-sm font-medium text-white hover:bg-black disabled:opacity-40"
+                className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-ink hover:brightness-95 disabled:opacity-40"
               >
                 {pending === "approve" ? "Approving" : "Approve"}
               </button>

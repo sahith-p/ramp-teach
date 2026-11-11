@@ -30,6 +30,8 @@ const opt = (n: string, d: string) => {
 };
 const PHASE = opt("phase", "all");
 const PORT = opt("port", "3000");
+/** Rehearsal: the agent runs in its labeled offline mode (scripted evidence, mock receipt). No API cost. */
+const OFFLINE = args.includes("--offline");
 const BASE = `http://localhost:${PORT}`;
 const WORK = path.join(ROOT, "demo", "video", "work-film");
 const OUT = path.join(ROOT, "demo", "video", "ramp-teach-film.mp4");
@@ -70,6 +72,7 @@ async function startServer(): Promise<ChildProcess> {
       RAMP_TEACH_FILM_DIR: path.join(WORK, "agent"),
       RAMP_TEACH_VIEWPORT: `${AGENT_VP.width}x${AGENT_VP.height}`,
       RAMP_TEACH_NO_CACHE: "1", // live model calls, not cache replays
+      ...(OFFLINE ? { RAMP_TEACH_OFFLINE: "1" } : {}),
     },
   });
   for (let i = 0; i < 60; i++) {
@@ -135,85 +138,82 @@ async function shoot() {
     async function type(text: string, delay = 70) {
       await page.keyboard.type(text, { delay });
     }
-    async function waitLoad() {
-      await page.waitForTimeout(150);
-      await frame().locator("body").waitFor();
-      await page.waitForTimeout(450);
+    const panel = () => page.frameLocator("#panelframe");
+    async function toPanel(sel: string) {
+      const box = await panel().locator(sel).first().boundingBox();
+      if (!box) throw new Error(`no panel element ${sel}`);
+      await S("move", box.x + box.width / 2, box.y + box.height / 2);
+      await S("press");
+      await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+    }
+    /** Click something in the app that navigates, then wait for the URL to change and the page to settle. */
+    async function toAndWait(sel: string) {
+      const from = await S<string>("href");
+      await to(sel);
+      await S("urlChange", from);
     }
 
+    try {
     await page.goto(`${BASE}/stage/index.html`);
     await S("go", "/portal/login");
     mark("start");
     await S("fadeIn", 900);
     await sleep(700);
 
-    /* ---------- Scene 1: record the review ---------- */
+    /* ---------- Scene 1: record the review with the real Recorder extension ---------- */
     await toStage("recbtn");
-    await S("panel", true);
-    await sleep(800);
-    await toStage("startbtn");
-    await S("startRecording");
-    mark("record_start");
+    await S("openPanel");
     await sleep(500);
+    await toPanel("#btn-start");
+    await sleep(700);
+    await toPanel("#btn-mic");
+    mark("record_start");
+    await sleep(700);
     await S("say", "I'm checking this month's invoice from Halcyon Staffing.");
     await to('input[name="username"]');
     await type("ap.reviewer");
     await to('input[name="password"]');
     await type("demo-only", 60);
     await sleep(200);
-    await to('button:has-text("Sign in")');
-    await waitLoad();
+    await toAndWait('button:has-text("Sign in")');
     await S("say", "Every rate on it has to match our contract.");
-    await sleep(1200);
-    await to('a[href="/portal/invoices/HSG-1010"]');
-    await waitLoad();
+    await sleep(1400);
+    await toAndWait('a[href="/portal/invoices/HSG-1010"]');
     await S("say", "And nobody should be billed twice for the same week.");
     await to("table tbody tr:nth-child(1)", { click: false, ms: 700 });
     await to("table tbody tr:nth-child(4)", { click: false, ms: 900 });
-    await sleep(900);
+    await sleep(1000);
     await S("say", "Then I check each person's hours against their timecard.");
-    await to('a[href^="/portal/employees/E-101"]');
-    await waitLoad();
+    await toAndWait('a[href^="/portal/employees/E-101"]');
     await to('[data-field="approved_hours"]');
     await S("say", "Maya is approved for 40 hours. Billed hours can't go over that.");
-    await sleep(2400);
+    await sleep(2600);
     await toStage("back");
     await S("back");
-    await to('a[href^="/portal/employees/E-104"]');
-    await waitLoad();
+    await toAndWait('a[href^="/portal/employees/E-104"]');
     await to('[data-field="approved_hours"]');
     await S("say", "Sam is approved for 36.");
-    await sleep(1800);
+    await sleep(2000);
     await toStage("back");
     await S("back");
     await S("say", "If anything is off, I dispute it and ask for a credit.");
-    await sleep(2600);
+    await sleep(2800);
     await S("unsay");
-    await toStage("stopbtn");
-    const recording = await S<unknown>("stopRecording");
-    writeJson(path.join(WORK, "film-recording.json"), recording);
+    await toPanel("#btn-mic");
+    await sleep(300);
+    await toPanel("#btn-stop");
+    await sleep(900);
+    await toPanel("#btn-export");
+    writeJson(path.join(WORK, "film-recording.json"), await page.evaluate(() => (window as any).__ext.recording()));
     mark("record_end");
-
-    /* ---------- Scene 2: learn ---------- */
-    const spec = readJson<{ rules: string[] }>(path.join(ROOT, "rules", "workflow_spec.json"));
-    await S("learning", `<div style="font-size:14px;display:flex;align-items:center;gap:10px"><span class="spin"></span>Learning from your recording</div>`);
-    await sleep(2400);
-    await S(
-      "learning",
-      `<div style="font-weight:650;font-size:15px;margin-bottom:10px">${spec.rules.length} rules learned</div>` +
-        spec.rules
-          .slice(0, 4)
-          .map((r) => `<div class="step" style="font-style:normal"><span style="color:#17633a">✓</span><span>${r.replace(/</g, "&lt;")}</span></div>`)
-          .join("") +
-        `<div style="margin-top:12px"><button class="btn dark" id="openrules">Open workflow</button></div>`,
-    );
-    await sleep(2200);
-    await toStage("openrules");
-    await S("go", "/learn");
-    await S("panel", false);
     await sleep(1600);
-    await page.frameLocator("#app").locator("body").evaluate(() => window.scrollTo({ top: 380, behavior: "smooth" }));
-    await sleep(2600);
+
+    /* ---------- Scene 2: the learned workflow ---------- */
+    await page.evaluate(() => (window as any).stage.closePanel());
+    await S("go", "/learn");
+    await sleep(1800);
+    await page.frameLocator("#app").locator("body").evaluate(() => window.scrollTo({ top: 300, behavior: "smooth" }));
+    await sleep(3200);
     mark("learn_end");
 
     /* ---------- Scene 3: the dashboard, an invoice arrives ---------- */
@@ -224,8 +224,7 @@ async function shoot() {
     await type("alex@northwind.test", 55);
     await to('input[name="password"]');
     await type("northwind", 50);
-    await to('button:has-text("Sign in")');
-    await waitLoad();
+    await toAndWait('button:has-text("Continue")');
     await S("move", 1100, 520, 800);
     await sleep(1600);
 
@@ -233,12 +232,12 @@ async function shoot() {
     mark("deliver_1011");
     await frame().locator('tr[data-bill="bill_HSG-1011"]').waitFor({ timeout: 8000 });
     await sleep(1400);
-    await to('tr[data-bill="bill_HSG-1011"] a');
+    await toAndWait('tr[data-bill="bill_HSG-1011"] a');
     await frame().getByTestId("bill-drawer").waitFor();
     await sleep(900);
 
     // The agent's own browser, in its window (its pixels are composited in assemble).
-    const win = { left: 150, top: 230, width: 1000, height: 86 + Math.round((1000 * AGENT_VP.height) / AGENT_VP.width) };
+    const win = { left: 130, top: 300, width: 1000, height: 86 + Math.round((1000 * AGENT_VP.height) / AGENT_VP.width) };
     await S("agentWindow", true, win);
     mark("agent_on");
     await sleep(800);
@@ -273,7 +272,7 @@ async function shoot() {
     mark("deliver_1012");
     await frame().locator('tr[data-bill="bill_HSG-1012"]').waitFor({ timeout: 8000 });
     await sleep(1400);
-    await to('tr[data-bill="bill_HSG-1012"] a');
+    await toAndWait('tr[data-bill="bill_HSG-1012"] a');
     await frame().getByTestId("bill-drawer").waitFor();
     await sleep(2500);
     mark("fast_start");
@@ -294,6 +293,12 @@ async function shoot() {
     await sleep(1800);
     mark("end");
 
+    } catch (err) {
+      await page.screenshot({ path: path.join(WORK, "failure.png") }).catch(() => {});
+      await ctx.close();
+      await browser.close();
+      throw err;
+    }
     await ctx.close();
     await browser.close();
     const f = fs.readdirSync(rawDir).find((x) => x.endsWith(".webm"))!;

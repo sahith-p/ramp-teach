@@ -4,78 +4,40 @@
 <meta charset="utf-8" />
 <title>Stage</title>
 <!--
-  Film stage for demo/video (not part of the app UI). A macOS-style desktop with a browser window whose
-  content is the live app (same-origin iframe), a docked Recorder panel that captures the real clicks /
-  inputs / page loads inside that iframe, an animated cursor, narrator subtitles, and a second "agent"
-  window whose content area is filled in by ffmpeg with the agent's own recorded browser.
-  Driven by demo/video/film.ts through window.stage.
+  Film stage for demo/video (not part of the app UI): a desktop (wallpaper only) with a browser window whose
+  content is the live app (same-origin iframe). The Recorder side panel is the REAL extension panel
+  (/stage-ext/sidepanel.html) and the REAL content script is injected into each app page; chrome.* calls go
+  to the background stand-in below, which uses the extension's own lib/recording.js. A second "agent" window's
+  content area is filled in post (ffmpeg) with the agent's own recorded browser. Driven by demo/video/film.ts.
 -->
 <style>
-  @font-face { font-family: "InterStage"; src: local("Inter"), local("Inter Regular"); }
-  :root { --ink:#1f1f1f; --muted:#6b6b6b; --line:#e6e6e3; --lemon:#e4f222; }
   * { box-sizing: border-box; }
   html, body { margin:0; width:1920px; height:1080px; overflow:hidden; font-family: Inter, "Inter Variable", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
-  #desk { position:absolute; inset:0;
-    background:
-      radial-gradient(1200px 800px at 15% 20%, #6d8bd9 0%, transparent 60%),
-      radial-gradient(1000px 700px at 85% 15%, #b58ae0 0%, transparent 55%),
-      radial-gradient(1200px 900px at 70% 90%, #f0a37a 0%, transparent 60%),
-      radial-gradient(900px 700px at 20% 95%, #5fb3c9 0%, transparent 60%),
-      linear-gradient(135deg, #3d4f9a, #7a5aa8 55%, #c77a6b); }
-  #menubar { position:absolute; top:0; left:0; right:0; height:30px; display:flex; align-items:center; gap:22px; padding:0 18px;
-    background:rgba(255,255,255,.28); backdrop-filter: blur(20px); color:#111; font-size:14px; z-index:5; }
-  #menubar b { font-weight:650; }
-  #menubar .right { margin-left:auto; display:flex; gap:18px; align-items:center; }
-  #dock { position:absolute; bottom:10px; left:50%; transform:translateX(-50%); height:70px; padding:8px 12px; display:flex; gap:12px;
-    background:rgba(255,255,255,.3); backdrop-filter: blur(24px); border:1px solid rgba(255,255,255,.4); border-radius:22px; z-index:4; }
-  #dock span { width:54px; height:54px; border-radius:13px; display:block; box-shadow: 0 2px 6px rgba(0,0,0,.15); }
+  #desk { position:absolute; inset:0; background: url("/stage/wallpaper.jpg") center/cover no-repeat, linear-gradient(135deg, #3d4f9a, #7a5aa8 55%, #c77a6b); }
 
-  .win { position:absolute; background:#fff; border-radius:12px; overflow:hidden; box-shadow: 0 30px 80px rgba(0,0,0,.35), 0 0 0 1px rgba(0,0,0,.12);
+  .win { position:absolute; background:#fff; border-radius:12px; overflow:hidden; box-shadow: 0 40px 100px rgba(0,0,0,.38), 0 0 0 .5px rgba(0,0,0,.25);
     transition: left .7s cubic-bezier(.2,.8,.2,1), top .7s cubic-bezier(.2,.8,.2,1), width .7s cubic-bezier(.2,.8,.2,1), height .7s cubic-bezier(.2,.8,.2,1), opacity .5s, transform .5s; }
   .tabs { height:42px; background:#ececea; display:flex; align-items:flex-end; padding:0 12px; gap:8px; }
   .lights { display:flex; gap:8px; align-self:center; margin-right:14px; }
   .lights i { width:12px; height:12px; border-radius:50%; display:block; }
-  .tab { height:34px; background:#fff; border-radius:9px 9px 0 0; padding:0 14px; display:flex; align-items:center; gap:8px; font-size:13px; color:#333; min-width:220px; max-width:320px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .tab { height:34px; background:#fff; border-radius:9px 9px 0 0; padding:0 14px; display:flex; align-items:center; gap:8px; font-size:13px; color:#333; min-width:220px; max-width:340px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .tab .fav { width:14px; height:14px; border-radius:4px; background:#1f1f1f; flex:none; }
   .toolbar { height:44px; display:flex; align-items:center; gap:10px; padding:0 12px; border-bottom:1px solid #e3e3e0; background:#fff; }
-  .nav svg { color:#555; }
+  .nav { display:flex; color:#555; }
   .url { flex:1; height:30px; border-radius:15px; background:#f1f1ef; display:flex; align-items:center; gap:8px; padding:0 14px; font-size:13.5px; color:#333; }
   .url .host { color:#111; }
-  .url .path { color:#777; }
+  .url .path { color:#777; margin-left:-6px; }
   .ext { width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; position:relative; }
-  .ext.on::after { content:""; position:absolute; top:6px; right:6px; width:8px; height:8px; border-radius:50%; background:#e5484d; box-shadow:0 0 0 2px #fff; }
+  .ext.on::after { content:""; position:absolute; top:5px; right:5px; width:8px; height:8px; border-radius:50%; background:#e5484d; box-shadow:0 0 0 2px #fff; }
   .body { position:absolute; top:86px; left:0; right:0; bottom:0; display:flex; }
-  iframe { border:0; flex:1; height:100%; background:#fff; }
+  iframe { border:0; height:100%; background:#fff; }
+  #app { flex:1; }
+  #panel { width:0; border-left:1px solid #e3e3e0; transition: width .55s cubic-bezier(.2,.8,.2,1); overflow:hidden; background:#fff; }
+  #panel.open { width:370px; }
+  #panelframe { width:370px; }
 
-  /* Recorder side panel (mirrors the extension's side panel) */
-  #panel { width:0; overflow:hidden; border-left:1px solid #e3e3e0; background:#fff; transition: width .55s cubic-bezier(.2,.8,.2,1); display:flex; flex-direction:column; }
-  #panel.open { width:380px; }
-  #panel .in { width:380px; height:100%; display:flex; flex-direction:column; }
-  #panel header { padding:16px 18px; border-bottom:1px solid #eee; display:flex; align-items:center; gap:10px; }
-  #panel header .t { font-weight:650; font-size:15px; }
-  #panel .rec { margin-left:auto; display:flex; align-items:center; gap:7px; font-size:13px; color:#c4343a; font-variant-numeric: tabular-nums; opacity:0; transition:opacity .3s; }
-  #panel .rec.on { opacity:1; }
-  #panel .rec i { width:9px; height:9px; border-radius:50%; background:#e5484d; animation: blink 1.2s infinite; }
-  @keyframes blink { 50% { opacity:.25; } }
-  #panel .actions { padding:14px 18px; display:flex; gap:8px; }
-  .btn { border:0; border-radius:9px; padding:9px 14px; font: 600 13px Inter, sans-serif; cursor:pointer; }
-  .btn.dark { background:#1f1f1f; color:#fff; }
-  .btn.red { background:#e5484d; color:#fff; }
-  .btn.ghost { background:#f1f1ef; color:#1f1f1f; }
-  #steps { flex:1; overflow:hidden; padding:4px 12px 12px; display:flex; flex-direction:column; gap:4px; }
-  .step { display:flex; gap:10px; padding:7px 8px; border-radius:8px; font-size:13px; color:#444; animation: stepin .35s ease-out; }
-  .step .k { width:56px; flex:none; font-size:11px; color:#999; padding-top:1px; }
-  .step.say { background:#f6f6f3; color:#1f1f1f; font-style:italic; }
-  @keyframes stepin { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform:none; } }
-  #learn { padding:18px; display:none; }
-  #learn.on { display:block; animation: stepin .4s ease-out; }
-  .spin { width:14px; height:14px; border-radius:50%; border:2px solid #1f1f1f; border-right-color:transparent; display:inline-block; animation: sp 0.8s linear infinite; vertical-align:-2px; }
-  @keyframes sp { to { transform: rotate(360deg); } }
-
-  /* Agent window (content filled by the agent's own recorded browser in post) */
   #agentwin { opacity:0; transform: scale(.96); pointer-events:none; }
   #agentwin.on { opacity:1; transform:none; }
-  #agentwin .body { background:#fff; }
   #agentwin .tab .fav { background:#e4f222; }
 
   #cursor { position:absolute; left:0; top:0; width:28px; height:28px; z-index:50; pointer-events:none; transform-origin: 3px 2px; transition: transform .12s; filter: drop-shadow(0 2px 3px rgba(0,0,0,.35)); }
@@ -83,8 +45,8 @@
   .ripple { position:absolute; width:44px; height:44px; margin:-22px 0 0 -22px; border-radius:50%; border:3px solid rgba(228,242,34,.95); z-index:49; pointer-events:none; animation: rip .55s ease-out forwards; }
   @keyframes rip { from { transform: scale(.3); opacity:1; } to { transform: scale(1.4); opacity:0; } }
 
-  #sub { position:absolute; left:50%; bottom:104px; transform:translateX(-50%); max-width:1300px; z-index:40; pointer-events:none;
-    background:rgba(20,20,20,.82); color:#fff; font-size:30px; line-height:1.35; font-weight:500; text-align:center; padding:14px 26px; border-radius:14px;
+  #sub { position:absolute; left:50%; bottom:46px; transform:translateX(-50%); max-width:1300px; z-index:40; pointer-events:none;
+    background:rgba(18,18,18,.84); color:#fff; font-size:30px; line-height:1.35; font-weight:500; text-align:center; padding:14px 28px; border-radius:14px;
     opacity:0; transition: opacity .35s; }
   #sub.on { opacity:1; }
   #fade { position:absolute; inset:0; z-index:60; background:#0f0f12; opacity:1; pointer-events:none; transition: opacity .8s ease; display:flex; align-items:center; justify-content:center; color:#fff; font-size:56px; font-weight:650; letter-spacing:-.02em; }
@@ -93,15 +55,8 @@
 </head>
 <body>
 <div id="desk"></div>
-<div id="menubar"><b>Browser</b><span>File</span><span>Edit</span><span>View</span><span>History</span><span>Window</span><span>Help</span>
-  <div class="right"><svg width="17" height="13" viewBox="0 0 17 13"><path d="M8.5 11.5 6.6 9.3a2.8 2.8 0 0 1 3.8 0L8.5 11.5Zm-4-4.4a6 6 0 0 1 8 0M2 4.4a9.5 9.5 0 0 1 13 0" stroke="#111" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg><svg width="26" height="12" viewBox="0 0 26 12"><rect x=".7" y=".7" width="21.6" height="10.6" rx="3" stroke="#111" stroke-width="1.2" fill="none"/><rect x="2.5" y="2.5" width="15" height="7" rx="1.6" fill="#111"/><rect x="23.5" y="4" width="1.8" height="4" rx=".8" fill="#111"/></svg><span id="clock"></span></div></div>
-<div id="dock">
-  <span style="background:linear-gradient(135deg,#4c8bf5,#2a5bd7)"></span><span style="background:linear-gradient(135deg,#f6f6f6,#d9d9d9)"></span>
-  <span style="background:linear-gradient(135deg,#34c759,#1f9d45)"></span><span style="background:linear-gradient(135deg,#ff9f0a,#ff6b00)"></span>
-  <span style="background:linear-gradient(135deg,#1f1f1f,#444)"></span><span style="background:linear-gradient(135deg,#e4f222,#c9d81a)"></span>
-</div>
 
-<div class="win" id="main" style="left:110px; top:52px; width:1700px; height:928px;">
+<div class="win" id="main" style="left:80px; top:44px; width:1760px; height:992px;">
   <div class="tabs"><div class="lights"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
     <div class="tab"><span class="fav"></span><span id="title">New Tab</span></div></div>
   <div class="toolbar">
@@ -109,20 +64,15 @@
     <span class="nav"><svg width="18" height="18" viewBox="0 0 18 18"><path d="m7 4 5 5-5 5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg></span>
     <span class="nav"><svg width="18" height="18" viewBox="0 0 18 18"><path d="M14 9a5 5 0 1 1-1.5-3.6M14 3.5V6h-2.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>
     <div class="url"><svg width="12" height="12" viewBox="0 0 12 12"><rect x="2.5" y="5" width="7" height="5.5" rx="1" fill="#777"/><path d="M4 5V3.8a2 2 0 0 1 4 0V5" stroke="#777" stroke-width="1.2" fill="none"/></svg><span class="host" id="host"></span><span class="path" id="path"></span></div>
-    <span class="ext" id="recbtn" title="Recorder"><svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6.5" stroke="#1f1f1f" stroke-width="1.5" fill="none"/><circle cx="9" cy="9" r="3" fill="#e5484d"/></svg></span>
+    <span class="ext" id="recbtn" title="Ramp Teach Recorder"><svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6.5" stroke="#1f1f1f" stroke-width="1.5" fill="none"/><circle cx="9" cy="9" r="3" fill="#e5484d"/></svg></span>
   </div>
   <div class="body">
     <iframe id="app" src="about:blank"></iframe>
-    <div id="panel"><div class="in">
-      <header><span class="t">Recorder</span><span class="rec" id="rec"><i></i><span id="timer">00:00</span></span></header>
-      <div class="actions"><button class="btn red" id="startbtn">Start recording</button><button class="btn ghost" id="stopbtn" style="display:none">Stop</button></div>
-      <div id="steps"></div>
-      <div id="learn"></div>
-    </div></div>
+    <div id="panel"><iframe id="panelframe" src="about:blank"></iframe></div>
   </div>
 </div>
 
-<div class="win" id="agentwin" style="left:150px; top:300px; width:960px; height:686px;">
+<div class="win" id="agentwin" style="left:130px; top:300px; width:1000px; height:711px;">
   <div class="tabs"><div class="lights"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
     <div class="tab"><span class="fav"></span><span>Agent</span></div></div>
   <div class="toolbar"><div class="url"><span class="host" id="ahost">portal.halcyonstaffing.demo</span><span class="path" id="apath"></span></div></div>
@@ -133,142 +83,169 @@
 <div id="sub"></div>
 <div id="fade"></div>
 
-<script>
-(() => {
-  const $ = (id) => document.getElementById(id);
-  const app = $("app");
-  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-  const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+<script type="module">
+import { appendStep, buildNarrationStep, buildStep, isAllowedUrl, newSession, toRecording } from "/stage-ext/lib/recording.js";
 
-  // Clock in the menu bar.
-  $("clock").textContent = "Wed Nov 11  9:41 AM";
+const $ = (id) => document.getElementById(id);
+const app = $("app");
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
-  // Display URLs as the product would see them (fake domains: this is a film prop).
-  function display(u) {
-    try {
-      const url = new URL(u);
-      const p = url.pathname + url.search;
-      if (p.startsWith("/portal")) return ["portal.halcyonstaffing.demo", p.replace(/^\/portal/, "") || "/"];
-      if (p.startsWith("/bills") || p.startsWith("/login")) return ["app.rampteach.demo", p];
-      return ["rampteach.demo", p === "/" ? "" : p];
-    } catch { return ["", ""]; }
-  }
+/* ---------- background stand-in for the real extension (same messages as extension/background.js) ---------- */
+const state = { recording: false, session: null };
+const listeners = new Set();
+const recognizers = new Set();
+function emit(keys) {
+  const changes = {};
+  for (const k of keys) changes[k] = { newValue: structuredClone(state[k]) };
+  for (const fn of [...listeners]) { try { fn(changes, "local"); } catch { listeners.delete(fn); } }
+  $("recbtn").classList.toggle("on", state.recording);
+}
+function appPage() {
+  try { return { url: app.contentWindow.location.href, title: app.contentDocument.title }; } catch { return { url: "", title: "" }; }
+}
+window.__ext = {
+  get(keys) { const o = {}; for (const k of [].concat(keys)) o[k] = structuredClone(state[k] ?? null); return o; },
+  listen(fn) { listeners.add(fn); },
+  addRecognizer(r) { recognizers.add(r); },
+  removeRecognizer(r) { recognizers.delete(r); },
+  /** The narrator speaks: deliver a final phrase to the panel's real dictation handler. */
+  speak(text) {
+    for (const r of recognizers) {
+      const result = Object.assign([{ transcript: text, confidence: 0.95 }], { isFinal: true });
+      try { r.onresult && r.onresult({ resultIndex: 0, results: [result] }); } catch {}
+    }
+  },
+  recording() { return state.session ? toRecording(state.session) : null; },
+  handle(msg) {
+    switch (msg?.type) {
+      case "rt:capture": {
+        if (!state.recording || !state.session || !isAllowedUrl(msg.raw?.url)) return { ok: false, error: "not recording" };
+        const step = buildStep(msg.raw);
+        state.session.steps = appendStep(state.session.steps, step);
+        if (step.detail.event === "navigate") state.session.last_page = { url: step.detail.url ?? "", title: step.detail.title ?? "" };
+        emit(["session"]);
+        return { ok: true, count: state.session.steps.length };
+      }
+      case "rt:start": {
+        const page = appPage();
+        if (!state.session) state.session = newSession();
+        state.recording = true;
+        state.session.steps = appendStep(state.session.steps, buildStep({ event: "navigate", url: page.url, title: page.title }));
+        state.session.last_page = page;
+        emit(["recording", "session"]);
+        return { ok: true, session_id: state.session.session_id };
+      }
+      case "rt:stop": state.recording = false; emit(["recording"]); return { ok: true };
+      case "rt:narrate": {
+        const text = String(msg.text ?? "").trim();
+        if (!text || !state.recording || !state.session) return { ok: false, error: "Start recording before adding narration." };
+        state.session.steps = appendStep(state.session.steps, buildNarrationStep(text, state.session.last_page));
+        emit(["session"]);
+        return { ok: true, count: state.session.steps.length };
+      }
+      case "rt:status": return { ok: true, recording: state.recording, session: state.session };
+      case "rt:export": return state.session ? { ok: true, recording: toRecording(state.session) } : { ok: false, error: "no session to export" };
+      case "rt:clear": state.recording = false; state.session = null; emit(["recording", "session"]); return { ok: true };
+      default: return { ok: false, error: "unknown message" };
+    }
+  },
+};
 
-  /* ----------------------------- recorder ----------------------------- */
-  const rec = { on: false, t0: 0, steps: [], transcript: [], session: "", timer: null };
-  function addStep(kind, label, text) {
-    const row = document.createElement("div");
-    row.className = "step" + (kind === "narration" ? " say" : "");
-    row.innerHTML = `<span class="k"></span><span></span>`;
-    row.children[0].textContent = label;
-    row.children[1].textContent = text;
-    const box = $("steps");
-    box.appendChild(row);
-    while (box.scrollHeight > box.clientHeight && box.children.length > 1) box.removeChild(box.firstChild);
-  }
-  function capture(kind, detail, label, text) {
-    if (!rec.on) return;
-    rec.steps.push({ ts: new Date().toISOString(), kind, detail });
-    addStep(kind, label, text);
-  }
-  function describe(el) {
-    if (!el) return "";
-    const t = (el.innerText || el.value || el.getAttribute("aria-label") || "").trim().replace(/\s+/g, " ");
-    return t.slice(0, 60);
-  }
-  function hook() {
-    let doc;
-    try { doc = app.contentDocument; } catch { return; }
-    if (!doc) return;
+/* ---------- each app page: URL bar, tab title, and the real content script ---------- */
+function display(u) {
+  try {
+    const url = new URL(u);
+    const p = url.pathname + url.search;
+    if (p.startsWith("/portal")) return ["portal.halcyonstaffing.demo", p.replace(/^\/portal/, "") || "/"];
+    if (p.startsWith("/bills") || p.startsWith("/login")) return ["app.rampteach.demo", p];
+    return ["rampteach.demo", p === "/" ? "" : p];
+  } catch { return ["", ""]; }
+}
+app.addEventListener("load", () => {
+  let win, doc;
+  try { win = app.contentWindow; doc = app.contentDocument; } catch { return; }
+  if (!doc || win.location.href === "about:blank") return;
+  const [host, path] = display(win.location.href);
+  $("host").textContent = host; $("path").textContent = path;
+  $("title").textContent = doc.title || host;
+  // Real content script, with chrome.* bridged to the stand-in above.
+  win.chrome = {
+    runtime: { sendMessage: (m) => Promise.resolve(window.__ext.handle(m)) },
+    storage: { local: { get: (k) => Promise.resolve(window.__ext.get(k)) }, onChanged: { addListener: (fn) => window.__ext.listen(fn) } },
+  };
+  const s = doc.createElement("script");
+  s.src = "/stage-ext/content.js";
+  doc.head.appendChild(s);
+});
+
+/* Client-side (Next.js) navigations don't fire load: keep the URL bar and tab title in sync by polling. */
+let lastHref = "";
+setInterval(() => {
+  try {
     const href = app.contentWindow.location.href;
+    if (href === lastHref || href === "about:blank") return;
+    lastHref = href;
     const [host, path] = display(href);
     $("host").textContent = host; $("path").textContent = path;
-    $("title").textContent = doc.title || host;
-    if (href !== "about:blank") capture("dom", { event: "navigate", url: href, title: doc.title }, "Page", `Opened ${path || "/"}`);
-    doc.addEventListener("click", (e) => {
-      const el = e.target.closest("a,button,input,[data-field]");
-      if (!el || el.tagName === "INPUT") return;
-      capture("dom", { event: "click", url: href, title: doc.title, text: describe(el) }, "Click", `Clicked “${describe(el)}”`);
-    }, true);
-    doc.addEventListener("change", (e) => {
-      const el = e.target;
-      if (!el || el.tagName !== "INPUT") return;
-      const secret = el.type === "password";
-      capture("dom", { event: "input", url: href, title: doc.title, selector: `input[name="${el.name}"]`, value: secret ? "[redacted]" : el.value },
-        "Input", secret ? "Typed password" : `Typed ${el.name}: ${el.value}`);
-    }, true);
-  }
-  app.addEventListener("load", hook);
+    setTimeout(() => { try { $("title").textContent = app.contentDocument.title || host; } catch {} }, 250);
+  } catch {}
+}, 150);
+const href = () => { try { return app.contentWindow.location.href; } catch { return ""; } };
+async function urlChange(from, timeout = 8000) {
+  const t0 = Date.now();
+  while (href() === from && Date.now() - t0 < timeout) await sleep(60);
+  await sleep(500);
+}
 
-  /* ------------------------------ stage API ------------------------------ */
-  const cur = { x: 960, y: 600 };
-  const cursorEl = $("cursor");
-  const place = () => { cursorEl.style.left = cur.x - 3 + "px"; cursorEl.style.top = cur.y - 2 + "px"; };
-  place();
+/* ---------- stage API used by demo/video/film.ts ---------- */
+const cur = { x: 960, y: 640 };
+const cursorEl = $("cursor");
+const place = () => { cursorEl.style.left = cur.x - 3 + "px"; cursorEl.style.top = cur.y - 2 + "px"; };
+place();
 
-  window.stage = {
-    sleep,
-    async go(url) { app.src = url; await new Promise((r) => app.addEventListener("load", r, { once: true })); await sleep(250); },
-    async fadeIn(ms = 800) { $("fade").style.transitionDuration = ms + "ms"; $("fade").textContent = ""; $("fade").classList.add("clear"); await sleep(ms); },
-    async fadeOut(ms = 800, text = "") { $("fade").style.transitionDuration = ms + "ms"; $("fade").textContent = text; $("fade").classList.remove("clear"); await sleep(ms); },
-    async move(x, y, ms) {
-      const sx = cur.x, sy = cur.y;
-      const d = Math.hypot(x - sx, y - sy);
-      ms = ms ?? Math.min(1100, Math.max(380, d * 0.9));
-      const t0 = performance.now();
-      await new Promise((resolve) => {
-        const step = (now) => {
-          const t = Math.min(1, (now - t0) / ms);
-          const k = ease(t);
-          // slight arc for a natural hand movement
-          const arc = Math.sin(Math.PI * t) * Math.min(40, d * 0.06);
-          cur.x = sx + (x - sx) * k; cur.y = sy + (y - sy) * k - arc;
-          place();
-          t < 1 ? requestAnimationFrame(step) : resolve();
-        };
-        requestAnimationFrame(step);
-      });
-    },
-    async press() {
-      cursorEl.classList.add("down");
-      const r = document.createElement("div"); r.className = "ripple"; r.style.left = cur.x + "px"; r.style.top = cur.y + "px";
-      document.body.appendChild(r); setTimeout(() => r.remove(), 600);
-      await sleep(110); cursorEl.classList.remove("down");
-    },
-    async say(text, ms) {
-      $("sub").textContent = text; $("sub").classList.add("on");
-      capture("narration", { event: "narration", text, url: app.contentWindow?.location.href }, "Note", `“${text}”`);
-      if (rec.on) rec.transcript.push(text);
-      if (ms) { await sleep(ms); $("sub").classList.remove("on"); }
-    },
-    async unsay() { $("sub").classList.remove("on"); await sleep(350); },
-    panel(open) { $("panel").classList.toggle("open", open); },
-    rect(id) { const r = $(id).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; },
-    startRecording() {
-      rec.on = true; rec.t0 = Date.now(); rec.steps = []; rec.transcript = [];
-      rec.session = "rec_" + new Date().toISOString().replace(/[-:.]/g, "").slice(0, 15) + "Z_film";
-      $("steps").innerHTML = ""; $("rec").classList.add("on"); $("recbtn").classList.add("on");
-      $("startbtn").style.display = "none"; $("stopbtn").style.display = "";
-      rec.timer = setInterval(() => { const s = Math.floor((Date.now() - rec.t0) / 1000); $("timer").textContent = String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0"); }, 250);
-      capture("dom", { event: "navigate", url: app.contentWindow.location.href, title: app.contentDocument.title }, "Page", `Opened ${$("path").textContent || "/"}`);
-    },
-    stopRecording() {
-      rec.on = false; clearInterval(rec.timer); $("rec").classList.remove("on"); $("recbtn").classList.remove("on");
-      $("stopbtn").style.display = "none";
-      return { session_id: rec.session, started_at: new Date(rec.t0).toISOString(), steps: rec.steps, transcript: rec.transcript };
-    },
-    learning(html) { const l = $("learn"); l.innerHTML = html; l.classList.add("on"); $("steps").style.display = "none"; },
-    back() { app.contentWindow.history.back(); return new Promise((r) => app.addEventListener("load", () => setTimeout(r, 250), { once: true })); },
-    agentWindow(on, rect) {
-      const w = $("agentwin");
-      if (rect) Object.assign(w.style, { left: rect.left + "px", top: rect.top + "px", width: rect.width + "px", height: rect.height + "px" });
-      w.classList.toggle("on", on);
-    },
-    agentUrl(u) { const [h, p] = display(u); $("ahost").textContent = h; $("apath").textContent = p; },
-    agentContentRect() { const r = $("agentbody").getBoundingClientRect(); return { x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height) }; },
-    mainWindow(rect) { Object.assign($("main").style, { left: rect.left + "px", top: rect.top + "px", width: rect.width + "px", height: rect.height + "px" }); },
-  };
-})();
+window.stage = {
+  sleep,
+  async go(url) { app.src = url; await new Promise((r) => app.addEventListener("load", r, { once: true })); await sleep(300); },
+  async fadeIn(ms = 800) { $("fade").style.transitionDuration = ms + "ms"; $("fade").textContent = ""; $("fade").classList.add("clear"); await sleep(ms); },
+  async fadeOut(ms = 800, text = "") { $("fade").style.transitionDuration = ms + "ms"; $("fade").textContent = text; $("fade").classList.remove("clear"); await sleep(ms); },
+  async move(x, y, ms) {
+    const sx = cur.x, sy = cur.y, d = Math.hypot(x - sx, y - sy);
+    ms = ms ?? Math.min(1100, Math.max(420, d * 0.85));
+    const t0 = performance.now();
+    await new Promise((resolve) => {
+      const step = (now) => {
+        const t = Math.min(1, (now - t0) / ms), k = ease(t), arc = Math.sin(Math.PI * t) * Math.min(36, d * 0.05);
+        cur.x = sx + (x - sx) * k; cur.y = sy + (y - sy) * k - arc; place();
+        t < 1 ? requestAnimationFrame(step) : resolve();
+      };
+      requestAnimationFrame(step);
+    });
+  },
+  async press() {
+    cursorEl.classList.add("down");
+    const r = document.createElement("div"); r.className = "ripple"; r.style.left = cur.x + "px"; r.style.top = cur.y + "px";
+    document.body.appendChild(r); setTimeout(() => r.remove(), 600);
+    await sleep(110); cursorEl.classList.remove("down");
+  },
+  /** Narrator line: subtitle on screen, and a final phrase to the Recorder's dictation (if listening). */
+  say(text) { $("sub").textContent = text; $("sub").classList.add("on"); window.__ext.speak(text); },
+  async unsay() { $("sub").classList.remove("on"); await sleep(350); },
+  async openPanel() { $("panelframe").src = "/stage-ext/sidepanel.html"; await new Promise((r) => $("panelframe").addEventListener("load", r, { once: true })); $("panel").classList.add("open"); await sleep(650); },
+  closePanel() { $("panel").classList.remove("open"); },
+  rect(id) { const r = $(id).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; },
+  async back() { const from = href(); app.contentWindow.history.back(); await urlChange(from); },
+  href,
+  urlChange,
+  agentWindow(on, rect) {
+    const w = $("agentwin");
+    if (rect) Object.assign(w.style, { left: rect.left + "px", top: rect.top + "px", width: rect.width + "px", height: rect.height + "px" });
+    w.classList.toggle("on", on);
+  },
+  agentUrl(u) { const [h, p] = display(u); $("ahost").textContent = h; $("apath").textContent = p; },
+  agentContentRect() { const r = $("agentbody").getBoundingClientRect(); return { x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height) }; },
+};
+window.stageReady = true;
 </script>
 </body>
 </html>

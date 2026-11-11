@@ -10,7 +10,7 @@ export function BillPayHeader() {
           </svg>
           Search bills
         </div>
-        <span className="rounded-lg bg-[#1f1f1f] px-4 py-2 text-sm font-medium text-white">New bill</span>
+        <span className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-ink">New bill</span>
       </div>
     </div>
   );

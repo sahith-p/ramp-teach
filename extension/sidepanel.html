@@ -7,10 +7,7 @@
     <link rel="stylesheet" href="sidepanel.css" />
   </head>
   <body>
-    <p class="demo-label" id="demo-label">Unofficial demo — records localhost fixture pages only</p>
-
     <header>
-      <p class="eyebrow">Ramp Teach · Record</p>
       <h1>Recorder</h1>
       <p class="status"><span id="status-dot" class="dot"></span><span id="status-text">Idle</span></p>
       <p class="session" id="session-id"></p>
@@ -46,12 +43,10 @@
         <button id="btn-export" type="button" disabled>Export JSON</button>
         <button id="btn-clear" class="danger" type="button" disabled>Clear</button>
       </div>
-      <p class="note">
-        Privacy: password fields are always saved as <code>[redacted]</code>. Nothing leaves this browser
-        until you export. Synthetic data only.
-      </p>
+      <p class="note">Passwords are never saved. Nothing leaves this browser until you export.</p>
     </section>
 
+    <p class="demo-label" id="demo-label">Unofficial demo. Records localhost pages only.</p>
     <script type="module" src="sidepanel.js"></script>
   </body>
 </html>

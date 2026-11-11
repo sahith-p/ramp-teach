@@ -19,18 +19,9 @@ body {
   color: var(--ink);
   font: 13px/1.45 Inter, Archivo, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
-.demo-label {
-  margin: 0 0 12px;
-  padding: 6px 10px;
-  background: var(--wash);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  color: var(--ink-muted);
-  font-size: 12px;
-}
+.demo-label { margin: 10px 0 0; color: var(--ink-faint); font-size: 11px; text-align: center; }
 header { margin-bottom: 12px; }
-.eyebrow { margin: 0; color: var(--ink-faint); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
-h1 { margin: 2px 0 4px; font: 500 26px/1.1 Newsreader, "Source Serif 4", Georgia, serif; letter-spacing: -0.01em; }
+h1 { margin: 2px 0 4px; font: 600 20px/1.2 Inter, system-ui, sans-serif; letter-spacing: -0.01em; }
 .status { margin: 0; display: flex; align-items: center; gap: 6px; color: var(--ink-muted); }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-faint); display: inline-block; }
 .dot.on { background: var(--fail); }
