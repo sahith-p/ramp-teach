@@ -1,0 +1,27 @@
+EVAL — 7 cases from rules/evals.json
+Mode: deterministic (calc runCalc, no LLM). Hours evidence: data/timecards.json as stand-in for portal evidence.
+
+eval_id   check                     exp_line  result  failing_lines  verdict
+--------  ------------------------  --------  ------  -------------  -------
+EV-C-001  line_amounts_correct      1         fail    1              PASS   
+EV-C-002  rate_matches_contract     1         fail    1              PASS   
+EV-C-003  no_unknown_charges        4         fail    4              PASS   
+EV-C-004  total_matches_line_items  null      fail    null           PASS   
+EV-C-005  no_duplicate_lines        4         fail    4              PASS   
+EV-C-006  hours_match_timecards     1         fail    1              PASS   
+EV-C-007  hours_match_timecards     2         fail    2              PASS   
+
+7/7 passed
+
+PRECISION — past invoices fail only the corrected check(s); clean invoices pass all
+HSG-1001  clean                      all pass                   PASS
+HSG-1002  line_amounts_correct       line_amounts_correct       PASS
+HSG-1003  rate_matches_contract      rate_matches_contract      PASS
+HSG-1004  no_unknown_charges         no_unknown_charges         PASS
+HSG-1005  total_matches_line_items   total_matches_line_items   PASS
+HSG-1006  no_duplicate_lines         no_duplicate_lines         PASS
+HSG-1007  hours_match_timecards      hours_match_timecards      PASS
+HSG-1008  clean                      all pass                   PASS
+HSG-1009  hours_match_timecards      hours_match_timecards      PASS
+HSG-1010  clean                      all pass                   PASS
+precision OK

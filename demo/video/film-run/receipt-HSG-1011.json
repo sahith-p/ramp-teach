@@ -4,21 +4,21 @@
   "checks": [
     {
       "name": "line_amounts_correct",
-      "expected": "Each line amount = quantity × unit rate (Lines 1-6)",
-      "actual": "All 6 line amounts match quantity × unit rate",
+      "expected": "Each line amount = quantity × unit rate (Lines 1–6)",
+      "actual": "All 6 line amounts match to the cent",
       "result": "pass",
       "evidence": "calc:line_amounts_correct"
     },
     {
       "name": "total_matches_line_items",
-      "expected": "Invoice total equals sum of Lines 1-6",
-      "actual": "Total $15,677.00 equals sum of line amounts $15,677.00",
+      "expected": "Invoice total equals sum of Lines 1–6",
+      "actual": "Total $15,677.00 equals the sum of 6 line amounts",
       "result": "pass",
       "evidence": "calc:total_matches_line_items"
     },
     {
       "name": "rate_matches_contract",
-      "expected": "Line 1 Maya Chen (Senior Recruiter) at contract rate 95.00/h",
+      "expected": "Line 1 Maya Chen (Senior Recruiter) at 95.00/h",
       "actual": "Line 1 billed at 105.00/h",
       "result": "fail",
       "evidence": "data/vendor.json#contract.rate_card.Senior Recruiter"
@@ -26,14 +26,14 @@
     {
       "name": "no_duplicate_lines",
       "expected": "One labor line for Priya Natarajan, week ending 2026-10-18",
-      "actual": "Line 5 duplicates Line 3 (36 h × 70.00/h = $2,520.00)",
+      "actual": "Line 5 duplicates Line 3 (36 h at 70.00/h)",
       "result": "fail",
       "evidence": "data/invoices/new/HSG-1011.json#line_items[4]"
     },
     {
       "name": "no_unknown_charges",
-      "expected": "Non-labor charges allowed and within caps",
-      "actual": "Line 6 Background check fee $85.00 (cap $120.00)",
+      "expected": "Non-labor charges allowed and within cap (Background check fee ≤ $120.00)",
+      "actual": "Line 6 Background check fee $85.00, within cap",
       "result": "pass",
       "evidence": "calc:no_unknown_charges"
     },
@@ -47,13 +47,14 @@
   ],
   "recommendation": "dispute",
   "reasons": [
-    "Line 1 Maya Chen billed at 105.00/h vs contract 95.00/h: 40 h × $10.00 = $400.00 overbilled.",
-    "Line 5 duplicates Priya Natarajan's week ending 2026-10-18 already billed on Line 3: $2,520.00 overbilled.",
-    "Line 4 Sam Okafor billed 44 h vs 38 h approved: 6 h × 88.00/h = $528.00 overbilled.",
-    "Request a credit memo from Halcyon Staffing Group for $3,448.00 against invoice HSG-1011."
+    "Line 1 bills Maya Chen at 105.00/h vs the contract 95.00/h, overbilling $400.00.",
+    "Line 5 duplicates Priya Natarajan's week ending 2026-10-18 already billed on Line 3, overbilling $2,520.00.",
+    "Line 4 bills Sam Okafor 44 h vs 38 h on his approved timecard, overbilling $528.00.",
+    "Dispute the invoice and request a credit memo from Halcyon Staffing Group for $3,448.00.",
+    "Open question: the recorded reviewer spoke of approving Sam at 36 h, while the portal timecard shows 38 h; confirm whether spoken approvals are fixed per-person limits or only readings of that week's timecard."
   ],
   "mode": "real",
   "human_decision": "dispute",
   "decided_by": "alex@northwind.test",
-  "decided_at": "2026-11-11T03:25:01.622Z"
+  "decided_at": "2026-11-11T06:38:43.595Z"
 }

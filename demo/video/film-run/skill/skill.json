@@ -1,0 +1,368 @@
+{
+  "skill_id": "halcyon-invoice-review",
+  "version": 1,
+  "title": "Review Halcyon Staffing invoice against contract and approved timecards",
+  "created_at": "2026-11-11T06:37:02.368Z",
+  "mode": "real",
+  "recordings": [
+    "rec_20261111T063450Z_sftc"
+  ],
+  "vendor": "Halcyon Staffing",
+  "rules": [
+    {
+      "id": "r1",
+      "text": "No employee may appear on more than one labor line for the same week ending date.",
+      "kind": "check",
+      "source": "said",
+      "citations": [
+        {
+          "utterance_id": "u3",
+          "quote": "And nobody should be billed twice for the same week.",
+          "step_index": 14,
+          "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        }
+      ]
+    },
+    {
+      "id": "r2",
+      "text": "For each labor line, billed hours must be less than or equal to the approved_hours shown on that employee's timecard for the billed week.",
+      "kind": "check",
+      "source": "said",
+      "citations": [
+        {
+          "utterance_id": "u4",
+          "quote": "Then I check each person's hours against their timecard.",
+          "step_index": 14,
+          "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": "u6",
+          "quote": "Billed hours can't go over that.",
+          "step_index": 16,
+          "selector": "[data-field=\"approved_hours\"]",
+          "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+        }
+      ]
+    },
+    {
+      "id": "r3",
+      "text": "If any check fails, recommend disputing the invoice and requesting a credit; otherwise the invoice passes review.",
+      "kind": "decision",
+      "source": "said",
+      "citations": [
+        {
+          "utterance_id": "u8",
+          "quote": "If anything is off, I dispute it and ask for a credit.",
+          "step_index": 21,
+          "selector": "[data-field=\"approved_hours\"]",
+          "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11"
+        }
+      ]
+    },
+    {
+      "id": "r4",
+      "text": "Sign in to the Halcyon Staffing client portal, open the invoices list, and open the invoice under review by its invoice number.",
+      "kind": "procedure",
+      "source": "shown",
+      "citations": [
+        {
+          "utterance_id": null,
+          "quote": "Sign in",
+          "step_index": 6,
+          "selector": "main > div > form > button",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "HSG-1010",
+          "step_index": 10,
+          "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+          "url": "http://localhost:3000/portal/invoices"
+        }
+      ]
+    },
+    {
+      "id": "r5",
+      "text": "For each person billed on the invoice, click that line's \"View timecard\" link to open the employee's timecard for the billed week, read the approved_hours field, then return to the invoice before opening the next person's timecard.",
+      "kind": "procedure",
+      "source": "both",
+      "citations": [
+        {
+          "utterance_id": "u4",
+          "quote": "Then I check each person's hours against their timecard.",
+          "step_index": 14,
+          "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "View timecard",
+          "step_index": 14,
+          "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "40",
+          "step_index": 16,
+          "selector": "[data-field=\"approved_hours\"]",
+          "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+        },
+        {
+          "utterance_id": null,
+          "quote": "View timecard",
+          "step_index": 19,
+          "selector": "a[href=\"/portal/employees/E-104?week=2026-10-11\"]",
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        }
+      ]
+    }
+  ],
+  "portal_map": [
+    {
+      "page": "/portal/invoices",
+      "fields": [
+        {
+          "name": "invoice link",
+          "selector": "a[href^=\"/portal/invoices/\"]"
+        }
+      ]
+    },
+    {
+      "page": "/portal/invoices/<invoice_id>",
+      "fields": [
+        {
+          "name": "View timecard link",
+          "selector": "a[href^=\"/portal/employees/\"]"
+        }
+      ]
+    },
+    {
+      "page": "/portal/employees/<employee_id>?week=<YYYY-MM-DD>",
+      "fields": [
+        {
+          "name": "approved_hours",
+          "selector": "[data-field=\"approved_hours\"]"
+        }
+      ]
+    }
+  ],
+  "open_questions": [
+    "Where are the contract rates found? The reviewer says every rate must match the contract but never opens it, and no per-role rates were stated.",
+    "How should duplicate billing for the same week be detected? It was stated as a rule but not demonstrated.",
+    "How is a dispute filed and a credit requested? This was not demonstrated.",
+    "Does a small difference (e.g. rounding) count as \"off\", or is any difference a failure?",
+    "Which non-labor charges are allowed and what are their caps? None were stated in the recording.",
+    "Where on the invoice page are each line's billed hours and bill rate read? The portal_map has no selectors for these, and no click on them was recorded.",
+    "Are the spoken approvals (Maya 40, Sam 36) meant as fixed per-person limits, or only as readings of that week's timecard? How do Maya and Sam map to employee IDs E-101 and E-104?",
+    "Does the week parameter (e.g. 2026-10-11) mean the week-ending date or the week-start date when matching invoice lines for the duplicate check?",
+    "Is any additional information on the timecard page (e.g. actual worked hours) to be compared, or only the approved_hours field?"
+  ],
+  "checks": [
+    {
+      "name": "no_duplicate_lines",
+      "file": "skills/halcyon-invoice-review/v1/checks/no_duplicate_lines.py",
+      "language": "python"
+    },
+    {
+      "name": "hours_match_timecards",
+      "file": "skills/halcyon-invoice-review/v1/checks/hours_match_timecards.py",
+      "language": "python"
+    }
+  ],
+  "stages": [
+    {
+      "name": "segment",
+      "mode": "deterministic",
+      "started_at": "2026-11-11T06:35:26.172Z",
+      "finished_at": "2026-11-11T06:35:26.176Z",
+      "output_path": "skills/halcyon-invoice-review/v1/stages/segment.json",
+      "model": null,
+      "request_id": null,
+      "usage": null
+    },
+    {
+      "name": "claims",
+      "mode": "real",
+      "started_at": "2026-11-11T06:35:26.178Z",
+      "finished_at": "2026-11-11T06:35:38.341Z",
+      "output_path": "skills/halcyon-invoice-review/v1/stages/claims.json",
+      "model": "claude-opus-5-5",
+      "request_id": "req_011CgvgCdtuv9nCpYr9wrzAg",
+      "usage": {
+        "input_tokens": 1995,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "iterations": [
+          {
+            "input_tokens": 1995,
+            "output_tokens": 1392,
+            "cache_read_input_tokens": 0,
+            "cache_creation_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "type": "message",
+            "model": null
+          }
+        ],
+        "output_tokens": 1392,
+        "output_tokens_details": {
+          "thinking_tokens": 440
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard",
+        "message_id": "msg_011CgvgCef4gfytPSQXvd7vx",
+        "cache_hit": false
+      }
+    },
+    {
+      "name": "synthesize",
+      "mode": "real",
+      "started_at": "2026-11-11T06:35:38.342Z",
+      "finished_at": "2026-11-11T06:35:49.989Z",
+      "output_path": "skills/halcyon-invoice-review/v1/stages/synthesize.json",
+      "model": "claude-opus-5-5",
+      "request_id": null,
+      "usage": {
+        "input_tokens": 8747,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "iterations": [
+          {
+            "input_tokens": 8747,
+            "output_tokens": 1234,
+            "cache_read_input_tokens": 0,
+            "cache_creation_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "type": "message",
+            "model": null
+          }
+        ],
+        "output_tokens": 1234,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard",
+        "message_id": "msg_011CgvgDXxGVXx7fKcnrUoRM",
+        "cache_hit": false
+      }
+    },
+    {
+      "name": "critique",
+      "mode": "real",
+      "started_at": "2026-11-11T06:35:49.990Z",
+      "finished_at": "2026-11-11T06:36:05.827Z",
+      "output_path": "skills/halcyon-invoice-review/v1/stages/critique.json",
+      "model": "claude-opus-5-5",
+      "request_id": null,
+      "usage": {
+        "input_tokens": 3555,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "iterations": [
+          {
+            "input_tokens": 3555,
+            "output_tokens": 1444,
+            "cache_read_input_tokens": 0,
+            "cache_creation_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "type": "message",
+            "model": null
+          }
+        ],
+        "output_tokens": 1444,
+        "output_tokens_details": {
+          "thinking_tokens": 738
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard",
+        "message_id": "msg_011CgvgEPgi8meEtnuu8TR2p",
+        "cache_hit": false
+      }
+    },
+    {
+      "name": "checks",
+      "mode": "real",
+      "started_at": "2026-11-11T06:36:05.827Z",
+      "finished_at": "2026-11-11T06:37:01.508Z",
+      "output_path": "skills/halcyon-invoice-review/v1/stages/checks.json",
+      "model": "claude-opus-5-5",
+      "request_id": null,
+      "usage": {
+        "input_tokens": 1512,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "iterations": [
+          {
+            "input_tokens": 1512,
+            "output_tokens": 1402,
+            "cache_read_input_tokens": 0,
+            "cache_creation_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "type": "message",
+            "model": null
+          }
+        ],
+        "output_tokens": 1402,
+        "output_tokens_details": {
+          "thinking_tokens": 280
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard",
+        "message_id": "msg_011CgvgFZQ8TB1QYpW5emFFz",
+        "cache_hit": false
+      }
+    },
+    {
+      "name": "package",
+      "mode": "deterministic",
+      "started_at": "2026-11-11T06:37:01.509Z",
+      "finished_at": "2026-11-11T06:37:02.367Z",
+      "output_path": "skills/halcyon-invoice-review/v1/stages/package.json",
+      "model": null,
+      "request_id": null,
+      "usage": null
+    }
+  ],
+  "package_dir": "skills/halcyon-invoice-review/v1",
+  "anthropic_skill": {
+    "id": "skill_012Pdewa4CNZekNRAyh9Yk17",
+    "version": "skver_01LgTFXfebkcPoZ6hhk1xhjh"
+  },
+  "status": "active",
+  "eval_run_id": "eval_halcyon-invoice-review_v1_20261111T063719Z"
+}

@@ -1,0 +1,917 @@
+{
+  "session_id": "rec_20261111T063450Z_sftc",
+  "utterance_source": "speech",
+  "utterances": [
+    {
+      "id": "u1",
+      "text": "I'm checking this month's invoice from Halcyon Staffing.",
+      "start": 2.027,
+      "end": 5.023,
+      "words": [
+        {
+          "text": "I'm",
+          "start": 2.027,
+          "end": 2.253,
+          "confidence": 1
+        },
+        {
+          "text": "checking",
+          "start": 2.303,
+          "end": 2.672,
+          "confidence": 1
+        },
+        {
+          "text": "this",
+          "start": 2.753,
+          "end": 3.026,
+          "confidence": 1
+        },
+        {
+          "text": "month's",
+          "start": 3.087,
+          "end": 3.408,
+          "confidence": 1
+        },
+        {
+          "text": "invoice",
+          "start": 3.478,
+          "end": 3.824,
+          "confidence": 1
+        },
+        {
+          "text": "from",
+          "start": 3.899,
+          "end": 4.173,
+          "confidence": 1
+        },
+        {
+          "text": "Halcyon",
+          "start": 4.233,
+          "end": 4.578,
+          "confidence": 1
+        },
+        {
+          "text": "Staffing.",
+          "start": 4.654,
+          "end": 5.023,
+          "confidence": 1
+        }
+      ],
+      "step_refs": [
+        0
+      ],
+      "low_confidence": []
+    },
+    {
+      "id": "u2",
+      "text": "Every rate on it has to match our contract.",
+      "start": 7.257,
+      "end": 9.618,
+      "words": [
+        {
+          "text": "Every",
+          "start": 7.257,
+          "end": 7.502,
+          "confidence": 1
+        },
+        {
+          "text": "rate",
+          "start": 7.556,
+          "end": 7.782,
+          "confidence": 1
+        },
+        {
+          "text": "on",
+          "start": 7.831,
+          "end": 8.017,
+          "confidence": 1
+        },
+        {
+          "text": "it",
+          "start": 8.058,
+          "end": 8.245,
+          "confidence": 1
+        },
+        {
+          "text": "has",
+          "start": 8.286,
+          "end": 8.492,
+          "confidence": 1
+        },
+        {
+          "text": "to",
+          "start": 8.537,
+          "end": 8.723,
+          "confidence": 1
+        },
+        {
+          "text": "match",
+          "start": 8.764,
+          "end": 9.009,
+          "confidence": 1
+        },
+        {
+          "text": "our",
+          "start": 9.063,
+          "end": 9.269,
+          "confidence": 1
+        },
+        {
+          "text": "contract.",
+          "start": 9.314,
+          "end": 9.618,
+          "confidence": 1
+        }
+      ],
+      "step_refs": [
+        10
+      ],
+      "low_confidence": []
+    },
+    {
+      "id": "u3",
+      "text": "And nobody should be billed twice for the same week.",
+      "start": 9.835,
+      "end": 12.061,
+      "words": [
+        {
+          "text": "And",
+          "start": 9.835,
+          "end": 10.002,
+          "confidence": 1
+        },
+        {
+          "text": "nobody",
+          "start": 10.038,
+          "end": 10.253,
+          "confidence": 1
+        },
+        {
+          "text": "should",
+          "start": 10.3,
+          "end": 10.514,
+          "confidence": 1
+        },
+        {
+          "text": "be",
+          "start": 10.561,
+          "end": 10.712,
+          "confidence": 1
+        },
+        {
+          "text": "billed",
+          "start": 10.745,
+          "end": 10.96,
+          "confidence": 1
+        },
+        {
+          "text": "twice",
+          "start": 11.007,
+          "end": 11.205,
+          "confidence": 1
+        },
+        {
+          "text": "for",
+          "start": 11.249,
+          "end": 11.416,
+          "confidence": 1
+        },
+        {
+          "text": "the",
+          "start": 11.452,
+          "end": 11.619,
+          "confidence": 1
+        },
+        {
+          "text": "same",
+          "start": 11.656,
+          "end": 11.838,
+          "confidence": 1
+        },
+        {
+          "text": "week.",
+          "start": 11.878,
+          "end": 12.061,
+          "confidence": 1
+        }
+      ],
+      "step_refs": [
+        14,
+        15
+      ],
+      "low_confidence": []
+    },
+    {
+      "id": "u4",
+      "text": "Then I check each person's hours against their timecard.",
+      "start": 12.251,
+      "end": 14.259,
+      "words": [
+        {
+          "text": "Then",
+          "start": 12.251,
+          "end": 12.422,
+          "confidence": 1
+        },
+        {
+          "text": "I",
+          "start": 12.46,
+          "end": 12.586,
+          "confidence": 1
+        },
+        {
+          "text": "check",
+          "start": 12.614,
+          "end": 12.8,
+          "confidence": 1
+        },
+        {
+          "text": "each",
+          "start": 12.841,
+          "end": 13.012,
+          "confidence": 1
+        },
+        {
+          "text": "person's",
+          "start": 13.049,
+          "end": 13.265,
+          "confidence": 1
+        },
+        {
+          "text": "hours",
+          "start": 13.312,
+          "end": 13.498,
+          "confidence": 1
+        },
+        {
+          "text": "against",
+          "start": 13.539,
+          "end": 13.755,
+          "confidence": 1
+        },
+        {
+          "text": "their",
+          "start": 13.802,
+          "end": 13.988,
+          "confidence": 1
+        },
+        {
+          "text": "timecard.",
+          "start": 14.029,
+          "end": 14.259,
+          "confidence": 1
+        }
+      ],
+      "step_refs": [
+        14,
+        15,
+        16
+      ],
+      "low_confidence": []
+    },
+    {
+      "id": "u5",
+      "text": "Maya is approved for 40 hours.",
+      "start": 14.46,
+      "end": 16.676,
+      "words": [
+        {
+          "text": "Maya",
+          "start": 14.46,
+          "end": 14.773,
+          "confidence": 1
+        },
+        {
+          "text": "is",
+          "start": 14.842,
+          "end": 15.101,
+          "confidence": 1
+        },
+        {
+          "text": "approved",
+          "start": 15.157,
+          "end": 15.579,
+          "confidence": 1
+        },
+        {
+          "text": "for",
+          "start": 15.672,
+          "end": 15.958,
+          "confidence": 1
+        },
+        {
+          "text": "40",
+          "start": 16.021,
+          "end": 16.279,
+          "confidence": 1
+        },
+        {
+          "text": "hours.",
+          "start": 16.336,
+          "end": 16.676,
+          "confidence": 1
+        }
+      ],
+      "step_refs": [
+        16
+      ],
+      "low_confidence": []
+    },
+    {
+      "id": "u6",
+      "text": "Billed hours can't go over that.",
+      "start": 16.751,
+      "end": 19.007,
+      "words": [
+        {
+          "text": "Billed",
+          "start": 16.751,
+          "end": 17.119,
+          "confidence": 1
+        },
+        {
+          "text": "hours",
+          "start": 17.199,
+          "end": 17.54,
+          "confidence": 1
+        },
+        {
+          "text": "can't",
+          "start": 17.614,
+          "end": 17.928,
+          "confidence": 1
+        },
+        {
+          "text": "go",
+          "start": 17.996,
+          "end": 18.255,
+          "confidence": 1
+        },
+        {
+          "text": "over",
+          "start": 18.312,
+          "end": 18.625,
+          "confidence": 1
+        },
+        {
+          "text": "that.",
+          "start": 18.694,
+          "end": 19.007,
+          "confidence": 1
+        }
+      ],
+      "step_refs": [
+        16
+      ],
+      "low_confidence": []
+    },
+    {
+      "id": "u7",
+      "text": "Sam is approved for 36.",
+      "start": 20.902,
+      "end": 22.766,
+      "words": [
+        {
+          "text": "Sam",
+          "start": 20.902,
+          "end": 21.2,
+          "confidence": 1
+        },
+        {
+          "text": "is",
+          "start": 21.266,
+          "end": 21.536,
+          "confidence": 1
+        },
+        {
+          "text": "approved",
+          "start": 21.595,
+          "end": 22.035,
+          "confidence": 1
+        },
+        {
+          "text": "for",
+          "start": 22.132,
+          "end": 22.43,
+          "confidence": 1
+        },
+        {
+          "text": "36.",
+          "start": 22.496,
+          "end": 22.766,
+          "confidence": 1
+        }
+      ],
+      "step_refs": [
+        21
+      ],
+      "low_confidence": []
+    },
+    {
+      "id": "u8",
+      "text": "If anything is off, I dispute it and ask for a credit.",
+      "start": 23.773,
+      "end": 28.303,
+      "words": [
+        {
+          "text": "If",
+          "start": 23.773,
+          "end": 24.047,
+          "confidence": 1
+        },
+        {
+          "text": "anything",
+          "start": 24.108,
+          "end": 24.556,
+          "confidence": 1
+        },
+        {
+          "text": "is",
+          "start": 24.654,
+          "end": 24.928,
+          "confidence": 1
+        },
+        {
+          "text": "off,",
+          "start": 24.989,
+          "end": 25.292,
+          "confidence": 1
+        },
+        {
+          "text": "I",
+          "start": 25.358,
+          "end": 25.604,
+          "confidence": 1
+        },
+        {
+          "text": "dispute",
+          "start": 25.658,
+          "end": 26.077,
+          "confidence": 1
+        },
+        {
+          "text": "it",
+          "start": 26.169,
+          "end": 26.443,
+          "confidence": 1
+        },
+        {
+          "text": "and",
+          "start": 26.503,
+          "end": 26.807,
+          "confidence": 1
+        },
+        {
+          "text": "ask",
+          "start": 26.873,
+          "end": 27.177,
+          "confidence": 1
+        },
+        {
+          "text": "for",
+          "start": 27.243,
+          "end": 27.547,
+          "confidence": 1
+        },
+        {
+          "text": "a",
+          "start": 27.613,
+          "end": 27.859,
+          "confidence": 1
+        },
+        {
+          "text": "credit.",
+          "start": 27.913,
+          "end": 28.303,
+          "confidence": 1
+        }
+      ],
+      "step_refs": [
+        21
+      ],
+      "low_confidence": []
+    }
+  ],
+  "narration_step": {},
+  "episodes": [
+    {
+      "id": "e1",
+      "url": "http://localhost:3000/portal/login",
+      "page": "/portal/login",
+      "title": "Sign in · Halcyon Staffing client portal",
+      "step_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "dom_step_indices": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "utterance_ids": [
+        "u1"
+      ],
+      "auth": true
+    },
+    {
+      "id": "e2",
+      "url": "http://localhost:3000/portal/invoices",
+      "page": "/portal/invoices",
+      "title": "Invoices · Halcyon Staffing client portal",
+      "step_indices": [
+        8,
+        9,
+        10
+      ],
+      "dom_step_indices": [
+        8,
+        10
+      ],
+      "utterance_ids": [
+        "u2"
+      ],
+      "auth": false
+    },
+    {
+      "id": "e3",
+      "url": "http://localhost:3000/portal/invoices/HSG-1010",
+      "page": "/portal/invoices/<invoice_id>",
+      "title": "Invoice · Halcyon Staffing client portal",
+      "step_indices": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "dom_step_indices": [
+        11,
+        14
+      ],
+      "utterance_ids": [
+        "u3",
+        "u4"
+      ],
+      "auth": false
+    },
+    {
+      "id": "e4",
+      "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+      "page": "/portal/employees/<employee_id>?week=<YYYY-MM-DD>",
+      "title": "Timecards · Halcyon Staffing client portal",
+      "step_indices": [
+        15,
+        16,
+        17
+      ],
+      "dom_step_indices": [
+        15,
+        16
+      ],
+      "utterance_ids": [
+        "u3",
+        "u4",
+        "u5",
+        "u6"
+      ],
+      "auth": false
+    },
+    {
+      "id": "e5",
+      "url": "http://localhost:3000/portal/invoices/HSG-1010",
+      "page": "/portal/invoices/<invoice_id>",
+      "title": "Invoice · Halcyon Staffing client portal",
+      "step_indices": [
+        18,
+        19
+      ],
+      "dom_step_indices": [
+        18,
+        19
+      ],
+      "utterance_ids": [],
+      "auth": false
+    },
+    {
+      "id": "e6",
+      "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+      "page": "/portal/employees/<employee_id>?week=<YYYY-MM-DD>",
+      "title": "Timecards · Halcyon Staffing client portal",
+      "step_indices": [
+        20,
+        21,
+        22
+      ],
+      "dom_step_indices": [
+        20,
+        21
+      ],
+      "utterance_ids": [
+        "u7",
+        "u8"
+      ],
+      "auth": false
+    },
+    {
+      "id": "e7",
+      "url": "http://localhost:3000/portal/invoices/HSG-1010",
+      "page": "/portal/invoices/<invoice_id>",
+      "title": "Invoice · Halcyon Staffing client portal",
+      "step_indices": [
+        23,
+        24
+      ],
+      "dom_step_indices": [
+        23
+      ],
+      "utterance_ids": [],
+      "auth": false
+    }
+  ],
+  "steps": [
+    {
+      "index": 0,
+      "kind": "dom",
+      "event": "navigate",
+      "url": "http://localhost:3000/portal/login",
+      "page": "/portal/login",
+      "title": "Sign in · Halcyon Staffing client portal",
+      "selector": null,
+      "text": null,
+      "value": null
+    },
+    {
+      "index": 1,
+      "kind": "narration",
+      "event": "narration",
+      "url": "http://localhost:3000/portal/login",
+      "page": "/portal/login",
+      "title": "Sign in · Halcyon Staffing client portal",
+      "selector": null,
+      "text": "I'm checking this month's invoice from Halcyon Staffing.",
+      "value": null
+    },
+    {
+      "index": 2,
+      "kind": "dom",
+      "event": "click",
+      "url": "http://localhost:3000/portal/login",
+      "page": "/portal/login",
+      "title": "Sign in · Halcyon Staffing client portal",
+      "selector": "input[name=\"username\"]",
+      "text": null,
+      "value": null
+    },
+    {
+      "index": 3,
+      "kind": "dom",
+      "event": "input",
+      "url": "http://localhost:3000/portal/login",
+      "page": "/portal/login",
+      "title": "Sign in · Halcyon Staffing client portal",
+      "selector": "input[name=\"username\"]",
+      "text": null,
+      "value": "ap.reviewer"
+    },
+    {
+      "index": 4,
+      "kind": "dom",
+      "event": "click",
+      "url": "http://localhost:3000/portal/login",
+      "page": "/portal/login",
+      "title": "Sign in · Halcyon Staffing client portal",
+      "selector": "input[name=\"password\"]",
+      "text": null,
+      "value": null
+    },
+    {
+      "index": 5,
+      "kind": "dom",
+      "event": "input",
+      "url": "http://localhost:3000/portal/login",
+      "page": "/portal/login",
+      "title": "Sign in · Halcyon Staffing client portal",
+      "selector": "input[name=\"password\"]",
+      "text": null,
+      "value": "[redacted]"
+    },
+    {
+      "index": 6,
+      "kind": "dom",
+      "event": "click",
+      "url": "http://localhost:3000/portal/login",
+      "page": "/portal/login",
+      "title": "Sign in · Halcyon Staffing client portal",
+      "selector": "main > div > form > button",
+      "text": "Sign in",
+      "value": null
+    },
+    {
+      "index": 7,
+      "kind": "dom",
+      "event": "submit",
+      "url": "http://localhost:3000/portal/login",
+      "page": "/portal/login",
+      "title": "Sign in · Halcyon Staffing client portal",
+      "selector": "div:nth-of-type(2) > main > div > form",
+      "text": null,
+      "value": null
+    },
+    {
+      "index": 8,
+      "kind": "dom",
+      "event": "navigate",
+      "url": "http://localhost:3000/portal/invoices",
+      "page": "/portal/invoices",
+      "title": "Invoices · Halcyon Staffing client portal",
+      "selector": null,
+      "text": null,
+      "value": null
+    },
+    {
+      "index": 9,
+      "kind": "narration",
+      "event": "narration",
+      "url": "http://localhost:3000/portal/invoices",
+      "page": "/portal/invoices",
+      "title": "Invoices · Halcyon Staffing client portal",
+      "selector": null,
+      "text": "Every rate on it has to match our contract.",
+      "value": null
+    },
+    {
+      "index": 10,
+      "kind": "dom",
+      "event": "click",
+      "url": "http://localhost:3000/portal/invoices",
+      "page": "/portal/invoices",
+      "title": "Invoices · Halcyon Staffing client portal",
+      "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+      "text": "HSG-1010",
+      "value": null
+    },
+    {
+      "index": 11,
+      "kind": "dom",
+      "event": "navigate",
+      "url": "http://localhost:3000/portal/invoices/HSG-1010",
+      "page": "/portal/invoices/<invoice_id>",
+      "title": "Invoice · Halcyon Staffing client portal",
+      "selector": null,
+      "text": null,
+      "value": null
+    },
+    {
+      "index": 12,
+      "kind": "narration",
+      "event": "narration",
+      "url": "http://localhost:3000/portal/invoices/HSG-1010",
+      "page": "/portal/invoices/<invoice_id>",
+      "title": "Invoice · Halcyon Staffing client portal",
+      "selector": null,
+      "text": "And nobody should be billed twice for the same week.",
+      "value": null
+    },
+    {
+      "index": 13,
+      "kind": "narration",
+      "event": "narration",
+      "url": "http://localhost:3000/portal/invoices/HSG-1010",
+      "page": "/portal/invoices/<invoice_id>",
+      "title": "Invoice · Halcyon Staffing client portal",
+      "selector": null,
+      "text": "Then I check each person's hours against their timecard.",
+      "value": null
+    },
+    {
+      "index": 14,
+      "kind": "dom",
+      "event": "click",
+      "url": "http://localhost:3000/portal/invoices/HSG-1010",
+      "page": "/portal/invoices/<invoice_id>",
+      "title": "Invoice · Halcyon Staffing client portal",
+      "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+      "text": "View timecard",
+      "value": null
+    },
+    {
+      "index": 15,
+      "kind": "dom",
+      "event": "navigate",
+      "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+      "page": "/portal/employees/<employee_id>?week=<YYYY-MM-DD>",
+      "title": "Timecards · Halcyon Staffing client portal",
+      "selector": null,
+      "text": null,
+      "value": null
+    },
+    {
+      "index": 16,
+      "kind": "dom",
+      "event": "click",
+      "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+      "page": "/portal/employees/<employee_id>?week=<YYYY-MM-DD>",
+      "title": "Timecards · Halcyon Staffing client portal",
+      "selector": "[data-field=\"approved_hours\"]",
+      "text": "40",
+      "value": null
+    },
+    {
+      "index": 17,
+      "kind": "narration",
+      "event": "narration",
+      "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+      "page": "/portal/employees/<employee_id>?week=<YYYY-MM-DD>",
+      "title": "Timecards · Halcyon Staffing client portal",
+      "selector": null,
+      "text": "Maya is approved for 40 hours. Billed hours can't go over that.",
+      "value": null
+    },
+    {
+      "index": 18,
+      "kind": "dom",
+      "event": "navigate",
+      "url": "http://localhost:3000/portal/invoices/HSG-1010",
+      "page": "/portal/invoices/<invoice_id>",
+      "title": "Invoice · Halcyon Staffing client portal",
+      "selector": null,
+      "text": null,
+      "value": null
+    },
+    {
+      "index": 19,
+      "kind": "dom",
+      "event": "click",
+      "url": "http://localhost:3000/portal/invoices/HSG-1010",
+      "page": "/portal/invoices/<invoice_id>",
+      "title": "Invoice · Halcyon Staffing client portal",
+      "selector": "a[href=\"/portal/employees/E-104?week=2026-10-11\"]",
+      "text": "View timecard",
+      "value": null
+    },
+    {
+      "index": 20,
+      "kind": "dom",
+      "event": "navigate",
+      "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+      "page": "/portal/employees/<employee_id>?week=<YYYY-MM-DD>",
+      "title": "Timecards · Halcyon Staffing client portal",
+      "selector": null,
+      "text": null,
+      "value": null
+    },
+    {
+      "index": 21,
+      "kind": "dom",
+      "event": "click",
+      "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+      "page": "/portal/employees/<employee_id>?week=<YYYY-MM-DD>",
+      "title": "Timecards · Halcyon Staffing client portal",
+      "selector": "[data-field=\"approved_hours\"]",
+      "text": "36",
+      "value": null
+    },
+    {
+      "index": 22,
+      "kind": "narration",
+      "event": "narration",
+      "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+      "page": "/portal/employees/<employee_id>?week=<YYYY-MM-DD>",
+      "title": "Timecards · Halcyon Staffing client portal",
+      "selector": null,
+      "text": "Sam is approved for 36.",
+      "value": null
+    },
+    {
+      "index": 23,
+      "kind": "dom",
+      "event": "navigate",
+      "url": "http://localhost:3000/portal/invoices/HSG-1010",
+      "page": "/portal/invoices/<invoice_id>",
+      "title": "Invoice · Halcyon Staffing client portal",
+      "selector": null,
+      "text": null,
+      "value": null
+    },
+    {
+      "index": 24,
+      "kind": "narration",
+      "event": "narration",
+      "url": "http://localhost:3000/portal/invoices/HSG-1010",
+      "page": "/portal/invoices/<invoice_id>",
+      "title": "Invoice · Halcyon Staffing client portal",
+      "selector": null,
+      "text": "If anything is off, I dispute it and ask for a credit.",
+      "value": null
+    }
+  ]
+}

@@ -1,0 +1,218 @@
+{
+  "mode": "real",
+  "draft": {
+    "title": "Review Halcyon Staffing invoice against contract and approved timecards",
+    "vendor": "Halcyon Staffing",
+    "rules": [
+      {
+        "id": "r1",
+        "text": "No employee may appear on more than one labor line for the same week ending date.",
+        "kind": "check",
+        "source": "said",
+        "citations": [
+          {
+            "utterance_id": "u3",
+            "quote": "And nobody should be billed twice for the same week.",
+            "step_index": 14,
+            "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+            "url": "http://localhost:3000/portal/invoices/HSG-1010"
+          }
+        ]
+      },
+      {
+        "id": "r2",
+        "text": "For each labor line, billed hours must be less than or equal to the approved_hours shown on that employee's timecard for the billed week.",
+        "kind": "check",
+        "source": "said",
+        "citations": [
+          {
+            "utterance_id": "u4",
+            "quote": "Then I check each person's hours against their timecard.",
+            "step_index": 14,
+            "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+            "url": "http://localhost:3000/portal/invoices/HSG-1010"
+          },
+          {
+            "utterance_id": "u6",
+            "quote": "Billed hours can't go over that.",
+            "step_index": 16,
+            "selector": "[data-field=\"approved_hours\"]",
+            "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+          }
+        ]
+      },
+      {
+        "id": "r3",
+        "text": "If any check fails, recommend disputing the invoice and requesting a credit; otherwise the invoice passes review.",
+        "kind": "decision",
+        "source": "said",
+        "citations": [
+          {
+            "utterance_id": "u8",
+            "quote": "If anything is off, I dispute it and ask for a credit.",
+            "step_index": 21,
+            "selector": "[data-field=\"approved_hours\"]",
+            "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11"
+          }
+        ]
+      },
+      {
+        "id": "r4",
+        "text": "Sign in to the Halcyon Staffing client portal, open the invoices list, and open the invoice under review by its invoice number.",
+        "kind": "procedure",
+        "source": "shown",
+        "citations": [
+          {
+            "utterance_id": null,
+            "quote": "Sign in",
+            "step_index": 6,
+            "selector": "main > div > form > button",
+            "url": "http://localhost:3000/portal/login"
+          },
+          {
+            "utterance_id": null,
+            "quote": "HSG-1010",
+            "step_index": 10,
+            "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+            "url": "http://localhost:3000/portal/invoices"
+          }
+        ]
+      },
+      {
+        "id": "r5",
+        "text": "For each person billed on the invoice, click that line's \"View timecard\" link to open the employee's timecard for the billed week, read the approved_hours field, then return to the invoice before opening the next person's timecard.",
+        "kind": "procedure",
+        "source": "both",
+        "citations": [
+          {
+            "utterance_id": "u4",
+            "quote": "Then I check each person's hours against their timecard.",
+            "step_index": 14,
+            "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+            "url": "http://localhost:3000/portal/invoices/HSG-1010"
+          },
+          {
+            "utterance_id": null,
+            "quote": "View timecard",
+            "step_index": 14,
+            "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+            "url": "http://localhost:3000/portal/invoices/HSG-1010"
+          },
+          {
+            "utterance_id": null,
+            "quote": "40",
+            "step_index": 16,
+            "selector": "[data-field=\"approved_hours\"]",
+            "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+          },
+          {
+            "utterance_id": null,
+            "quote": "View timecard",
+            "step_index": 19,
+            "selector": "a[href=\"/portal/employees/E-104?week=2026-10-11\"]",
+            "url": "http://localhost:3000/portal/invoices/HSG-1010"
+          }
+        ]
+      }
+    ],
+    "portal_map": [
+      {
+        "page": "/portal/invoices",
+        "fields": [
+          {
+            "name": "invoice link",
+            "selector": "a[href^=\"/portal/invoices/\"]"
+          }
+        ]
+      },
+      {
+        "page": "/portal/invoices/<invoice_id>",
+        "fields": [
+          {
+            "name": "View timecard link",
+            "selector": "a[href^=\"/portal/employees/\"]"
+          }
+        ]
+      },
+      {
+        "page": "/portal/employees/<employee_id>?week=<YYYY-MM-DD>",
+        "fields": [
+          {
+            "name": "approved_hours",
+            "selector": "[data-field=\"approved_hours\"]"
+          }
+        ]
+      }
+    ],
+    "open_questions": [
+      "Where are the contract rates found? The reviewer says every rate must match the contract but never opens it, and no per-role rates were stated.",
+      "How should duplicate billing for the same week be detected? It was stated as a rule but not demonstrated.",
+      "How is a dispute filed and a credit requested? This was not demonstrated.",
+      "Does a small difference (e.g. rounding) count as \"off\", or is any difference a failure?",
+      "Which non-labor charges are allowed and what are their caps? None were stated in the recording.",
+      "Where on the invoice page are each line's billed hours and bill rate read? The portal_map has no selectors for these, and no click on them was recorded.",
+      "Are the spoken approvals (Maya 40, Sam 36) meant as fixed per-person limits, or only as readings of that week's timecard? How do Maya and Sam map to employee IDs E-101 and E-104?",
+      "Does the week parameter (e.g. 2026-10-11) mean the week-ending date or the week-start date when matching invoice lines for the duplicate check?",
+      "Is any additional information on the timecard page (e.g. actual worked hours) to be compared, or only the approved_hours field?"
+    ]
+  },
+  "dropped": [
+    {
+      "rule": {
+        "id": "r1",
+        "text": "Every labor line's hourly bill rate must equal the contract rate card rate for that line's role.",
+        "kind": "check",
+        "source": "said",
+        "citations": [
+          {
+            "utterance_id": "u2",
+            "quote": "Every rate on it has to match our contract.",
+            "step_index": 10,
+            "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+            "url": "http://localhost:3000/portal/invoices"
+          }
+        ]
+      },
+      "reason": "invented: u2 only says every rate must match the contract. Keying the comparison to a 'rate card' and to 'that line's role' adds structure the recording never mentions; no roles or rate card were said or shown."
+    }
+  ],
+  "added_questions": [
+    "Where on the invoice page are each line's billed hours and bill rate read? The portal_map has no selectors for these, and no click on them was recorded.",
+    "Are the spoken approvals (Maya 40, Sam 36) meant as fixed per-person limits, or only as readings of that week's timecard? How do Maya and Sam map to employee IDs E-101 and E-104?",
+    "Does the week parameter (e.g. 2026-10-11) mean the week-ending date or the week-start date when matching invoice lines for the duplicate check?",
+    "Is any additional information on the timecard page (e.g. actual worked hours) to be compared, or only the approved_hours field?"
+  ],
+  "verdicts": [
+    {
+      "rule_id": "r1",
+      "verdict": "invented",
+      "reason": "u2 only says every rate must match the contract. Keying the comparison to a 'rate card' and to 'that line's role' adds structure the recording never mentions; no roles or rate card were said or shown."
+    },
+    {
+      "rule_id": "r2",
+      "verdict": "supported",
+      "reason": "u3 says nobody should be billed twice for the same week. One small detail is interpretation: calling the week a 'week ending date' is an assumption, since the URL only shows week=2026-10-11."
+    },
+    {
+      "rule_id": "r3",
+      "verdict": "supported",
+      "reason": "u4 says hours are checked against the timecard and u6 says billed hours can't go over the approved amount. Steps 14 and 16 show opening the timecard and reading the approved_hours field."
+    },
+    {
+      "rule_id": "r4",
+      "verdict": "supported",
+      "reason": "u8 says that if anything is off, the reviewer disputes it and asks for a credit. The 'otherwise passes' branch is the implied complement."
+    },
+    {
+      "rule_id": "r5",
+      "verdict": "supported",
+      "reason": "Steps 0–11 show the login form, submitting it, navigating to /portal/invoices and clicking invoice HSG-1010."
+    },
+    {
+      "rule_id": "r6",
+      "verdict": "supported",
+      "reason": "Steps 14–23 show clicking 'View timecard', reading approved_hours (40, 36), and returning to the invoice between employees. u4 backs doing this for each person."
+    }
+  ],
+  "fallback_reason": null
+}

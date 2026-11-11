@@ -1,13 +1,6 @@
 {
   "mode": "real",
   "model": "claude-opus-5-5",
-  "recording_path": "runtime/recordings/rec_20261111T032319Z_ixfg.json",
-  "generated_at": "2026-11-11T03:23:59.808Z",
-  "provenance": {
-    "session_id": "rec_20261111T032319Z_ixfg",
-    "capture": "mv3_extension",
-    "operator": "scripted_playwright",
-    "role": "primary",
-    "note": "Sent from the Ramp Teach Recorder (MV3 extension) with Send to Ramp. Performed by a scripted Playwright operator (demo film), not a person."
-  }
+  "recording_path": "runtime/recordings/rec_20261111T063450Z_sftc.json",
+  "generated_at": "2026-11-11T06:37:19.388Z"
 }

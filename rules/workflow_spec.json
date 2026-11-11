@@ -1,43 +1,44 @@
 {
-  "vendor": "Not stated in recording",
+  "vendor": "Halcyon Staffing",
   "proof_sources": [
     {
-      "app": "Fixture vendor portal",
-      "location": "/portal/invoices/<invoice_id>",
+      "app": "Vendor portal",
+      "location": "/portal/invoices",
       "fields": [
-        "description",
-        "quantity",
-        "unit_rate",
-        "amount",
-        "total"
+        "invoice link"
       ]
     },
     {
-      "app": "Fixture vendor portal",
+      "app": "Vendor portal",
+      "location": "/portal/invoices/<invoice_id>",
+      "fields": [
+        "View timecard link"
+      ]
+    },
+    {
+      "app": "Vendor portal",
       "location": "/portal/employees/<employee_id>?week=<YYYY-MM-DD>",
       "fields": [
         "approved_hours"
       ]
-    },
-    {
-      "app": "Vendor contract",
-      "location": "data/vendor.json#contract",
-      "fields": [
-        "rate_card",
-        "allowed_charges"
-      ]
     }
   ],
   "rules": [
-    "Each line amount must equal quantity (hours) times unit_rate.",
-    "The sum of all line amounts must equal the invoice total.",
-    "Every labor line's hourly rate must equal the contract rate card rate for that employee's role.",
-    "No employee may be billed on more than one labor line for the same week ending date.",
-    "Every non-labor charge must be on the contract's allowed charges list and must not exceed its cap.",
-    "Billed hours for an employee and week must not exceed the approved_hours on that employee's timecard for the same week ending date.",
-    "If any check fails, recommend dispute and ask the vendor for a credit memo; if all checks pass, approve."
+    "No employee may appear on more than one labor line for the same week ending date.",
+    "For each labor line, billed hours must be less than or equal to the approved_hours shown on that employee's timecard for the billed week.",
+    "If any check fails, recommend disputing the invoice and requesting a credit; otherwise the invoice passes review.",
+    "Sign in to the Halcyon Staffing client portal, open the invoices list, and open the invoice under review by its invoice number.",
+    "For each person billed on the invoice, click that line's \"View timecard\" link to open the employee's timecard for the billed week, read the approved_hours field, then return to the invoice before opening the next person's timecard."
   ],
   "open_questions": [
-    "Is overtime above 40 hours a week billable at 1.5 times the rate?"
+    "Where are the contract rates found? The reviewer says every rate must match the contract but never opens it, and no per-role rates were stated.",
+    "How should duplicate billing for the same week be detected? It was stated as a rule but not demonstrated.",
+    "How is a dispute filed and a credit requested? This was not demonstrated.",
+    "Does a small difference (e.g. rounding) count as \"off\", or is any difference a failure?",
+    "Which non-labor charges are allowed and what are their caps? None were stated in the recording.",
+    "Where on the invoice page are each line's billed hours and bill rate read? The portal_map has no selectors for these, and no click on them was recorded.",
+    "Are the spoken approvals (Maya 40, Sam 36) meant as fixed per-person limits, or only as readings of that week's timecard? How do Maya and Sam map to employee IDs E-101 and E-104?",
+    "Does the week parameter (e.g. 2026-10-11) mean the week-ending date or the week-start date when matching invoice lines for the duplicate check?",
+    "Is any additional information on the timecard page (e.g. actual worked hours) to be compared, or only the approved_hours field?"
   ]
 }

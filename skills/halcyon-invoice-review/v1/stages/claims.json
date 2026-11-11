@@ -1,0 +1,757 @@
+{
+  "mode": "real",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Every rate on the invoice must be checked against the contract, Every rate on it has to match our contract.",
+      "citations": [
+        {
+          "utterance_id": "u2",
+          "quote": "Every rate on it has to match our contract.",
+          "step_index": 10,
+          "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+          "url": "http://localhost:3000/portal/invoices"
+        }
+      ]
+    },
+    {
+      "id": "c2",
+      "text": "Check that no one is billed twice for the same week, because nobody should be billed twice for the same week.",
+      "citations": [
+        {
+          "utterance_id": "u3",
+          "quote": "And nobody should be billed twice for the same week.",
+          "step_index": 14,
+          "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        }
+      ]
+    },
+    {
+      "id": "c3",
+      "text": "Compare each person's billed hours against their timecard: Then I check each person's hours against their timecard.",
+      "citations": [
+        {
+          "utterance_id": "u4",
+          "quote": "Then I check each person's hours against their timecard.",
+          "step_index": 14,
+          "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        }
+      ]
+    },
+    {
+      "id": "c4",
+      "text": "Billed hours must not exceed the person's approved hours: Billed hours can't go over that.",
+      "citations": [
+        {
+          "utterance_id": "u6",
+          "quote": "Billed hours can't go over that.",
+          "step_index": 16,
+          "selector": "[data-field=\"approved_hours\"]",
+          "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+        }
+      ]
+    },
+    {
+      "id": "c5",
+      "text": "If any check fails, dispute the invoice and request a credit: If anything is off, I dispute it and ask for a credit.",
+      "citations": [
+        {
+          "utterance_id": "u8",
+          "quote": "If anything is off, I dispute it and ask for a credit.",
+          "step_index": 21,
+          "selector": "[data-field=\"approved_hours\"]",
+          "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11"
+        }
+      ]
+    },
+    {
+      "id": "c6",
+      "text": "The review starts by signing into the portal and opening the invoice from the invoices list. #8 navigate on /portal/invoices #10 click on /portal/invoices at a[href=\"/portal/invoices/HSG-1010\"] text \"HSG-1010\"",
+      "citations": [
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 0,
+          "selector": null,
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "input[name=\"username\"]",
+          "step_index": 2,
+          "selector": "input[name=\"username\"]",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "input[name=\"username\"]",
+          "step_index": 3,
+          "selector": "input[name=\"username\"]",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "input[name=\"password\"]",
+          "step_index": 4,
+          "selector": "input[name=\"password\"]",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "input[name=\"password\"]",
+          "step_index": 5,
+          "selector": "input[name=\"password\"]",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "Sign in",
+          "step_index": 6,
+          "selector": "main > div > form > button",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "div:nth-of-type(2) > main > div > form",
+          "step_index": 7,
+          "selector": "div:nth-of-type(2) > main > div > form",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 8,
+          "selector": null,
+          "url": "http://localhost:3000/portal/invoices"
+        },
+        {
+          "utterance_id": null,
+          "quote": "HSG-1010",
+          "step_index": 10,
+          "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+          "url": "http://localhost:3000/portal/invoices"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 11,
+          "selector": null,
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "View timecard",
+          "step_index": 14,
+          "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 15,
+          "selector": null,
+          "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+        },
+        {
+          "utterance_id": null,
+          "quote": "40",
+          "step_index": 16,
+          "selector": "[data-field=\"approved_hours\"]",
+          "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 18,
+          "selector": null,
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "View timecard",
+          "step_index": 19,
+          "selector": "a[href=\"/portal/employees/E-104?week=2026-10-11\"]",
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 20,
+          "selector": null,
+          "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11"
+        },
+        {
+          "utterance_id": null,
+          "quote": "36",
+          "step_index": 21,
+          "selector": "[data-field=\"approved_hours\"]",
+          "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 23,
+          "selector": null,
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        }
+      ]
+    },
+    {
+      "id": "c7",
+      "text": "For each person on the invoice, the reviewer clicks \"View timecard\" to open that employee's timecard for the billed week. #14 click on /portal/invoices/<invoice_id> at a[href=\"/portal/employees/E-101?week=2026-10-11\"] text \"View timecard\"",
+      "citations": [
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 0,
+          "selector": null,
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "input[name=\"username\"]",
+          "step_index": 2,
+          "selector": "input[name=\"username\"]",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "input[name=\"username\"]",
+          "step_index": 3,
+          "selector": "input[name=\"username\"]",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "input[name=\"password\"]",
+          "step_index": 4,
+          "selector": "input[name=\"password\"]",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "input[name=\"password\"]",
+          "step_index": 5,
+          "selector": "input[name=\"password\"]",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "Sign in",
+          "step_index": 6,
+          "selector": "main > div > form > button",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "div:nth-of-type(2) > main > div > form",
+          "step_index": 7,
+          "selector": "div:nth-of-type(2) > main > div > form",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 8,
+          "selector": null,
+          "url": "http://localhost:3000/portal/invoices"
+        },
+        {
+          "utterance_id": null,
+          "quote": "HSG-1010",
+          "step_index": 10,
+          "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+          "url": "http://localhost:3000/portal/invoices"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 11,
+          "selector": null,
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "View timecard",
+          "step_index": 14,
+          "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 15,
+          "selector": null,
+          "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+        },
+        {
+          "utterance_id": null,
+          "quote": "40",
+          "step_index": 16,
+          "selector": "[data-field=\"approved_hours\"]",
+          "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 18,
+          "selector": null,
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "View timecard",
+          "step_index": 19,
+          "selector": "a[href=\"/portal/employees/E-104?week=2026-10-11\"]",
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 20,
+          "selector": null,
+          "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11"
+        },
+        {
+          "utterance_id": null,
+          "quote": "36",
+          "step_index": 21,
+          "selector": "[data-field=\"approved_hours\"]",
+          "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 23,
+          "selector": null,
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        }
+      ]
+    },
+    {
+      "id": "c8",
+      "text": "On the timecard page, the reviewer looks at the approved_hours field. #16 click on /portal/employees/<employee_id>?week=<YYYY-MM-DD> at [data-field=\"approved_hours\"] text \"40\"",
+      "citations": [
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 0,
+          "selector": null,
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "input[name=\"username\"]",
+          "step_index": 2,
+          "selector": "input[name=\"username\"]",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "input[name=\"username\"]",
+          "step_index": 3,
+          "selector": "input[name=\"username\"]",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "input[name=\"password\"]",
+          "step_index": 4,
+          "selector": "input[name=\"password\"]",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "input[name=\"password\"]",
+          "step_index": 5,
+          "selector": "input[name=\"password\"]",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "Sign in",
+          "step_index": 6,
+          "selector": "main > div > form > button",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "div:nth-of-type(2) > main > div > form",
+          "step_index": 7,
+          "selector": "div:nth-of-type(2) > main > div > form",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 8,
+          "selector": null,
+          "url": "http://localhost:3000/portal/invoices"
+        },
+        {
+          "utterance_id": null,
+          "quote": "HSG-1010",
+          "step_index": 10,
+          "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+          "url": "http://localhost:3000/portal/invoices"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 11,
+          "selector": null,
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "View timecard",
+          "step_index": 14,
+          "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 15,
+          "selector": null,
+          "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+        },
+        {
+          "utterance_id": null,
+          "quote": "40",
+          "step_index": 16,
+          "selector": "[data-field=\"approved_hours\"]",
+          "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 18,
+          "selector": null,
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "View timecard",
+          "step_index": 19,
+          "selector": "a[href=\"/portal/employees/E-104?week=2026-10-11\"]",
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 20,
+          "selector": null,
+          "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11"
+        },
+        {
+          "utterance_id": null,
+          "quote": "36",
+          "step_index": 21,
+          "selector": "[data-field=\"approved_hours\"]",
+          "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 23,
+          "selector": null,
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        }
+      ]
+    },
+    {
+      "id": "c9",
+      "text": "After checking each timecard, the reviewer goes back to the invoice before opening the next person's timecard. #18 navigate on /portal/invoices/<invoice_id> #19 click on /portal/invoices/<invoice_id> at a[href=\"/portal/employees/E-104?week=2026-10-11\"] text \"View timecard\"",
+      "citations": [
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 0,
+          "selector": null,
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "input[name=\"username\"]",
+          "step_index": 2,
+          "selector": "input[name=\"username\"]",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "input[name=\"username\"]",
+          "step_index": 3,
+          "selector": "input[name=\"username\"]",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "input[name=\"password\"]",
+          "step_index": 4,
+          "selector": "input[name=\"password\"]",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "input[name=\"password\"]",
+          "step_index": 5,
+          "selector": "input[name=\"password\"]",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "Sign in",
+          "step_index": 6,
+          "selector": "main > div > form > button",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "div:nth-of-type(2) > main > div > form",
+          "step_index": 7,
+          "selector": "div:nth-of-type(2) > main > div > form",
+          "url": "http://localhost:3000/portal/login"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 8,
+          "selector": null,
+          "url": "http://localhost:3000/portal/invoices"
+        },
+        {
+          "utterance_id": null,
+          "quote": "HSG-1010",
+          "step_index": 10,
+          "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+          "url": "http://localhost:3000/portal/invoices"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 11,
+          "selector": null,
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "View timecard",
+          "step_index": 14,
+          "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 15,
+          "selector": null,
+          "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+        },
+        {
+          "utterance_id": null,
+          "quote": "40",
+          "step_index": 16,
+          "selector": "[data-field=\"approved_hours\"]",
+          "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 18,
+          "selector": null,
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "View timecard",
+          "step_index": 19,
+          "selector": "a[href=\"/portal/employees/E-104?week=2026-10-11\"]",
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 20,
+          "selector": null,
+          "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11"
+        },
+        {
+          "utterance_id": null,
+          "quote": "36",
+          "step_index": 21,
+          "selector": "[data-field=\"approved_hours\"]",
+          "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11"
+        },
+        {
+          "utterance_id": null,
+          "quote": "navigate",
+          "step_index": 23,
+          "selector": null,
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        }
+      ]
+    },
+    {
+      "id": "c10",
+      "text": "Open question: where the contract rates are found is not shown, since the reviewer says Every rate on it has to match our contract. but never opens a contract.",
+      "citations": [
+        {
+          "utterance_id": "u2",
+          "quote": "Every rate on it has to match our contract.",
+          "step_index": 10,
+          "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+          "url": "http://localhost:3000/portal/invoices"
+        }
+      ]
+    },
+    {
+      "id": "c11",
+      "text": "Open question: how to detect duplicate billing for the same week is not demonstrated, even though nobody should be billed twice for the same week.",
+      "citations": [
+        {
+          "utterance_id": "u3",
+          "quote": "And nobody should be billed twice for the same week.",
+          "step_index": 14,
+          "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+          "url": "http://localhost:3000/portal/invoices/HSG-1010"
+        }
+      ]
+    },
+    {
+      "id": "c12",
+      "text": "Open question: how to file a dispute and request a credit is not demonstrated, even though the reviewer says I dispute it and ask for a credit.",
+      "citations": [
+        {
+          "utterance_id": "u8",
+          "quote": "If anything is off, I dispute it and ask for a credit.",
+          "step_index": 21,
+          "selector": "[data-field=\"approved_hours\"]",
+          "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11"
+        }
+      ]
+    },
+    {
+      "id": "c13",
+      "text": "Open question: whether a small difference counts as \"off\" is not defined, since the reviewer only says If anything is off.",
+      "citations": [
+        {
+          "utterance_id": "u8",
+          "quote": "If anything is off, I dispute it and ask for a credit.",
+          "step_index": 21,
+          "selector": "[data-field=\"approved_hours\"]",
+          "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11"
+        }
+      ]
+    }
+  ],
+  "raw_citations": [
+    {
+      "type": "char_location",
+      "cited_text": "Every rate on it has to match our contract.\n",
+      "document_index": 0,
+      "document_title": "Transcript",
+      "start_char_index": 57,
+      "end_char_index": 101
+    },
+    {
+      "type": "char_location",
+      "cited_text": "And nobody should be billed twice for the same week.\n",
+      "document_index": 0,
+      "document_title": "Transcript",
+      "start_char_index": 101,
+      "end_char_index": 154
+    },
+    {
+      "type": "char_location",
+      "cited_text": "Then I check each person's hours against their timecard.\n",
+      "document_index": 0,
+      "document_title": "Transcript",
+      "start_char_index": 154,
+      "end_char_index": 211
+    },
+    {
+      "type": "char_location",
+      "cited_text": "Billed hours can't go over that.\n",
+      "document_index": 0,
+      "document_title": "Transcript",
+      "start_char_index": 242,
+      "end_char_index": 275
+    },
+    {
+      "type": "char_location",
+      "cited_text": "If anything is off, I dispute it and ask for a credit.",
+      "document_index": 0,
+      "document_title": "Transcript",
+      "start_char_index": 299,
+      "end_char_index": 353
+    },
+    {
+      "type": "char_location",
+      "cited_text": "#0 navigate on /portal/login\n#2 click on /portal/login at input[name=\"username\"]\n#3 input on /portal/login at input[name=\"username\"] value \"ap.reviewer\"\n#4 click on /portal/login at input[name=\"password\"]\n#5 input on /portal/login at input[name=\"password\"] value \"[redacted]\"\n#6 click on /portal/login at main > div > form > button text \"Sign in\"\n#7 submit on /portal/login at div:nth-of-type(2) > main > div > form\n#8 navigate on /portal/invoices\n#10 click on /portal/invoices at a[href=\"/portal/invoices/HSG-1010\"] text \"HSG-1010\"\n#11 navigate on /portal/invoices/<invoice_id>\n#14 click on /portal/invoices/<invoice_id> at a[href=\"/portal/employees/E-101?week=2026-10-11\"] text \"View timecard\"\n#15 navigate on /portal/employees/<employee_id>?week=<YYYY-MM-DD>\n#16 click on /portal/employees/<employee_id>?week=<YYYY-MM-DD> at [data-field=\"approved_hours\"] text \"40\"\n#18 navigate on /portal/invoices/<invoice_id>\n#19 click on /portal/invoices/<invoice_id> at a[href=\"/portal/employees/E-104?week=2026-10-11\"] text \"View timecard\"\n#20 navigate on /portal/employees/<employee_id>?week=<YYYY-MM-DD>\n#21 click on /portal/employees/<employee_id>?week=<YYYY-MM-DD> at [data-field=\"approved_hours\"] text \"36\"\n#23 navigate on /portal/invoices/<invoice_id>",
+      "document_index": 1,
+      "document_title": "Recorded steps",
+      "start_char_index": 0,
+      "end_char_index": 1248
+    },
+    {
+      "type": "char_location",
+      "cited_text": "#0 navigate on /portal/login\n#2 click on /portal/login at input[name=\"username\"]\n#3 input on /portal/login at input[name=\"username\"] value \"ap.reviewer\"\n#4 click on /portal/login at input[name=\"password\"]\n#5 input on /portal/login at input[name=\"password\"] value \"[redacted]\"\n#6 click on /portal/login at main > div > form > button text \"Sign in\"\n#7 submit on /portal/login at div:nth-of-type(2) > main > div > form\n#8 navigate on /portal/invoices\n#10 click on /portal/invoices at a[href=\"/portal/invoices/HSG-1010\"] text \"HSG-1010\"\n#11 navigate on /portal/invoices/<invoice_id>\n#14 click on /portal/invoices/<invoice_id> at a[href=\"/portal/employees/E-101?week=2026-10-11\"] text \"View timecard\"\n#15 navigate on /portal/employees/<employee_id>?week=<YYYY-MM-DD>\n#16 click on /portal/employees/<employee_id>?week=<YYYY-MM-DD> at [data-field=\"approved_hours\"] text \"40\"\n#18 navigate on /portal/invoices/<invoice_id>\n#19 click on /portal/invoices/<invoice_id> at a[href=\"/portal/employees/E-104?week=2026-10-11\"] text \"View timecard\"\n#20 navigate on /portal/employees/<employee_id>?week=<YYYY-MM-DD>\n#21 click on /portal/employees/<employee_id>?week=<YYYY-MM-DD> at [data-field=\"approved_hours\"] text \"36\"\n#23 navigate on /portal/invoices/<invoice_id>",
+      "document_index": 1,
+      "document_title": "Recorded steps",
+      "start_char_index": 0,
+      "end_char_index": 1248
+    },
+    {
+      "type": "char_location",
+      "cited_text": "#0 navigate on /portal/login\n#2 click on /portal/login at input[name=\"username\"]\n#3 input on /portal/login at input[name=\"username\"] value \"ap.reviewer\"\n#4 click on /portal/login at input[name=\"password\"]\n#5 input on /portal/login at input[name=\"password\"] value \"[redacted]\"\n#6 click on /portal/login at main > div > form > button text \"Sign in\"\n#7 submit on /portal/login at div:nth-of-type(2) > main > div > form\n#8 navigate on /portal/invoices\n#10 click on /portal/invoices at a[href=\"/portal/invoices/HSG-1010\"] text \"HSG-1010\"\n#11 navigate on /portal/invoices/<invoice_id>\n#14 click on /portal/invoices/<invoice_id> at a[href=\"/portal/employees/E-101?week=2026-10-11\"] text \"View timecard\"\n#15 navigate on /portal/employees/<employee_id>?week=<YYYY-MM-DD>\n#16 click on /portal/employees/<employee_id>?week=<YYYY-MM-DD> at [data-field=\"approved_hours\"] text \"40\"\n#18 navigate on /portal/invoices/<invoice_id>\n#19 click on /portal/invoices/<invoice_id> at a[href=\"/portal/employees/E-104?week=2026-10-11\"] text \"View timecard\"\n#20 navigate on /portal/employees/<employee_id>?week=<YYYY-MM-DD>\n#21 click on /portal/employees/<employee_id>?week=<YYYY-MM-DD> at [data-field=\"approved_hours\"] text \"36\"\n#23 navigate on /portal/invoices/<invoice_id>",
+      "document_index": 1,
+      "document_title": "Recorded steps",
+      "start_char_index": 0,
+      "end_char_index": 1248
+    },
+    {
+      "type": "char_location",
+      "cited_text": "#0 navigate on /portal/login\n#2 click on /portal/login at input[name=\"username\"]\n#3 input on /portal/login at input[name=\"username\"] value \"ap.reviewer\"\n#4 click on /portal/login at input[name=\"password\"]\n#5 input on /portal/login at input[name=\"password\"] value \"[redacted]\"\n#6 click on /portal/login at main > div > form > button text \"Sign in\"\n#7 submit on /portal/login at div:nth-of-type(2) > main > div > form\n#8 navigate on /portal/invoices\n#10 click on /portal/invoices at a[href=\"/portal/invoices/HSG-1010\"] text \"HSG-1010\"\n#11 navigate on /portal/invoices/<invoice_id>\n#14 click on /portal/invoices/<invoice_id> at a[href=\"/portal/employees/E-101?week=2026-10-11\"] text \"View timecard\"\n#15 navigate on /portal/employees/<employee_id>?week=<YYYY-MM-DD>\n#16 click on /portal/employees/<employee_id>?week=<YYYY-MM-DD> at [data-field=\"approved_hours\"] text \"40\"\n#18 navigate on /portal/invoices/<invoice_id>\n#19 click on /portal/invoices/<invoice_id> at a[href=\"/portal/employees/E-104?week=2026-10-11\"] text \"View timecard\"\n#20 navigate on /portal/employees/<employee_id>?week=<YYYY-MM-DD>\n#21 click on /portal/employees/<employee_id>?week=<YYYY-MM-DD> at [data-field=\"approved_hours\"] text \"36\"\n#23 navigate on /portal/invoices/<invoice_id>",
+      "document_index": 1,
+      "document_title": "Recorded steps",
+      "start_char_index": 0,
+      "end_char_index": 1248
+    },
+    {
+      "type": "char_location",
+      "cited_text": "Every rate on it has to match our contract.\n",
+      "document_index": 0,
+      "document_title": "Transcript",
+      "start_char_index": 57,
+      "end_char_index": 101
+    },
+    {
+      "type": "char_location",
+      "cited_text": "And nobody should be billed twice for the same week.\n",
+      "document_index": 0,
+      "document_title": "Transcript",
+      "start_char_index": 101,
+      "end_char_index": 154
+    },
+    {
+      "type": "char_location",
+      "cited_text": "If anything is off, I dispute it and ask for a credit.",
+      "document_index": 0,
+      "document_title": "Transcript",
+      "start_char_index": 299,
+      "end_char_index": 353
+    },
+    {
+      "type": "char_location",
+      "cited_text": "If anything is off, I dispute it and ask for a credit.",
+      "document_index": 0,
+      "document_title": "Transcript",
+      "start_char_index": 299,
+      "end_char_index": 353
+    }
+  ],
+  "fallback_reason": null
+}

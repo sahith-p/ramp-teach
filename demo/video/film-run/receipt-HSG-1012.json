@@ -11,29 +11,29 @@
     },
     {
       "name": "total_matches_line_items",
-      "expected": "Total = sum of Lines 1-5 = $12,374.00",
-      "actual": "Invoice total $12,374.00",
+      "expected": "Invoice total equals sum of Lines 1-5",
+      "actual": "Total $12,374.00 equals sum of 5 line amounts",
       "result": "pass",
       "evidence": "calc:total_matches_line_items"
     },
     {
       "name": "rate_matches_contract",
-      "expected": "Rate card: 95.00/h, 62.00/h, 70.00/h, 88.00/h (Lines 1-4)",
-      "actual": "Billed 95.00/h, 62.00/h, 70.00/h, 88.00/h (Lines 1-4)",
+      "expected": "Rate-card rates: 95.00/h, 62.00/h, 70.00/h, 88.00/h (Lines 1-4)",
+      "actual": "Lines 1-4 bill 95.00/h, 62.00/h, 70.00/h, 88.00/h",
       "result": "pass",
       "evidence": "calc:rate_matches_contract"
     },
     {
       "name": "no_duplicate_lines",
       "expected": "One labor line per employee-week (Lines 1-4)",
-      "actual": "4 distinct employees, week ending 2026-10-25",
+      "actual": "4 distinct employee-weeks, week ending 2026-10-25",
       "result": "pass",
       "evidence": "calc:no_duplicate_lines"
     },
     {
       "name": "no_unknown_charges",
       "expected": "Job board posting allowed, cap $400.00 (Line 5)",
-      "actual": "Job board posting $250.00 (Line 5)",
+      "actual": "Line 5 Job board posting $250.00",
       "result": "pass",
       "evidence": "calc:no_unknown_charges"
     },
@@ -47,12 +47,12 @@
   ],
   "recommendation": "approve",
   "reasons": [
-    "All six checks pass: rates, hours, line math, total, duplicates and non-labor charges match the contract and approved timecards.",
-    "Billed hours for all four employees match approved timecards for week ending 2026-10-25.",
-    "No credit memo is needed; invoice total $12,374.00 is supported."
+    "All six checks pass: line math, total, contract rates, no duplicates, allowed charges, and hours match approved timecards.",
+    "Line 5 Job board posting ($250.00) is within its $400.00 contract cap.",
+    "Open question: does any small difference (e.g. rounding) count as a failure, or only material differences?"
   ],
   "mode": "real",
   "human_decision": "approve",
   "decided_by": "alex@northwind.test",
-  "decided_at": "2026-11-11T03:25:50.788Z"
+  "decided_at": "2026-11-11T06:39:52.462Z"
 }

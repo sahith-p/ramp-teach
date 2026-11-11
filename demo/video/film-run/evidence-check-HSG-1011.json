@@ -1,0 +1,151 @@
+{
+  "invoice_id": "HSG-1011",
+  "checked_at": "2026-11-11T06:38:17.911Z",
+  "mode": "deterministic",
+  "checks": [
+    {
+      "key": "approved_hours",
+      "subject": {
+        "employee_id": "E-101",
+        "week_ending": "2026-10-18"
+      },
+      "source": "fixture:/portal/employees/E-101?week=2026-10-18",
+      "value": "40",
+      "rechecked_value": "40",
+      "status": "match",
+      "screenshot": "runs/HSG-1011/evidence/approved_hours-E-101-2026-10-18.png"
+    },
+    {
+      "key": "status",
+      "subject": {
+        "employee_id": "E-101",
+        "week_ending": "2026-10-18"
+      },
+      "source": "fixture:/portal/employees/E-101?week=2026-10-18",
+      "value": "approved",
+      "rechecked_value": "approved",
+      "status": "match",
+      "screenshot": "runs/HSG-1011/evidence/status-E-101-2026-10-18.png"
+    },
+    {
+      "key": "approved_by",
+      "subject": {
+        "employee_id": "E-101",
+        "week_ending": "2026-10-18"
+      },
+      "source": "fixture:/portal/employees/E-101?week=2026-10-18",
+      "value": "Dana Whitfield",
+      "rechecked_value": "Dana Whitfield",
+      "status": "match",
+      "screenshot": "runs/HSG-1011/evidence/approved_by-E-101-2026-10-18.png"
+    },
+    {
+      "key": "approved_hours",
+      "subject": {
+        "employee_id": "E-102",
+        "week_ending": "2026-10-18"
+      },
+      "source": "fixture:/portal/employees/E-102?week=2026-10-18",
+      "value": "40",
+      "rechecked_value": "40",
+      "status": "match",
+      "screenshot": "runs/HSG-1011/evidence/approved_hours-E-102-2026-10-18.png"
+    },
+    {
+      "key": "status",
+      "subject": {
+        "employee_id": "E-102",
+        "week_ending": "2026-10-18"
+      },
+      "source": "fixture:/portal/employees/E-102?week=2026-10-18",
+      "value": "approved",
+      "rechecked_value": "approved",
+      "status": "match",
+      "screenshot": "runs/HSG-1011/evidence/status-E-102-2026-10-18.png"
+    },
+    {
+      "key": "approved_by",
+      "subject": {
+        "employee_id": "E-102",
+        "week_ending": "2026-10-18"
+      },
+      "source": "fixture:/portal/employees/E-102?week=2026-10-18",
+      "value": "Dana Whitfield",
+      "rechecked_value": "Dana Whitfield",
+      "status": "match",
+      "screenshot": "runs/HSG-1011/evidence/approved_by-E-102-2026-10-18.png"
+    },
+    {
+      "key": "approved_hours",
+      "subject": {
+        "employee_id": "E-103",
+        "week_ending": "2026-10-18"
+      },
+      "source": "fixture:/portal/employees/E-103?week=2026-10-18",
+      "value": "36",
+      "rechecked_value": "36",
+      "status": "match",
+      "screenshot": "runs/HSG-1011/evidence/approved_hours-E-103-2026-10-18.png"
+    },
+    {
+      "key": "status",
+      "subject": {
+        "employee_id": "E-103",
+        "week_ending": "2026-10-18"
+      },
+      "source": "fixture:/portal/employees/E-103?week=2026-10-18",
+      "value": "approved",
+      "rechecked_value": "approved",
+      "status": "match",
+      "screenshot": "runs/HSG-1011/evidence/status-E-103-2026-10-18.png"
+    },
+    {
+      "key": "approved_by",
+      "subject": {
+        "employee_id": "E-103",
+        "week_ending": "2026-10-18"
+      },
+      "source": "fixture:/portal/employees/E-103?week=2026-10-18",
+      "value": "Dana Whitfield",
+      "rechecked_value": "Dana Whitfield",
+      "status": "match",
+      "screenshot": "runs/HSG-1011/evidence/approved_by-E-103-2026-10-18.png"
+    },
+    {
+      "key": "approved_hours",
+      "subject": {
+        "employee_id": "E-104",
+        "week_ending": "2026-10-18"
+      },
+      "source": "fixture:/portal/employees/E-104?week=2026-10-18",
+      "value": "38",
+      "rechecked_value": "38",
+      "status": "match",
+      "screenshot": "runs/HSG-1011/evidence/approved_hours-E-104-2026-10-18.png"
+    },
+    {
+      "key": "status",
+      "subject": {
+        "employee_id": "E-104",
+        "week_ending": "2026-10-18"
+      },
+      "source": "fixture:/portal/employees/E-104?week=2026-10-18",
+      "value": "approved",
+      "rechecked_value": "approved",
+      "status": "match",
+      "screenshot": "runs/HSG-1011/evidence/status-E-104-2026-10-18.png"
+    },
+    {
+      "key": "approved_by",
+      "subject": {
+        "employee_id": "E-104",
+        "week_ending": "2026-10-18"
+      },
+      "source": "fixture:/portal/employees/E-104?week=2026-10-18",
+      "value": "Dana Whitfield",
+      "rechecked_value": "Dana Whitfield",
+      "status": "match",
+      "screenshot": "runs/HSG-1011/evidence/approved_by-E-104-2026-10-18.png"
+    }
+  ]
+}
