@@ -102,6 +102,15 @@ async function main() {
     }
   }
 
+  // 6b. ElevenLabs key (voice; optional)
+  if (process.env.ELEVENLABS_API_KEY) add("elevenlabs key", "ok", "found (voice transcription available)");
+  else {
+    add("elevenlabs key", "warn", "not found: voice uses browser dictation and the demo narration path");
+    manual.push(
+      "Optional, for real speech-to-text: add the environment variable ELEVENLABS_API_KEY (same places as the Anthropic key; never commit it).",
+    );
+  }
+
   // 7. Port 3000 (the app, demo and film use it)
   const free = await new Promise<boolean>((resolve) => {
     const s = net.createServer().once("error", () => resolve(false)).once("listening", () => s.close(() => resolve(true)));

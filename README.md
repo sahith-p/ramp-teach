@@ -2,14 +2,21 @@
 
 **Unofficial demo inspired by Ramp's design. Not affiliated with Ramp. All data is synthetic.**
 
-An AP specialist verifies one staffing vendor's invoice once while narrating, and an agent learns
-the job from that. On a new invoice it runs deterministic checks, uses Claude to drive a browser through
-the vendor's timecard portal for evidence, and writes an auditable receipt recommending
-approve / dispute / review. A human decides, and the receipt attaches to a Ramp-style bill.
+An AP specialist reviews one staffing vendor's invoice once while narrating, with a Chrome extension recording.
+Ramp Teach learns a versioned workflow from that recording, tests it, and when a new invoice arrives in Bill Pay a
+routing model picks the workflow and its agent reviews the invoice in a real browser. A person decides.
 
-```
-RECORD (MV3 extension) → LEARN (spec + evals) → VERIFY (calc + browser agent) → RECEIPT (Claude) → DECIDE + ATTACH (human)
-```
+Three technical pillars, with observability across all of them (details: **[docs/TECHNICAL.md](docs/TECHNICAL.md)**):
+
+- **Voice and recording:** ElevenLabs Scribe v2 transcription with word timing and page-aware key terms, each
+  sentence linked to the clicks it is about.
+- **Skill and evals:** a six-stage Claude learner with citations to the exact words and clicks, packaged as an Agent
+  Skill (Skills API) with check scripts run in Anthropic's code-execution sandbox; eight eval cases and a promotion
+  gate decide which version goes live.
+- **Execution:** a routing model picks the workflow; the workflow agent drives Chromium through Claude's browser
+  tools with live progress notes and a task budget; every fact is re-checked against its page by plain code.
+- **Observability:** spans for every model turn and tool call (tokens, cost, Anthropic request IDs), a live view of
+  the agent's browser inside the bill page, traces labeled real / scripted / mock / deterministic.
 
 **New to the repo (agent or person)? Start with [docs/HANDOFF.md](docs/HANDOFF.md).** The product film and how to re-make it: [demo/video/README.md](demo/video/README.md), [demo/video/PIPELINE.md](demo/video/PIPELINE.md).
 How it works, what is real AI vs scripted vs mock, and the limitations: **[docs/workflow.md](docs/workflow.md)**.

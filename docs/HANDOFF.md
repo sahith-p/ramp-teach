@@ -59,6 +59,7 @@ RECORD (MV3 extension) → LEARN (spec + evals) → VERIFY (calc + browser agent
 | Rules of the repo (lanes, frozen contracts, guardrails, modes) | `CLAUDE.md` |
 | How the product works, real vs scripted vs mock, limitations | `docs/workflow.md` |
 | Run commands, status, demo script, outstanding work | `README.md`, `MORNING.md` |
+| **How the three pillars work (voice, skill + evals, execution, observability)** | **`docs/TECHNICAL.md`** |
 | Claude API usage in this repo (model, browser toolset, caching) | `docs/claude-api-notes.md` |
 | UI design rules | `docs/design.md` |
 | Lane specs from the original build | `docs/lane-spec.md` |
@@ -113,6 +114,12 @@ Per-step commands: `npm run learn`, `npm run agent -- HSG-1011` (app must be run
 | `app/stage-ext/` | Serves real extension files to the film stage | film only |
 | `lib/` | paths, validated data loaders, stores, trace, usage ledger, money, cache, dash, learn job | |
 | `data/` | Synthetic seed data | `data/answer_key.json` is never read by agent/, learn/ or prompts |
+| `lib/speech/`, `app/api/stt/` | ElevenLabs transcription, word ↔ click alignment, key terms, peaks | voice pillar |
+| `learn/skill/`, `lib/skills/`, `skills/` | Six-stage skill learner, Agent Skill package, diff, status | skill pillar; only real versions are committed |
+| `evals/`, `lib/evals/` | Skill eval cases, graders, runner, gate | `npm run eval:skill` |
+| `agent/router.ts`, `agent/spans.ts`, `agent/live.ts`, `agent/evidence-check.ts` | Routing, spans, live view, evidence re-check | execution + observability |
+| `app/(dash)/bills/**`, `components/dash/**` | Bill page (Review / Evidence), Workflows tab, recording, run and eval pages | the app |
+| `contracts/pillars.ts`, `lib/pillars.ts` | Contracts and shared paths for all of the above | |
 | `scripts/` | `demo.ts`, `usage.ts`, `guard-artifacts.ts` | |
 | `demo/video/` | Films, their scripts, archived runs | See PIPELINE.md |
 | `public/stage/` | Film stage (desktop + Chrome frame) | |
@@ -152,6 +159,11 @@ hosts can't take a key through the network-secrets card).
 
 | Variable | Default | Effect |
 |---|---|---|
+| `ELEVENLABS_API_KEY` | unset | Speech-to-text (Scribe v2 batch + Realtime tokens). Server-side only; without it the voice path falls back to browser dictation and the demo narration. Network host `api.elevenlabs.io` is allowed in the cloud environment. |
+| `RAMP_TEACH_ROUTER` | unset | `deterministic` forces the code routing path (the product film uses it) |
+| `RAMP_TEACH_ROUTER_MODEL` | `claude-opus-5-5` | Routing model |
+| `RAMP_TEACH_TASK_BUDGET` | `60000` | Browser-agent task budget in tokens (`0` turns it off) |
+| `RAMP_TEACH_LIVE` | on | `0` turns off the live screencast of the agent browser |
 | `RAMP_ANTHROPIC_BASE_URL` | `https://api.anthropic.com` | API base URL. Set explicitly because cloud sessions export `ANTHROPIC_BASE_URL` for Claude Code itself. |
 | `RAMP_TEACH_MODEL` | `claude-opus-5-5` | Model for learn, browser agent and receipt |
 | `RAMP_TEACH_EFFORT` | `medium` | Effort level (`low`…`max`) |
@@ -186,18 +198,27 @@ cloud sessions; don't reinstall), system fonts are optional (Inter and JetBrains
 
 - Branches: work happens on `claude/pensive-turing-jh6orb`; `main` was fast-forwarded to it on 2026-11-11 at the
   user's request. Keep `main` a fast-forward of the work branch (no force pushes).
-- All build tickets done; 171 tests pass; artifact guard OK.
-- Walkthrough video: `demo/video/ramp-teach-walkthrough.mp4` (done).
-- **Product film:** the committed `ramp-teach-film.mp4` is the previous cut (138.8 s, no diagrams, light outro).
-  The new cut is fully wired and rehearsed offline (four technical diagrams, dark logo-only outro, request IDs in
-  the trace diagram) but **needs one real take**, which is blocked on the API key being added to the environment.
-  When the key is there:
+- **Pillar build (T-40) merged:** voice (ElevenLabs), skill learner + Skills API, skill evals + gate, routing +
+  execution observability, and the new Bill Pay UI (bill page, Workflows tab). 379 tests pass; `next build` passes;
+  artifact guard OK. Verified end to end **offline** in the built app (learn → evals → route → agent run → every
+  page reviewed). **Not yet verified with real calls** (no key was visible in the building session):
+  the six learning stages against Claude, the Skills API upload, code-execution checks, the Claude judge,
+  ElevenLabs batch + Realtime, task budget + progress notes + fallbacks in one request. First real-mode session:
+  run `npm run setup`, then `npm run skill:learn -- --recording extension/recordings/portal-HSG-1010.json`,
+  `npm run eval:skill -- --yes` (prints a cost estimate first), then deliver an invoice in Bill Pay and watch the run.
+  Commit only real skill versions and eval runs (the guard enforces it).
+- Walkthrough video: `demo/video/ramp-teach-walkthrough.mp4` (old flow).
+- **Product film:** the committed `ramp-teach-film.mp4` is the previous cut (old flow). The film script is being
+  re-cut for the new flow (no sign-in, Bill Pay → Workflows learning, routing, the triggered run, live view inside
+  the bill page, new diagrams). A real take needs `RAMP_ANTHROPIC_API_KEY` visible:
   ```bash
   npx tsx demo/video/film.ts --phase all
   ```
-  Then: check frames (diagrams, transitions, extension icon, avatar, no blank frames), confirm `film-run/usage.jsonl`
-  has `request_id`s, update `demo/video/README.md` (duration, size, four diagrams, dark outro) and `MORNING.md`'s
-  Demo videos section, run the guard, commit only the intended files, push, and send the MP4 to the user.
+  Then: check frames, confirm `film-run/usage.jsonl` has `request_id`s, update `demo/video/README.md` and
+  `MORNING.md`, run the guard, commit only the intended files, push, fast-forward `main`, send the MP4.
+- Owner rules for the film and commits: never show "simulated" on screen or in commit messages; never label a
+  non-real step with a real provider's name (just no tag). Disclosure of what is staged lives in
+  `demo/video/README.md`'s live-vs-staged table.
 - API spend so far ≈ $2.00 total (103 calls) by the usage ledger; a film take ≈ $0.33.
 
 ## 8. Outstanding product work
