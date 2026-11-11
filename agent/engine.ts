@@ -581,6 +581,11 @@ export async function runWorkflow<S>(def: WorkflowDefinition<S>, subjectId: stri
 
     /* (c2) evidence check: re-read every recorded fact from its page (plain code, same browser session) */
     if (evidence && driver && opts.evidenceCheck !== false) {
+      // Stop the live stream first: the re-check's field crops must not show up as the agent's last frame.
+      if (stopLive) {
+        await (stopLive as () => Promise<void>)().catch(() => {});
+        stopLive = null;
+      }
       const targets = evidenceTargets(evidence, realFacts);
       if (targets.length > 0) {
         const vSpan = spans.start("evidence.check", "verify", "deterministic", rootId, { targets: targets.length });

@@ -8,7 +8,10 @@ const problems: string[] = [];
 const j = (p: string) => JSON.parse(fs.readFileSync(p, "utf8"));
 const meta = j("rules/learn_meta.json");
 if (meta.mode !== "real") problems.push(`rules/learn_meta.json mode=${meta.mode} (expected real)`);
-if (meta.recording_path !== "extension/recordings/portal-HSG-1010.json") problems.push(`rules/learn_meta.json recording_path=${meta.recording_path}`);
+// The committed extension recording, or (after a real film take keeps rules/ synced from its learned skill) the
+// recording that take sent from the extension.
+const filmTake = /(^|\/)runtime\/recordings\/rec_[\w.-]+\.json$/.test(meta.recording_path ?? "");
+if (meta.recording_path !== "extension/recordings/portal-HSG-1010.json" && !filmTake) problems.push(`rules/learn_meta.json recording_path=${meta.recording_path}`);
 const r = j("receipts/HSG-1011.json");
 if (r.mode !== "real") problems.push(`receipts/HSG-1011.json mode=${r.mode} (expected real)`);
 for (const p of ["receipts/HSG-1012.json", "runs/HSG-1012"]) if (fs.existsSync(p)) problems.push(`${p} exists (rehearsal/film output; archive it, do not commit)`);
