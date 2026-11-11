@@ -857,6 +857,15 @@ async function postProduce() {
     placed.push({ seg, from, to, a: l.a, b: l.b, text: l.text, speaker: l.speaker, caption: l.caption !== false });
   }
   const st = starts();
+  if (args.includes("--plan")) {
+    for (const p of placed) {
+      const g = segs[p.seg];
+      console.log(`${p.from.toFixed(1).padStart(6)}-${p.to.toFixed(1).padEnd(6)} ${(g.kind === "sec" ? g.id! : "footage").padEnd(10)} ${p.speaker.padEnd(7)} ${p.text.slice(0, 70)}`);
+    }
+    console.log(segs.map((g, i) => `${g.kind === "sec" ? g.id : "footage"} ${st[i].toFixed(1)}+${g.len.toFixed(1)}${g.kind === "main" && g.hold ? ` (freeze ${g.hold.toFixed(1)})` : ""}`).join("\n"));
+    console.log(`total ${(st.at(-1)! + segs.at(-1)!.len).toFixed(1)} s`);
+    return;
+  }
 
   // 3. Captions. With a voice-over, every caption is a line as said; without one, the written captions.
   type Cap = { from: number; to: number; text: string };
@@ -929,6 +938,7 @@ async function postProduce() {
   const secSegs = segs.filter((g) => g.kind === "sec");
   const mains = segs.filter((g) => g.kind === "main").length;
   const cin = ["-i", MASTER_MP4, ...secSegs.flatMap((g) => ["-i", file(g.id!)])];
+  let nIn = 1 + secSegs.length;
   let cg = `[0:v]split=${mains}${Array.from({ length: mains }, (_, n) => `[m${n}]`).join("")};`;
   let mi = 0, si = 0;
   const norm = "fps=30,format=yuv420p,settb=AVTB,setpts=PTS-STARTPTS";
@@ -944,7 +954,7 @@ async function postProduce() {
     accLen += segs[i].len - XF;
   }
   footCaps.forEach((c, k) => {
-    const n = cin.length / 2;
+    const n = nIn++;
     const d = Math.max(0.6, c.to - c.from);
     cin.push("-loop", "1", "-t", d.toFixed(3), "-i", path.join(capDir, `c${k}.png`));
     // Captions that join up switch without a fade (the take's subtitle must never show through).
@@ -956,7 +966,7 @@ async function postProduce() {
   cg += `[${acc}]null[final];`;
   const audioArgs: string[] = [];
   if (vo) {
-    const n = cin.length / 2;
+    const n = nIn++;
     cin.push("-i", path.join(VO_DIR, vo.audio));
     cg += `[${n}:a]aresample=48000,asplit=${placed.length}${placed.map((_, k) => `[s${k}]`).join("")};`;
     placed.forEach((p, k) => {

@@ -10,7 +10,7 @@
    "heard": "Suppose I'm Rohin in AP Accountant. Every week I check invoices from our staffing agency, Halcyon, by hand.",
    "at": {
     "sec": "intro",
-    "t": 0.6
+    "t": 0.4
    },
    "caption": false
   },
@@ -21,7 +21,8 @@
    "text": "Ramp Teach lets Rohin show that check once, so every bill after already arrives checked, with the proof.",
    "heard": "Ramp Teach lets Rohin show that check once, so every bill after already arrives checked with the proof.",
    "at": {
-    "after": 0.5
+    "mark": "start",
+    "dt": 0.2
    }
   },
   {
@@ -167,8 +168,7 @@
    "text": "Here's what it learned.",
    "heard": "Here's what it learned.",
    "at": {
-    "mark": "learn_done",
-    "dt": 1.8
+    "after": 0.4
    }
   },
   {
@@ -178,8 +178,7 @@
    "text": "Each rule points back to what I said and where I clicked,",
    "heard": "Each rule points back to what I said and where I clicked,",
    "at": {
-    "mark": "rules",
-    "dt": 1.1
+    "after": 0.5
    }
   },
   {
@@ -189,8 +188,7 @@
    "text": "and my recording keeps my words lined up with my clicks.",
    "heard": "and my recording keeps my words lined up with my clicks.",
    "at": {
-    "mark": "recording",
-    "dt": 0.3
+    "after": 0.4
    }
   },
   {
@@ -232,8 +230,7 @@
    "text": "Just now, a new invoice from Halcyon hit my approval queue,",
    "heard": "Just now, a new invoice from Halcyon hit my approval queue,",
    "at": {
-    "mark": "deliver_1011",
-    "dt": 0.2
+    "after": 0.4
    }
   },
   {
@@ -243,8 +240,7 @@
    "text": "so we can see Ramp picks the right workflow and starts its agent.",
    "heard": "so we can see Ramp picks the right workflow and starts its agent.",
    "at": {
-    "mark": "review",
-    "dt": 0.0
+    "after": 0.3
    }
   },
   {
@@ -276,8 +272,7 @@
    "text": "The run lives under Workflows, with every model turn and tool call,",
    "heard": "The run lives under workflows with every model turn and tool call,",
    "at": {
-    "mark": "agent_leave",
-    "dt": 1.4
+    "after": 0.4
    }
   },
   {
@@ -287,8 +282,7 @@
    "text": "and each step shows its tokens, cost and request ID.",
    "heard": "and each step shows its tokens, cost, and request ID.",
    "at": {
-    "mark": "result_1011",
-    "dt": 0.9
+    "after": 0.3
    }
   },
   {
@@ -298,8 +292,7 @@
    "text": "So every fact gets reread from its page by plain code.",
    "heard": "So every fact gets reread from its page by plain code.",
    "at": {
-    "mark": "evidence",
-    "dt": 0.0
+    "after": 0.3
    }
   },
   {
@@ -309,8 +302,7 @@
    "text": "It found three problems and $3,500 to credit back,",
    "heard": "It found three problems and 3 ,500 to credit back,",
    "at": {
-    "mark": "evidence",
-    "dt": 3.4
+    "after": 0.3
    }
   },
   {
@@ -321,7 +313,7 @@
    "heard": "and this is where I can dispute it as an agent never approves or pays anything itself.",
    "at": {
     "mark": "dispute",
-    "dt": -1.2
+    "dt": -2.8
    }
   },
   {
