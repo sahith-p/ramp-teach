@@ -69,7 +69,7 @@ Diagram cut points (in `captions()`, `slots`): after `record_end`, at `learn_don
 |---|---|---|
 | Inter (400, 500): captions | `demo/video/assets/fonts/inter/` | SIL OFL 1.1 (license file alongside) |
 | JetBrains Mono (400, 500, italic): code and log lines in diagrams | `demo/video/assets/fonts/jetbrains-mono/` | Apache 2.0 / OFL (license file alongside) |
-| Lausanne (300, 400, 700): Ramp's typeface | **not committed**; `demo/video/assets/fonts/lausanne/` is a gitignored cache | Commercial typeface licensed to Ramp. Fetch with `NODE_USE_ENV_PROXY=1 npx tsx demo/video/fetch-fonts.ts`; without the cache, renderers load it from `assets.ramp.com` (allowed by the environment's network list). The app and extension always load it from there. |
+| Lausanne (300, 400, 700): Ramp's typeface | **not committed**; `demo/video/assets/fonts/lausanne/` is a gitignored cache | Commercial typeface licensed to Ramp. `npm run setup` fetches it (or `NODE_USE_ENV_PROXY=1 npx tsx demo/video/fetch-fonts.ts`); without the cache, renderers load it from `assets.ramp.com` (allowed by the environment's network list). The app and extension always load it from there. |
 | Claude mark | `demo/video/assets/logos/claude.svg` (also inline in `diagrams.ts`) | Simple Icons `claude`, CC0 |
 | Ramp logo + mark | `demo/video/assets/logos/ramp-logo.svg`, `ramp-mark.svg`; source of truth `components/dash/RampLogo.tsx` | Ramp's; used with Ramp's approval for the hackathon (per the project owner) |
 | Halcyon mark (fictional vendor) | `demo/video/assets/logos/halcyon-mark.svg`; source `components/fixtures/HalcyonLogo.tsx` | Original artwork for this demo |

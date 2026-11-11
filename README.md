@@ -19,8 +19,10 @@ Two-minute walkthrough video (real app, live Claude run): **[demo/video/ramp-tea
 ## Quick start
 
 ```bash
-npm install
+npm install && npm run setup
 ```
+
+`npm run setup` checks everything (Chromium, ffmpeg, fonts, the API key, tests) and lists any manual steps.
 
 ```bash
 npm run typecheck && npm test

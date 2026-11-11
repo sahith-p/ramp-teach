@@ -5,7 +5,7 @@ One reusable core engine: **RECORD → LEARN → BROWSER ACTIONS → EVIDENCE �
 Invoice review (`workflows/invoice-review/`) is the first workflow on it. Not a multi-workflow
 or multi-provider platform: one workflow, one provider adapter (Anthropic), behind thin interfaces.
 
-Handoff for a new agent: **`docs/HANDOFF.md`** (state, config, where everything is). Film pipeline: `demo/video/PIPELINE.md`.
+Handoff for a new agent: **`docs/HANDOFF.md`**. If asked to read it, run `npm run setup` first and tell the person the manual steps it prints (usually just the API key). Film pipeline: `demo/video/PIPELINE.md`.
 
 ## Stack (fixed)
 Next.js 16 App Router + TypeScript + Tailwind v4 · `@anthropic-ai/sdk` · Playwright 1.63.0 (pinned to the

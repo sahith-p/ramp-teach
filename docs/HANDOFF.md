@@ -3,6 +3,40 @@
 Start here if you are a new agent (or person) on this repo. Read this file, then `CLAUDE.md` (the rules), then the
 doc for the area you will touch. Last updated 2026-11-11.
 
+## 0. Claude: do this first
+
+When a person asks you to read this handoff:
+
+1. From the repo root, run:
+   ```bash
+   npm run setup
+   ```
+   It installs dependencies if missing, checks Chromium (Playwright), ffmpeg and port 3000, caches the Lausanne
+   font for the video renderers, finds the Anthropic key and checks it against the API (free; it never prints the
+   key), runs the artifact guard, the typecheck and the tests. `--quick` skips the typecheck and tests.
+2. Tell the person, in plain words, what passed and the **MANUAL STEPS FOR A HUMAN** it printed. Usually that is
+   only the API key (see "Manual steps" below). Don't ask them to paste the key into chat.
+3. Then summarize the current state (§7) and ask what they want to do next.
+
+## Manual steps (only a human can do these)
+
+1. **Anthropic API key**, the only required setting. Never commit it, paste it into chat, or print it. Pick one:
+   - Own machine, permanent (outside the repo, so it can't be committed):
+     ```bash
+     echo 'RAMP_ANTHROPIC_API_KEY=sk-ant-...' > ~/ramp-teach.env && chmod 600 ~/ramp-teach.env
+     ```
+   - One terminal session: `export RAMP_ANTHROPIC_API_KEY=sk-ant-...`
+   - Claude Code cloud session: environment menu in the session title bar → Edit → add the environment variable
+     `RAMP_ANTHROPIC_API_KEY`, then restart or resume the session. The network-secrets form doesn't work for
+     Anthropic's API.
+
+   Then run `npm run setup` again; it should say the key is accepted. Without a key everything runs in labeled
+   offline mode and the film script refuses to shoot. Spend so far: `npx tsx scripts/usage.ts` (a film take is
+   about $0.33).
+2. **Only if missing** (setup says so): Node 22+, Chromium for Playwright (`npx playwright install chromium`; never on
+   a Claude Code cloud machine, it is preinstalled), ffmpeg with libx264 (only for the videos).
+3. **GitHub access** to push: the person's own git credentials, or in Claude Code cloud the connected GitHub account.
+
 ## 1. What this is (30 seconds)
 
 **Ramp Teach** is a demo of a service-invoice verification agent, made for a Ramp hackathon. It is an
@@ -35,7 +69,7 @@ RECORD (MV3 extension) → LEARN (spec + evals) → VERIFY (calc + browser agent
 ## 3. Run it
 
 ```bash
-npm install
+npm run setup
 ```
 
 ```bash
