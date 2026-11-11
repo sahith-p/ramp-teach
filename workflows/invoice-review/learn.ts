@@ -118,6 +118,18 @@ export const invoiceReviewRecordings: { path: string; provenance: Omit<Recording
   },
 ];
 
+/**
+ * Skill learner config (learn/skill/, the SKILL pillar). Same domain hints as the distiller; the skill id is the
+ * folder under skills/. VENDOR_PATTERN finds the vendor only when the reviewer says it.
+ */
+export const invoiceReviewSkill = {
+  skillId: "halcyon-invoice-review",
+  title: "Halcyon Staffing invoice review",
+  hints: distillHints,
+  vendorPattern: VENDOR_PATTERN,
+  vendorNotStated: VENDOR_NOT_STATED,
+};
+
 export const invoiceReviewLearn: WorkflowDefinition["learn"] = {
   recordingPath: invoiceReviewRecordings[0].path,
   specPath: "rules/workflow_spec.json",
