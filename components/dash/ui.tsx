@@ -1,5 +1,6 @@
 /** Shared bits for the bill-pay dashboard (Ramp-style look; no Ramp marks). */
 import type { DashStatus } from "@/lib/dash";
+import { HalcyonMark } from "@/components/fixtures/HalcyonLogo";
 
 export const fmtMoney = (n: number, currency = "USD") =>
   new Intl.NumberFormat("en-US", { style: "currency", currency }).format(n);
@@ -17,6 +18,7 @@ export function initials(name: string) {
 }
 
 export function VendorAvatar({ name, size = 28 }: { name: string; size?: number }) {
+  if (/halcyon/i.test(name)) return <HalcyonMark size={size} />;
   return (
     <span
       className="inline-flex shrink-0 items-center justify-center rounded-md bg-[#1f1f1f] font-semibold text-white"

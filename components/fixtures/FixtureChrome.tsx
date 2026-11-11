@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { HalcyonLogo } from "./HalcyonLogo";
 import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/Badge";
 import type { BillStatus } from "@/contracts";
@@ -19,9 +20,9 @@ export function PortalHeader({ signedIn = true }: { signedIn?: boolean }) {
   return (
     <header className={`${BRAND} text-white`}>
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-6 py-4">
-        <Link href={signedIn ? "/portal/invoices" : "/portal/login"} className="flex items-baseline gap-3">
-          <span className="text-lg font-semibold">Halcyon Staffing</span>
-          <span className="text-sm text-white/60">Client portal</span>
+        <Link href={signedIn ? "/portal/invoices" : "/portal/login"} className="flex items-center gap-3">
+          <HalcyonLogo onDark />
+          <span className="self-center border-l border-white/20 pl-3 text-sm text-white/60">Client portal</span>
         </Link>
         {signedIn && (
           <nav aria-label="Portal" className="flex items-center gap-6 text-sm">

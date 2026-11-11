@@ -37,7 +37,7 @@ try {
   // 3. Login
   check("demo creds shown", (await page.textContent("body")).includes("demo-only"));
   check("demo label shown (footer)", (await page.getByTestId("demo-banner").textContent()).includes("Synthetic data"));
-  check("vendor header shown", (await page.textContent("header")).includes("Halcyon Staffing"));
+  check("vendor header shown", (await page.textContent("header")).includes("Halcyon"));
   await page.fill('input[name="username"]', "ap.reviewer");
   await page.fill('input[name="password"]', "demo-only");
   await Promise.all([page.waitForURL(/\/portal\/invoices$/), page.getByRole("button", { name: "Sign in" }).click()]);

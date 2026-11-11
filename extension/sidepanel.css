@@ -1,68 +1,83 @@
-/* Tokens from docs/design.md (inlined: the extension has no build step). */
+/* Ramp Teach Recorder side panel, in Ramp's UI language (Lausanne, warm grays, square controls, lemon primary). */
+@font-face { font-family: "Lausanne"; font-weight: 300; font-display: swap; src: url("https://assets.ramp.com/fonts/lausanne/lausanne-300/TWKLausanne-300.woff2") format("woff2"); }
+@font-face { font-family: "Lausanne"; font-weight: 400; font-display: swap; src: url("https://assets.ramp.com/fonts/lausanne/lausanne-400/TWKLausanne-400.woff2") format("woff2"); }
 :root {
-  --surface: #ffffff;
-  --ink: #1f1f1f;
-  --ink-muted: #5c5c5c;
-  --ink-faint: #8a8a8a;
-  --line: #e6e6e3;
-  --wash: #f7f7f5;
-  --accent: #e4f222;
-  --pass: #1d7a46;
-  --fail: #b42318;
-  --warn: #a15c07;
+  --ink: rgb(26, 25, 25);
+  --ink-2: rgb(71, 69, 67);
+  --muted: rgb(110, 106, 104);
+  --line: rgb(226, 222, 219);
+  --line-strong: rgb(210, 206, 203);
+  --wash: rgb(244, 242, 240);
+  --wash-2: rgb(250, 249, 248);
+  --lemon: rgb(228, 242, 34);
+  --red: rgb(196, 52, 58);
 }
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  padding: 12px;
-  background: var(--surface);
+  padding: 16px;
+  background: #fff;
   color: var(--ink);
-  font: 13px/1.45 Inter, Archivo, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font: 300 14px/1.45 Lausanne, Inter, Roboto, Arial, sans-serif;
 }
-.demo-label { margin: 10px 0 0; color: var(--ink-faint); font-size: 11px; text-align: center; }
-header { margin-bottom: 12px; }
-h1 { margin: 2px 0 4px; font: 600 20px/1.2 Inter, system-ui, sans-serif; letter-spacing: -0.01em; }
-.status { margin: 0; display: flex; align-items: center; gap: 6px; color: var(--ink-muted); }
-.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-faint); display: inline-block; }
-.dot.on { background: var(--fail); }
-.session { margin: 2px 0 0; color: var(--ink-faint); font-size: 11px; font-family: ui-monospace, monospace; }
-.card { border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin-bottom: 10px; }
-.card-title { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+header { margin-bottom: 14px; }
+.brand { display: flex; align-items: center; gap: 6px; color: var(--ink); }
+.brand .logo { height: 16px; width: auto; }
+.brand .product { font-size: 15px; font-weight: 400; padding-left: 6px; border-left: 1px solid var(--line-strong); line-height: 16px; }
+h1 { margin: 14px 0 4px; font: 400 22px/1.2 Lausanne, Inter, sans-serif; letter-spacing: -0.01em; }
+.status { margin: 0; display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 13px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line-strong); display: inline-block; }
+.dot.on { background: var(--red); animation: blink 1.2s infinite; }
+@keyframes blink { 50% { opacity: .3; } }
+.session { margin: 2px 0 0; color: var(--muted); font-size: 11px; font-family: ui-monospace, monospace; }
+
+.card { border: 1px solid var(--line); padding: 14px; margin-bottom: 12px; background: #fff; }
+.card-title { display: block; font-weight: 400; font-size: 15px; margin-bottom: 8px; }
 .row { display: flex; gap: 8px; flex-wrap: wrap; }
 .row.between { justify-content: space-between; align-items: center; }
+
 button {
-  font: inherit;
-  padding: 6px 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface);
-  color: var(--ink);
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  background: #fff;
+  color: var(--ink-2);
+  font: 400 13.5px Lausanne, Inter, sans-serif;
   cursor: pointer;
 }
-button:hover:not(:disabled) { background: var(--wash); }
-button:disabled { color: var(--ink-faint); cursor: not-allowed; }
-button.primary { background: var(--accent); border-color: var(--accent); font-weight: 600; }
-button.primary:hover:not(:disabled) { filter: brightness(0.97); background: var(--accent); }
-button.danger { color: var(--fail); }
-button[aria-pressed="true"] { border-color: var(--fail); color: var(--fail); }
+button:hover:not(:disabled) { background: var(--wash-2); }
+button:disabled { opacity: 0.45; cursor: default; }
+button.primary { background: var(--lemon); border-color: var(--lemon); color: var(--ink); }
+button.primary:hover:not(:disabled) { background: var(--lemon); filter: brightness(0.96); }
+button.danger { color: var(--red); }
+button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+
 textarea {
   width: 100%;
-  font: inherit;
-  padding: 8px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  border: 1px solid var(--muted);
+  padding: 10px 12px;
+  font: 300 14px/1.4 Lausanne, Inter, sans-serif;
+  color: var(--ink);
   resize: vertical;
   margin-bottom: 8px;
+  outline: none;
 }
-.message { margin: 8px 0 0; min-height: 1em; color: var(--ink-muted); }
-.message.error { color: var(--fail); }
-.note { margin: 6px 0 0; color: var(--ink-faint); font-size: 12px; }
-.count { color: var(--ink-faint); font-weight: 400; font-variant-numeric: tabular-nums; }
-.steps { list-style: none; margin: 0; padding: 0; max-height: 45vh; overflow-y: auto; }
-.steps li { border-bottom: 1px solid var(--line); padding: 6px 0; }
-.steps li:last-child { border-bottom: 0; }
-.steps .kind { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-faint); }
-.steps .kind.narration { color: var(--pass); }
-.steps .main { word-break: break-word; }
-.steps .sub { color: var(--ink-faint); font-size: 11px; font-family: ui-monospace, monospace; word-break: break-all; }
-code { font-family: ui-monospace, monospace; font-size: 12px; }
+textarea:focus { border-color: var(--ink); }
+
+.message { margin: 10px 0 0; color: var(--muted); font-size: 12.5px; min-height: 1em; }
+.message.error { color: var(--red); }
+.note { margin: 8px 0 0; color: var(--muted); font-size: 12px; }
+.count { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 4px; margin-left: 6px; background: var(--wash); color: var(--ink-2); font-size: 11.5px; border-radius: 3px; }
+
+.steps-card { padding-bottom: 6px; }
+.steps { list-style: none; margin: 0; padding: 0; max-height: 46vh; overflow-y: auto; }
+.steps li { display: grid; grid-template-columns: 74px 1fr; gap: 2px 8px; padding: 8px 0; border-top: 1px solid var(--line); }
+.steps li:first-child { border-top: 0; }
+.kind { grid-row: span 2; align-self: start; font-size: 11px; color: var(--ink-2); background: var(--wash); padding: 2px 6px; text-align: center; text-transform: capitalize; }
+.kind.narration { background: var(--lemon); color: var(--ink); }
+.main { font-size: 13px; color: var(--ink); overflow-wrap: anywhere; }
+li .main:has(+ .sub), .main { line-height: 1.35; }
+.sub { font-size: 11.5px; color: var(--muted); font-family: ui-monospace, monospace; overflow-wrap: anywhere; }
+code { font-family: ui-monospace, monospace; font-size: 12px; background: var(--wash); padding: 1px 4px; }
+.demo-label { margin: 10px 0 0; color: var(--muted); font-size: 11px; text-align: center; }
+button[aria-pressed="true"]:hover:not(:disabled) { background: var(--ink); filter: none; }

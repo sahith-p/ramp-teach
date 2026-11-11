@@ -313,6 +313,12 @@ async function shoot() {
       server.kill();
     }
     await sleep(1200);
+    if (OFFLINE) {
+      // A rehearsal must never leave mock output where the committed real-run artifacts live.
+      for (const t of TRACKED) if (fs.existsSync(path.join(backup, t))) fs.copyFileSync(path.join(backup, t), path.join(ROOT, t));
+      for (const n of NEW_OUTPUTS) fs.rmSync(path.join(ROOT, n), { recursive: true, force: true });
+      console.log("rehearsal: restored committed artifacts");
+    }
   }
 }
 
