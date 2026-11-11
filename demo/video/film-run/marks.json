@@ -1,0 +1,18 @@
+{
+  "t0": "2026-11-11T01:06:20.706Z",
+  "marks": {
+    "start": 0.622,
+    "record_start": 7.485,
+    "record_end": 37.568,
+    "learn_start": 44.764,
+    "learn_done": 47.38,
+    "deliver_1011": 56.829,
+    "agent_on": 60.797,
+    "agent_off": 97.125,
+    "result_1011": 104.381,
+    "deliver_1012": 114.73,
+    "fast_start": 121.821,
+    "fast_end": 152.072,
+    "end": 165.784
+  }
+}

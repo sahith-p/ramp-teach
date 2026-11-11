@@ -21,16 +21,15 @@ One real demo run costs about **$0.18**.
 
 Every ticket is DONE (`board/tickets.md`). Nothing is BLOCKED. **Outstanding:** a genuinely human-recorded session (below).
 
-## Walkthrough video
+## Demo videos
 
-**`demo/video/ramp-teach-walkthrough.mp4`**: 118 s, 1280x720 H.264, 4.0 MB, real app pixels with on-screen captions.
-- The browser agent and the receipt are a **live real Claude run** recorded for the video (21:30 UTC).
-- The learned rules are **saved output** from the 09:43 UTC real call.
-- The recorded session and the decision click are **scripted**, not human.
-- The checks are hand-written code.
-
-Details, the reproduce command and the run's archived outputs are in `demo/video/README.md`. The new `/learn` page
-shows the capture and the learned spec in the app.
+- **Product film for voice-over: `demo/video/ramp-teach-film.mp4`** (142 s, 1080p, 5.7 MB):
+  - Recording with the real Recorder extension, with subtitles.
+  - **Send to Ramp**, then Ramp Teach inside the Ramp-style dashboard learns the rules (a live Claude call).
+  - An invoice arrives and the agent reviews it live, with its own browser in a second window: "Needs a second look", then Dispute.
+  - A clean invoice arrives: "Looks good", then Approve.
+  - Cursor, narration and the clicks are scripted. Details and live-vs-staged table: `demo/video/README.md`.
+- Earlier walkthrough with honesty captions: `demo/video/ramp-teach-walkthrough.mp4`.
 
 ## What works
 

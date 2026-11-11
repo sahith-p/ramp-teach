@@ -1,45 +1,54 @@
-# Walkthrough video
+# Demo videos
 
-**[ramp-teach-walkthrough.mp4](ramp-teach-walkthrough.mp4)**: 118 s, 1280x720, H.264, 4.0 MB. It plays in any
-browser or video player. Unofficial demo inspired by Ramp's design. All data is synthetic, and no real Ramp
-account is connected.
+## Product film (for voice-over): [ramp-teach-film.mp4](ramp-teach-film.mp4)
 
-Every frame is real browser pixels from the running app, captured with Playwright `recordVideo`. The captions
-are overlays added during capture (presenter clips) or burned in with ffmpeg (agent clip). No terminal, code,
-logs or keys appear in frame.
+141.6 s · 1920×1080 · H.264 · 5.7 MB · no audio. Made for a voice-over: the only on-screen text besides the app itself
+is the narrator's lines as subtitles while recording.
 
-## What is live, saved or scripted (as captioned on screen)
+**What happens**
+1. **Record:** a reviewer checks past invoice HSG-1010 on the vendor's portal with the Ramp Teach Recorder side panel
+   open. The panel captures each click, typed field and page, and each spoken sentence arrives through the panel's
+   dictation as a narration step.
+2. **Send to Ramp:** the panel's **Send to Ramp** uploads the recording. Ramp's sign-in appears, and the
+   **Ramp Teach** page inside Ramp learns the rules from that recording.
+3. **Bill Pay:** invoice HSG-1011 arrives in the inbox. The agent starts on its own, and its browser works through the
+   vendor portal in a second window while the bill drawer lists each step. Result: **Needs a second look**
+   (3 issues, $3,448.00 to credit). The reviewer clicks **Dispute**.
+4. Invoice HSG-1012 arrives. The wait is sped up 5×. Result: **Looks good** (all 6 checks passed). The reviewer
+   clicks **Approve**, and the bill moves to Payment required.
 
-| Step | On screen | Mode |
-|---|---|---|
-| 1. Overview | Home page, five-stage engine | App UI, synthetic data |
-| 2. Record | `/learn`: the capture timeline from `extension/recordings/portal-HSG-1010.json` | Captured by the MV3 extension. **Performed by a scripted Playwright operator, not a human.** |
-| 2. Learn | `/learn`: the learned rules, proof sources and open question | **Saved output** of an earlier real claude-opus-5-5 call (2026-11-09 09:43 UTC). Not re-run for the video. |
-| 3. Verify | Claude's own browser signing in, opening invoice HSG-1011 and reading 4 timecards | **Live real Claude run** for this video (2026-11-09 21:30 UTC, run `invoice-review:HSG-1011:20261109T213021`). 8 model turns, shown in real time (not sped up), with one caption per turn generated from that run's trace. |
-| 4. Receipt | Recommendation banner, 6 checks with evidence links, the evidence viewer, line-item flags | Receipt text from a **live** claude-opus-5-5 call in the same run (model-output cache bypassed, `cache_hit: false`, 8.3 s). **The six checks are hand-written code.** |
-| 5. Decide | A name is typed and Dispute is clicked on the receipt page, then the bill in the inbox | **Scripted stand-in for a human** (Playwright), through the real `POST /api/decisions`. The bill shows Disputed with the receipt attached. |
+**Live vs staged**
 
-The video run's outputs are archived in [`run/`](run/): the receipt as decided on camera, calc, evidence, the
-run's trace lines, the decision line, and the caption timeline. After capture, the repo's committed real-run
-artifacts (`receipts/`, `runs/HSG-1011/`, `agent/trace.jsonl`) were restored unchanged, so they still match the
-`npm run demo` report.
+| Part | How it was made |
+|---|---|
+| Learning the rules | **Live** claude-opus-5-5 call (cache bypassed) on the recording made in this take → `film-run/learned-spec.json` (4 rules), `film-run/sent-recording.json` |
+| Agent review of HSG-1011 and HSG-1012 | **Live** runs: Claude chose every browser action (8 turns, 12 facts each) and wrote each receipt (`film-run/receipt-*.json`, `film-run/trace.jsonl`). It used the rules learned seconds earlier. |
+| Agent window | The agent's **own** browser, recorded during the run and composited into the second window frame-by-frame by wall clock |
+| The six checks | Hand-written code (deterministic) |
+| Cursor, typing, clicks, narration | **Scripted** (Playwright). The narration reaches the real Recorder through a stand-in speech recognizer, not a microphone. The recording is labeled "scripted test run" in the app. |
+| Dispute / Approve | Scripted stand-in for a person, through the real decision API. The agent never approves. |
+| Recorder side panel + content script | The **real** extension code (`extension/`), with `public/stage/chrome-shim.js` standing in for Chrome's extension APIs |
+| Desktop + browser frame | A stage page (`public/stage/index.html`): macOS Tahoe wallpaper, Chrome-style frame, fake demo domains |
+| Ramp dashboard | Mirrors Ramp's UI and uses the Ramp logo and font, with Ramp's approval for the Ramp hackathon (per the project owner). Synthetic data; no real Ramp account is connected. |
 
-**Cost of the video's live run:** 9 API calls (8 browser turns + 1 synthesis), about $0.20 at Opus 5.5 list prices.
+All the take's outputs are in [`film-run/`](film-run/). The repo's committed run artifacts were restored afterwards
+(`npx tsx scripts/guard-artifacts.ts` checks this).
 
-## Re-create it
+**Cost of the final take:** 19 API calls, about $0.33. Rehearsals run with `--offline` and cost nothing.
+
+**Re-make it** (needs `RAMP_ANTHROPIC_API_KEY`, ffmpeg with libx264, and port 3000 free):
 
 ```bash
-npm run build && npm run start
+npx tsx demo/video/film.ts --phase all
 ```
+
+Rehearse for free first:
 
 ```bash
-npx tsx demo/video/record-video.ts --phase all
+npx tsx demo/video/film.ts --phase shoot --offline
 ```
 
-The phases are `agent` (one live real-mode run, about $0.20), `present` (UI clips, no API), `assemble` (ffmpeg)
-and `restore` (archive the run, restore the committed artifacts). `present` and `assemble` can be retaken without
-another API run. Raw clips and backups go to `demo/video/work/`, which is gitignored.
+## Earlier walkthrough: [ramp-teach-walkthrough.mp4](ramp-teach-walkthrough.mp4)
 
-The script needs `RAMP_ANTHROPIC_API_KEY` for the `agent` phase, plus `ffmpeg` with libx264. It records the
-agent's browser through two opt-in env switches: `RAMP_TEACH_RECORD_VIDEO_DIR` in `agent/browser/playwright-driver.ts`
-and `RAMP_TEACH_VIEWPORT` in `config/engine.ts`. Neither changes what the model sees or can do.
+118 s, 1280×720, with honesty captions on screen. Made with `record-video.ts`; details in that file's header.
+Its run outputs are in [`run/`](run/).

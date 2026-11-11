@@ -95,19 +95,21 @@ const getBill = (id: string) => fetch(`${BASE}/api/dash/bills/${id}`).then((r) =
 async function shoot() {
   fs.mkdirSync(WORK, { recursive: true });
   // Back up committed artifacts once.
+  // Back up each committed artifact once (per file, so files added to TRACKED later are covered too).
   const backup = path.join(WORK, "backup");
-  if (!fs.existsSync(backup)) {
-    for (const t of TRACKED) {
-      const src = path.join(ROOT, t);
-      if (fs.existsSync(src)) {
-        fs.mkdirSync(path.dirname(path.join(backup, t)), { recursive: true });
-        fs.copyFileSync(src, path.join(backup, t));
-      }
+  for (const t of TRACKED) {
+    const src = path.join(ROOT, t);
+    const dst = path.join(backup, t);
+    if (!fs.existsSync(dst) && fs.existsSync(src)) {
+      fs.mkdirSync(path.dirname(dst), { recursive: true });
+      fs.copyFileSync(src, dst);
     }
   }
   fs.rmSync(path.join(WORK, "agent"), { recursive: true, force: true });
   for (const n of NEW_OUTPUTS) fs.rmSync(path.join(ROOT, n), { recursive: true, force: true });
 
+  // Always film the current code.
+  execFileSync("npx", ["next", "build"], { cwd: ROOT, stdio: "ignore" });
   const server = await startServer();
   const marks: Record<string, number> = {};
   try {
@@ -397,6 +399,15 @@ function restore() {
   fs.writeFileSync(path.join(RUN_OUT, "trace.jsonl"), trace.join("\n") + "\n");
   const decisions = fs.readFileSync(path.join(ROOT, "receipts", "decisions.jsonl"), "utf8").split("\n").filter(Boolean);
   fs.writeFileSync(path.join(RUN_OUT, "decisions.jsonl"), decisions.filter((l) => JSON.parse(l).decided_at >= t0).join("\n") + "\n");
+  // The take's learned workflow and learn trace (before restoring the committed rules/).
+  for (const [src, dst] of [
+    ["rules/workflow_spec.json", "learned-workflow_spec.json"],
+    ["rules/learn_meta.json", "learned-learn_meta.json"],
+  ]) {
+    if (fs.existsSync(path.join(ROOT, src))) fs.copyFileSync(path.join(ROOT, src), path.join(RUN_OUT, dst));
+  }
+  const learnTrace = fs.readFileSync(path.join(ROOT, "learn", "trace.jsonl"), "utf8").split("\n").filter((l) => l && JSON.parse(l).ts >= t0);
+  fs.writeFileSync(path.join(RUN_OUT, "learn-trace.jsonl"), learnTrace.join("\n") + "\n");
   for (const f of ["film-recording.json", "marks.json", "assemble.json"]) {
     if (fs.existsSync(path.join(WORK, f))) fs.copyFileSync(path.join(WORK, f), path.join(RUN_OUT, f));
   }
