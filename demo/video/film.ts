@@ -385,7 +385,7 @@ function assemble() {
   const mid = path.join(WORK, "assembled.mp4"); // high quality; the captions phase makes the final file
   execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-i", film, "-i", path.join(agentDir, agentWebm), "-filter_complex", graph, "-map", "[out]", "-c:v", "libx264", "-preset", "medium", "-crf", "14", "-pix_fmt", "yuv420p", "-an", mid]);
   const d = Number(probe(mid));
-  console.log(`wrote ${path.relative(ROOT, OUT)}: ${(fs.statSync(OUT).size / 1e6).toFixed(2)} MB, ${d.toFixed(1)} s (agent overlay ${on.toFixed(1)}-${off.toFixed(1)} s, offset ${offset.toFixed(2)} s; wait ${a.toFixed(1)}-${b.toFixed(1)} s at ${SPEED}x)`);
+  console.log(`wrote ${path.relative(ROOT, mid)}: ${(fs.statSync(mid).size / 1e6).toFixed(2)} MB, ${d.toFixed(1)} s (agent overlay ${on.toFixed(1)}-${off.toFixed(1)} s, offset ${offset.toFixed(2)} s; wait ${a.toFixed(1)}-${b.toFixed(1)} s at ${SPEED}x)`);
   writeJson(path.join(WORK, "assemble.json"), { offset, on, off, a, b, SPEED, start, rect, out_duration: d, waits });
 }
 
@@ -585,10 +585,17 @@ async function captions() {
       return { from: out(ft), to: out(ft) + 2.8, text: s.detail.text ?? "" };
     });
   const diagLines = diag.flatMap((x, i) => x.d.captions.map((c) => ({ from: starts[2 * i + 1] + c.t0, to: starts[2 * i + 1] + c.t1, text: c.text })));
-  const all = [...[...lines, ...said].map((l) => ({ from: fin(l.from), to: fin(l.to), text: l.text })), ...diagLines].sort((x, y) => x.from - y.from);
+  // A cue never runs past the cut that ends its part of the take.
+  const clampToPart = (l: { from: number; to: number; text: string }) => {
+    const n = cuts.findIndex((c) => l.from < c);
+    return { ...l, to: n >= 0 ? Math.min(l.to, cuts[n] - 0.05) : l.to };
+  };
+  const mainLines = [...lines, ...said].map(clampToPart).map((l) => ({ from: fin(l.from), to: fin(l.to), text: l.text }));
+  const all = [...mainLines, ...diagLines].sort((x, y) => x.from - y.from);
   all.forEach((l, i) => {
     if (all[i + 1]) l.to = Math.min(l.to, all[i + 1].from - 0.1);
   });
+  for (let i = all.length - 1; i >= 0; i--) if (all[i].to - all[i].from < 0.4) all.splice(i, 1);
   const srt = all.map((l, i) => `${i + 1}\n${srtTime(l.from)} --> ${srtTime(l.to)}\n${l.text}\n`).join("\n");
   fs.writeFileSync(OUT.replace(/\.mp4$/, ".voiceover.srt"), srt);
   console.log(`wrote ${path.relative(ROOT, OUT)}: ${(fs.statSync(OUT).size / 1e6).toFixed(2)} MB, ${Number(probe(OUT)).toFixed(1)} s, ${lines.length} voice-over captions; script ${path.relative(ROOT, OUT.replace(/\.mp4$/, ".voiceover.srt"))}`);
