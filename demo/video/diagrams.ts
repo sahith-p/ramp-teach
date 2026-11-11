@@ -133,6 +133,16 @@ const rampLockup = (logos: Logos, h: number, t: number, k = 1) => `
     <span class="o" style="font-size:${h * 1.04}px;line-height:1;letter-spacing:-.02em;transform:translateX(-16px);${at(t + 0.5 * k, 0.6 * k)}">Teach</span>
   </div>`;
 
+/** A rule as it fits a small box: no parenthetical selectors, cut at a word boundary. */
+function shortRule(text: string, max: number): string {
+  const t = text.replace(/\s*\([^)]*[\[`=][^)]*\)/g, "").replace(/\s+/g, " ").trim();
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max);
+  const clause = cut.lastIndexOf(", ");
+  const end = clause > max * 0.6 ? clause : Math.max(cut.lastIndexOf(" "), max - 12);
+  return cut.slice(0, end).replace(/[,;:]$/, "") + "…";
+}
+
 /* ------------------------------------------------------------------ drawing helpers */
 function panel(x: number, y: number, w: number, h: number, head: string, t: number, cls = "") {
   return `<div class="panel ${cls}" style="${box(x, y, w, h)}${at(t, 0.5)}">${head ? `<div class="ph">${head}</div>` : ""}</div>`;
@@ -699,7 +709,7 @@ function learningBody(): string {
 
   // Worked example, one left-to-right row on one baseline: recording, cited claim, learned rule with where the
   // proof lives, and the new invoice it was used on. Straight arrows, each drawn as its target appears.
-  const EY = 336, BH = 236;
+  const EY = 336, BH = 262;
   const stepTxt = d.step ? stepLabel(d.step) : null;
   type Box = { head: string; body: string; claude?: boolean };
   const boxes: Box[] = [];
@@ -722,8 +732,8 @@ function learningBody(): string {
     boxes.push({
       head: d.focus ? `Rule in skill v${d.skill?.version ?? 1}` : "Rule in the workflow spec",
       claude: true,
-      body: `<div style="font-size:17px;line-height:24px">${d.focus ? `<span class="mono m" style="font-size:13px;margin-right:8px">${esc(d.focus.id)}</span>` : ""}${esc(clip(d.ruleText, 150))}</div>
-        ${d.proof ? `<div class="muted" style="font-size:13.5px;margin-top:14px">proof</div><div class="mono soft" style="font-size:13px;line-height:19px;margin-top:3px;word-break:break-all">${esc(d.proof.page)}</div><div class="mono hl" style="font-size:13px;margin-top:3px">${esc(d.proof.field)}</div>` : ""}`,
+      body: `<div style="font-size:16px;line-height:22px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden">${d.focus ? `<span class="mono m" style="font-size:13px;margin-right:8px">${esc(d.focus.id)}</span>` : ""}${esc(shortRule(d.ruleText, 118))}</div>
+        ${d.proof ? `<div class="muted" style="font-size:13.5px;margin-top:14px">proof</div><div class="mono soft" style="font-size:13px;line-height:19px;margin-top:3px;overflow-wrap:anywhere">${esc(d.proof.page).replace("?", "?<wbr>")}</div><div class="mono hl" style="font-size:13px;margin-top:3px">${esc(d.proof.field)}</div>` : ""}`,
     });
   }
   if (f && d.proof) {
