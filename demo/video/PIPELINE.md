@@ -10,58 +10,99 @@ npx tsx demo/video/film.ts --phase all
 ```
 
 Needs `RAMP_ANTHROPIC_API_KEY` (or `ANTHROPIC_API_KEY`) in the environment, ffmpeg with libx264, the preinstalled
-Chromium (Playwright), and port 3000 free. A real take costs about **$0.33** (19 Claude calls). Without a key the
-script **refuses** to shoot (it used to fall back to offline mode silently and film a fake run).
+Chromium (Playwright), and port 3000 free. Without a key the script **refuses** to shoot. A real take makes live
+Claude calls for learning (the six stages), each agent run and each receipt, and by default runs the **real skill
+evals** on the learned version (`--evals real`, the learner and the judge on all eight eval recordings, with
+`--yes` passed to the evals CLI). The evals cost far more than the rest of the take; `evals/cli.ts` prints its own
+estimate into `work-film/evals.log`. Cheaper: `--evals sample:2`. `--evals skip` leaves the version a draft, so
+routing falls back to the built-in workflow (the story then no longer shows the learned workflow being picked).
 
-Free rehearsal (no API calls; output goes to `demo/video/work-film/rehearsal.mp4`, never over the committed film):
+Free rehearsal (no API calls; output goes to `demo/video/work-film/rehearsal.mp4` and its archive to
+`work-film/rehearsal-run/`, never over the committed film or `film-run/`):
 
 ```bash
 npx tsx demo/video/film.ts --phase all --offline
 ```
 
+Rehearsals use `--evals offline` (plain-code grader, offline learner, gate applied) and leave out the `paraphrase`
+case, which the offline keyword grader cannot match; a real take never uses the offline grader (refused).
+`--no-build` skips `next build` on rehearsal iterations when the app did not change.
+
 ## Phases (`--phase <name>`)
 
 | Phase | What it does | Output (in `demo/video/work-film/`, gitignored) |
 |---|---|---|
-| `shoot` | Backs up committed run artifacts, `npx next build`, starts `next start` on :3000 (detached, killed by process group), resets dashboard state, then plays the whole take in Playwright on the stage page. The agent runs are **real** (spawned by the app with `npx tsx agent/cli.ts`). | `film.webm`, `marks.json`, `film-recording.json`, `agent/<job>/…webm` (the agent's own browser video), `video-start.json` |
-| `archive` (auto after a real shoot) | Copies the take's outputs to `demo/video/film-run/`: receipts, `trace.jsonl` (agent, since t0), `learn-trace.jsonl`, `decisions.jsonl`, learned `workflow_spec`/`learn_meta`, `usage.jsonl` (API ledger), `sent-recording.json` (what Send to Ramp uploaded), marks. | `demo/video/film-run/*` (committed) |
-| `assemble` | Composites the agent's own browser video into the stage's "agent window" by wall-clock offset, speeds up the two waits (learning, second invoice) 5×, trims pre-roll. | `assembled.mp4`, `assemble.json` |
+| `shoot` | Backs up every path a take touches (fresh when they match git; else the earlier backup is reused), `npx next build`, starts `next start` on :3000 (detached, killed by process group) with `RAMP_TEACH_NO_CACHE=1`, `RAMP_TEACH_VIEWPORT=1280x800` and `RAMP_TEACH_ROUTER=deterministic`, resets Bill Pay, then plays the whole take in Playwright on the stage page. At the end it **archives** the take and **restores** the repo (a failed archive in a real take leaves the outputs in place and says so). | `film.webm`, `marks.json`, `film-recording.json`, `evals.log`, `next.log`, `backup/` |
+| `archive` | (runs inside `shoot`; standalone only to redo it before a restore) Copies the take's outputs to `film-run/` (real) or `work-film/rehearsal-run/` (rehearsal): see "What a take archives". | `film-run/*` (committed for a real take) |
+| `assemble` | Trims pre-roll and fits each wait into a short target (the six learning stages, the agent in the live view, the rest of the run on the run page, the second review). No compositing: the agent's browser is already in the footage, inside the bill page. | `assembled.mp4`, `assemble.json` |
 | `outro` | Dark Ramp-style end card (Ramp logo + divider + "Teach", Lausanne), rendered frame by frame. | `outro.mp4` |
-| `diagrams` | Renders the four technical diagrams from `diagrams.ts`. | `diag-{record,agent,review,trace}.mp4` |
-| `captions` | Draws the voice-over captions as PNGs and overlays them, then **composes** main + diagrams + outro with 0.5 s crossfades, and writes the `.srt` voice-over script. | `captioned.mp4`, then `../ramp-teach-film.mp4` + `.voiceover.srt` |
-| `restore` | Puts the repo's committed run artifacts back (the take overwrote them). | — |
+| `diagrams` | Renders the four diagrams from `diagrams.ts`, reading the take's archive. | `diag-{voice,skill,execution,trace}.mp4` (+ `.html`) |
+| `captions` | Draws the voice-over captions as PNGs and overlays them, then **composes** main + diagrams + outro with 0.5 s crossfades (the eval run is cut out behind diagram 02), and writes the `.srt` voice-over script. Refuses any caption or script line containing banned wording. | `captioned.mp4`, then `../ramp-teach-film.mp4` + `.voiceover.srt` |
+| `restore` | Puts the touched paths back as they were before the take (runs inside `shoot`; standalone after a manual `archive`). | — |
 
-`--phase all` = shoot → archive → assemble → outro → diagrams → captions → restore.
+`--phase all` = shoot (with archive + restore) → assemble → outro → diagrams → captions.
 Post-only re-edits (no new take, free): `--phase assemble` (redoes everything after the shoot), `--phase diagrams`
-(re-renders diagrams + recomposes), `--phase captions` (recomposes only). They reuse `work-film/`, so they only
-work in the container that shot the take.
+(re-renders diagrams + recomposes), `--phase captions` (recomposes only). Add `--offline` to re-edit a rehearsal.
+They reuse `work-film/`, so they only work in the container that shot the take.
 
-**Always finish with** `npx tsx scripts/guard-artifacts.ts` (must print OK) before committing.
+**Always finish with** `npx tsx scripts/guard-artifacts.ts` (must print OK) and `git status` before committing.
 
 ## The take (what `shoot` does, in order)
 
 Marks (seconds of film time, saved in `marks.json`) drive captions, cuts and the speed-ups:
 
-`start` → `record_start` → (vendor portal: login, invoice HSG-1010, two timecards, narration) → `record_end` →
-Send to Ramp → Ramp sign-in → `learn_start` → (live learn call) → `learn_done` → Bills → `deliver_1011` → `agent_on`
-(agent window overlay) → `agent_off` → `result_1011` → Dispute → close drawer → `deliver_1012` → `fast_start` →
-`fast_end` → Approve → "Payment required" tab → `end` (fade out).
+`start` → `record_start` (Recorder side panel: Start, voice on) → vendor portal: sign in, invoice HSG-1010, two
+timecards, narration lines (each drives the panel's voice visualizer) → `record_stop` (Stop: the panel shows the
+word-timed transcript, each sentence linked to its steps) → `record_end` → Send to Ramp → straight into Bill Pay >
+Workflows (`/bills/workflows?recording=<id>`, no sign-in) → `learn_start` (learning card, six stages, live) →
+`learn_done` → View v1 → Rules tab → `rules` (rule 1 opened: quote, clicked element, eval cases) → its time link →
+`recording` (recording page: waveform, transcript lined up with clicks) → `eval_start` (the skill evals run in a
+child process; cut in post) → `eval_end` (workflow Evals tab: gate) → Workflows table (active v1) → For approval →
+`deliver_1011` → bill page, Review tab → `review` (routing card: workflow chosen, the triggered run) → `agent_on`
+(the agent's live frames inside the bill) → `agent_leave` → click the run → `run_open` (Workflows > Runs: the
+waterfall) → `result_1011` (a model span's tokens, cost, request id) → Open bill → `evidence` (Evidence tab) →
+`dispute` → back to Bills → `deliver_1012` → `ready_1012` → bill → `approve` → Payment required → `end` (fade out).
 
-Diagram cut points (in `captions()`, `slots`): after `record_end`, at `learn_done+5.9` (before Bills), at
-`deliver_1012-0.3` (after the dispute), at `end-2.9` (then the outro).
+Diagram slots (`slotsFor()` in `film.ts`): 01 voice at `record_end` (before Send to Ramp); 02 skill from
+`eval_start` to `eval_end` (it covers the eval run, which is cut out); 03 execution at `dispute + 2.8`; 04 trace at
+`end - 2.9`, then the outro.
+
+## What a take archives (`film-run/` for a real take)
+
+`receipt-HSG-1011.json`, `receipt-HSG-1012.json`, `route-<id>.json`, `spans-<id>.jsonl`, `evidence-check-<id>.json`,
+`evidence-HSG-1011/` (field crops the evidence check took), `trace.jsonl` (agent, since t0), `learn-trace.jsonl`,
+`decisions.jsonl`, `usage.jsonl` (one line per Claude call, with request ids), `skill/` (the learned version: SKILL.md,
+skill.json, stages/, checks/), `eval-run.json`, `learned-workflow_spec.json` + `learned-learn_meta.json` (rules/
+as synced from the version when it passed the gate), `sent-recording.json` (what Send to Ramp uploaded, with the
+word-timed transcript), `film-recording.json`, `marks.json`, `assemble.json`.
+
+Paths a take touches and `restore` puts back: `TRACKED` (committed receipts, decisions, `runs/HSG-1011/{calc,evidence}.json`,
+traces, `rules/*`) and `NEW_OUTPUTS` (`receipts/HSG-1012.json`, `runs/HSG-1011/{route.json,spans.jsonl,evidence-check.json,evidence/}`,
+`runs/HSG-1012/`, `skills/halcyon-invoice-review/`, `evals/runs/`). The learned skill version is removed from
+`skills/` after the take (it stays in `film-run/skill/`); to keep a real one in the repo, copy it back deliberately.
 
 ## Pieces and where they live
 
 | Piece | File(s) | Notes |
 |---|---|---|
-| Orchestration | `demo/video/film.ts` | All phases. `voiceover()` holds the 16 caption lines, timed off marks. `TRACKED` / `NEW_OUTPUTS` list the artifacts a take touches. |
-| Stage (desktop + Chrome) | `public/stage/index.html`, `public/stage/wallpaper.jpg` | macOS Tahoe wallpaper, no menu bar/dock. Chrome-refresh frame: tabs, omnibox, extension icon (Ramp mark on lemon) with REC badge, flat blue "A" avatar, per-site favicon, side panel (388 px, inset card). The app runs in a same-origin iframe. The URL bar shows fake demo domains: `/portal/*` → `portal.halcyonstaffing.demo`, `/bills`, `/login`, `/agents` → `app.rampteach.demo`. API on `window.stage`: `go, fadeIn, fadeOut, move, press, say, unsay, openPanel, closePanel, openInMain, rect, back, href, urlChange, agentWindow, agentUrl, agentContentRect`. |
-| Real extension in the stage | `app/stage-ext/[...path]/route.ts`, `public/stage/chrome-shim.js` | Serves the **real** `extension/sidepanel.*`, `content.js`, `lib/recording.js` (allowlist). `chrome-shim.js` stands in for `chrome.*` (storage, runtime messages, tabs.create → `stage.openInMain`, speech). The background worker is replaced by `window.__ext` using `extension/lib/recording.js`. Narration reaches the panel through a stand-in `SpeechRecognition` (`window.__ext.speak`). `window.__RT_OPERATOR="scripted_playwright"` labels the recording honestly. |
-| Ramp-style dashboard | `app/(dash)/{login,bills,agents}`, `components/dash/*`, `lib/dash.ts`, `app/api/dash/*` | Bill Pay mirror (Ramp logo in `components/dash/RampLogo.tsx`, Lausanne from `assets.ramp.com`). State in `runtime/inbox.json` (hidden/arrived invoices) and `runtime/agent-jobs.json`. `POST /api/dash/reset` hides invoices; `POST /api/dash/deliver` makes one arrive and spawns the agent. `/agents` = Ramp Teach page that runs learning (`POST /api/learn` → `lib/learnjob.ts` → `learn/cli.ts --recording-file … --operator`). |
-| Agent footage | env `RAMP_TEACH_FILM_DIR` on the server → per job `RAMP_TEACH_RECORD_VIDEO_DIR`, `RAMP_TEACH_VIEWPORT=1280x800` | The agent's own Playwright browser is video-recorded; `assemble` overlays it into the agent window rect (`agent-rect.json`). |
-| Diagrams | `demo/video/diagrams.ts`, `demo/video/diagram-assets/` | HTML/CSS scenes rendered frame by frame. 01–03 use real material from an earlier live take: portal screenshots + element boxes (`boxes.json`), `source-recording.json`, `source-trace-HSG-1011.jsonl`, `source-receipt-HSG-1011.json`. 04 (observability) reads **this take's** `film-run/` traces at render time (rows, calls per step, cost from `usage.jsonl`, request IDs). |
+| Orchestration | `demo/video/film.ts` | All phases. `voiceover()` holds the caption lines, timed off marks; `waitsFor()` the speed-ups; `slotsFor()` the diagram slots. `TRACKED` / `NEW_OUTPUTS` list the paths a take touches. |
+| Stage (desktop + Chrome) | `public/stage/index.html`, `public/stage/wallpaper.jpg` | macOS Tahoe wallpaper, no menu bar/dock. Chrome-refresh frame: tab, new-tab button, omnibox, extension icon (Ramp mark on lemon) with REC badge, flat blue "A" avatar, per-site favicon, side panel (388 px, inset card). The app runs in a same-origin iframe. The URL bar shows fake demo domains: `/portal/*` → `portal.halcyonstaffing.demo`, `/bills…`, `/login`, `/agents` → `app.rampteach.demo`. No agent window: the agent's browser is the live view inside the bill page. API on `window.stage`: `go, fadeIn, fadeOut, move, press, say, unsay, openPanel, closePanel, openInMain, rect, back, href, urlChange`. |
+| Real extension in the stage | `app/stage-ext/[...path]/route.ts`, `public/stage/chrome-shim.js` | Serves the **real** `extension/sidepanel.*`, `content.js`, `lib/recording.js`. `chrome-shim.js` stands in for `chrome.*` (storage, runtime messages, tabs.create → `stage.openInMain`). Narration reaches the panel through a stand-in `SpeechRecognition` (`window.__ext.speak`), which also drives the panel's voice visualizer; at Stop the panel asks `/api/stt` for the scripted narration transcript (word timings from the narration steps, aligned to the clicks). The panel shows no provider name for it. `window.__RT_OPERATOR="scripted_playwright"` labels the recording honestly. |
+| Bill Pay | `app/(dash)/bills/**`, `components/dash/**`, `lib/dash.ts`, `app/api/{dash,runs,teach,learn,stt}/*` | Bill page tabs Overview / Review / Evidence / Activity; Review = routing card + the triggered run + live view (frames from `runs/<id>/live/frame.jpg`, the agent's CDP screencast) + steps. Workflows tab with the learning card; workflow page tabs (Rules, Recordings, Runs, Evals, Versions); run page waterfall; recording page. `POST /api/dash/reset` hides invoices; `POST /api/dash/deliver` makes one arrive and spawns `agent/cli.ts` (route → run). |
+| Diagrams | `demo/video/diagrams.ts`, `demo/video/diagram-assets/` | Four HTML/CSS scenes rendered frame by frame, reading the take's archive at render time (`setRunDir`). The login screenshot, its element boxes and the page outline are from an earlier live take. |
 | Captions | `film.ts` `captions()` | Caption PNGs in the stage subtitle style (Inter 500 30px, dark pill), alpha-faded overlays. Diagram captions are inside the diagram renders. |
 | Outro | `film.ts` `outro()` | Dark `#121211`, white logo + divider + "Teach". No tagline, no underline (by request). |
+
+## The four diagrams (`diagrams.ts`)
+
+| Id | Shows | Data |
+|---|---|---|
+| `voice` (01, 13 s) | The transcript with one sentence expanded word by word with start times, the recorded steps it is linked to, and words and clicks on one time axis | `sent-recording.json` (its `speech`; else its narration aligned by `lib/speech`) |
+| `skill` (02, 16 s) | The six learning stages with their times, one rule with its quote and clicked element, the other rules, the skill package, the eight eval recordings, the graders, the promotion gate (thresholds from `GATE`) | `skill/skill.json`, `skill/` files, `evals/cases/`, `eval-run.json` (scores shown **only** for a real eval run of that version) |
+| `execution` (03, 16 s) | Routing (candidates, chosen workflow), the portal page with refs, what the agent reads, what it can't do, its tool calls turn by turn, the facts read again by plain code | `route-HSG-1011.json`, `trace.jsonl` (real tool calls when the take has them, else the earlier live take's), `evidence-check-HSG-1011.json` |
+| `trace` (04, 14 s) | Trace lines with their mode (learning, route, agent, evidence check, receipt, decision), Claude calls per part of the take with tokens and cost, request ids, the run's spans on a time axis | `learn-trace.jsonl`, `trace.jsonl`, `route-HSG-1011.json`, `spans-HSG-1011.jsonl`, `usage.jsonl`, `decisions.jsonl`, `marks.json` |
+
+The Claude mark appears on a panel only when the data in it came from Claude (`mode: "real"`).
 
 ## Assets (all in the repo, except one font)
 
@@ -114,27 +155,37 @@ Diagram style rules the user signed off on (keep them):
 2. **No key ⇒ no real take.** The session's environment must carry `RAMP_ANTHROPIC_API_KEY`. Check with
    `[ -n "$RAMP_ANTHROPIC_API_KEY" ] && echo set` (never print the value). Anthropic hosts can't be given a key via
    the network-secrets card; it must be an environment variable set by the user in the environment settings.
-3. **If a take goes wrong, kill it before `archive`/`restore`** or it will archive junk over `film-run/`. Then restore
-   tracked files with `git show HEAD:<path> > <path>` (no `git checkout --`; destructive git is banned here) and
-   delete `receipts/HSG-1012.json` and `runs/HSG-1012/`.
+3. **If a take fails**, `shoot` does not archive it and restores the repo from its backup. If a take is killed
+   outright, run `--phase restore` (it uses `work-film/backup/`); without a backup, restore tracked files with
+   `git show HEAD:<path> > <path>` (no `git checkout --`; destructive git is banned here) and delete the
+   `NEW_OUTPUTS` paths.
 4. **Stale build:** the take films whatever `.next` holds; `shoot` always runs `next build` for that reason.
 5. **Port 3000 stuck:** a leftover `next-server` keeps the port. `pkill -f next-server`.
-6. **Click targets in the stage:** the panel is an iframe; scroll buttons into view (`scrollIntoViewIfNeeded`). Scope
-   selectors to the drawer (`[data-testid="bill-drawer"] footer button:has-text("Dispute")`), or they hit the
-   "Disputed" tab.
+6. **Click targets in the stage:** the panel is an iframe; scroll buttons into view (`scrollIntoViewIfNeeded`). Use the
+   UI's test ids (`[data-testid="dispute"]`, `[data-testid="run-link"]`, `[data-testid="bill-tabs"] [data-tab="evidence"]`)
+   and scope back links to the page (`[data-testid="bill-page"] a[href="/bills"]`), or they hit the sidebar.
 7. **Learn cache:** `RAMP_TEACH_NO_CACHE=1` is set for takes so the learn and receipt calls are live (traces say
    `cache_hit: false`).
 8. **Work dir is per container.** `work-film/` (raw footage) is gitignored; a new container must reshoot.
-9. **Honesty labels:** the operator is scripted Playwright, the narration uses a stand-in speech recognizer, the
-   decisions are scripted stand-ins through the real decision API. The README's live-vs-staged table must stay true.
+9. **Honesty labels:** the operator is scripted Playwright, the voice is the scripted narration path (no microphone,
+   no speech model), routing uses its plain-code path, the decisions are scripted stand-ins through the real decision
+   API. The README's live-vs-staged table must stay true. On screen the scripted voice carries no provider name, and
+   no caption, diagram or UI text may call anything "simulated" (`captions` and `diagrams` refuse it).
+10. **The eval gate decides the story.** Routing only picks active workflows; if the learned version fails the gate
+   the take stops (before the agent runs) and says so. Read `work-film/evals.log`.
 
 ## Observability (what proves it is not just frontend)
 
-- `learn/trace.jsonl`: load_recording (steps, narration, operator) → `distill.real` (model, `cache_hit`, tokens, rules).
+- `learn/trace.jsonl`: `skill.start` → one line per stage (`skill.segment` … `skill.package`: model, request id,
+  `cache_hit`, ms) → `skill.done` (rules, pages, checks, stage modes).
+- `runs/<id>/route.json` + the `route.*` trace lines: the routing decision (workflow, version, confidence, reason,
+  candidates, mode).
+- `runs/<id>/spans.jsonl`: one span per model turn, tool call, calc, evidence check and synthesis (tokens, cost,
+  request ids); the run page's waterfall. `runs/<id>/evidence-check.json`: each fact re-read from its page.
 - `agent/trace.jsonl`: per run: calc results → spec loaded → each `browser.action` Claude chose (per turn) →
   `browser.evidence` facts with their source page → `browser.done` → calc with evidence → `synthesis.done` →
   `receipt.written`. Every line has `mode`: `real` (Claude), `deterministic` (code), `scripted`, `mock`.
 - `runtime/usage.jsonl`: one line per Claude call with tokens, plus Anthropic `request_id` and `message_id`
   (since commit cef405e), which match Anthropic's own logs. `npx tsx scripts/usage.ts` sums cost.
 - `receipts/decisions.jsonl`: the human decision.
-- Per take, all of the above is archived in `demo/video/film-run/`; diagram 04 shows it on screen.
+- Per take, all of the above is archived in `demo/video/film-run/`; diagrams 02 to 04 show it on screen.

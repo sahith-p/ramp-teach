@@ -468,7 +468,7 @@ async function shoot() {
       await to('[data-testid="dispute"]');
       await frame().locator('[data-testid="decision"]').waitFor({ timeout: 10000 });
       mark("dispute");
-      await sleep(2600);
+      await sleep(3200);
 
       /* ---------- Scene 4: a clean invoice ---------- */
       await toAndWait('[data-testid="bill-page"] a[href="/bills"]');
@@ -654,27 +654,31 @@ async function diagrams() {
  * the stage). Times are film times from the take's marks; the speed-ups are mapped out. Plain words, short.
  */
 function voiceover(m: Marks): [number, number, string][] {
-  return [
+  // "Sped up" is said only when that wait really was sped up.
+  const spedAgent = waitsFor(m).some(([x]) => Math.abs(x - (m.agent_on + 7)) < 0.01);
+  const lines: [number, number, string][] = [
     [m.start + 0.3, m.record_start + 0.2, "I record myself checking one invoice from our staffing vendor."],
-    [m.record_stop + 0.6, m.record_end, "When I stop, every word I said is lined up with what I clicked."],
+    [m.record_stop + 0.6, m.record_end, "When I stop, my words show up next to the steps they go with."],
     [m.record_end + 0.2, m.learn_start + 0.2, "I send the recording to Ramp."],
     [m.learn_start + 0.5, m.learn_done + 2.6, "Bill Pay learns a new workflow from it, one stage at a time."],
     [m.learn_done + 2.9, m.rules + 1.2, "Here is what it learned."],
     [m.rules + 1.5, m.recording - 0.2, "Each rule points back to what I said and where I clicked."],
     [m.recording + 0.3, m.eval_start, "The recording keeps my words in time with my clicks."],
-    [m.eval_end + 0.3, m.eval_end + 4.6, "Before it goes live, the workflow has to pass its evals."],
-    [m.eval_end + 4.9, m.deliver_1011 - 0.2, "It passed, so this version is now active."],
+    [m.eval_end + 0.3, m.eval_end + 4.6, "Its evals ran, and every gate held."],
+    [m.eval_end + 4.9, m.deliver_1011 - 0.2, "So this version is now the active workflow."],
     [m.deliver_1011 + 0.2, m.review - 0.2, "Now a new invoice from the same vendor arrives."],
     [m.review, m.agent_on + 0.4, "Ramp picks the workflow that fits and starts its agent."],
-    [m.agent_on + 0.6, m.agent_on + 6.8, "The agent's own browser runs right here in the bill."],
-    [m.agent_on + 7.0, m.agent_leave + 1.2, "Sped up, it reads each timecard the same way I did."],
+    [m.agent_on + 0.6, Math.min(m.agent_on + 6.8, m.agent_leave + 1.2), "The agent's own browser runs right here in the bill."],
+    [m.agent_on + 7.0, m.agent_leave + 1.2, spedAgent ? "Sped up, it reads each timecard the same way I did." : "It reads each timecard the same way I did."],
     [m.agent_leave + 1.4, m.result_1011 + 0.6, "The run is under Workflows, with every model turn and tool call."],
     [m.result_1011 + 0.9, m.evidence - 0.3, "Each step shows its tokens, cost and request ID."],
-    [m.evidence, m.dispute - 0.4, "Every fact it found was read again from the page by plain code."],
-    [m.dispute - 0.2, m.deliver_1012 - 0.3, "Three problems, $3,448 to credit. I dispute it. The agent never approves or pays."],
+    [m.evidence, m.evidence + 3.6, "Every fact it found was read again from the page by plain code."],
+    [m.evidence + 3.8, m.dispute + 2.6, "Three problems, $3,448 to credit. I dispute it. The agent never approves or pays."],
     [m.deliver_1012 + 0.2, m.ready_1012 - 0.2, "Next, a clean invoice from the same vendor."],
     [m.ready_1012, m.end - 3.0, "Everything checks out. One click from me, and it moves on to payment."],
   ];
+  // A line that would be too short to read (a wait that did not happen) is left out.
+  return lines.filter(([a, b]) => b - a >= 1);
 }
 
 /** Diagram cut points, in film time: `at` cuts away, `resume` comes back (later than `at` when the take is cut). */
@@ -682,7 +686,7 @@ function slotsFor(m: Marks): { at: number; resume: number; id: string }[] {
   return [
     { at: m.record_end, resume: m.record_end, id: "voice" }, // after the transcript, before Send to Ramp
     { at: m.eval_start, resume: m.eval_end, id: "skill" }, // covers the eval run (cut out of the take)
-    { at: m.dispute + 2.4, resume: m.dispute + 2.4, id: "execution" }, // after the dispute
+    { at: m.dispute + 2.8, resume: m.dispute + 2.8, id: "execution" }, // after the dispute
     { at: m.end - 2.9, resume: m.end - 2.9, id: "trace" }, // after the approval, then the outro
   ];
 }
