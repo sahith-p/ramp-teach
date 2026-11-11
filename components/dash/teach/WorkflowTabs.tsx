@@ -197,6 +197,30 @@ const METRICS: { key: keyof SkillEvalMetrics; label: string; gate?: number; lowe
   { key: "wer", label: "WER", lowerBetter: true },
 ];
 
+/** Only the lines worth a reviewer's attention (misses, inventions, disagreements), in plain words, at most 3. */
+function problemNotes(notes: Record<string, string[]>): string[] {
+  const out: string[] = [];
+  for (const n of Object.values(notes).flat()) {
+    const m = /^(MISSED|INVENTED|DISAGREE|INVALID|MISSING|KEYTERM)\b[:\s]*(.*)$/.exec(n);
+    if (!m) continue;
+    if (m[1] === "KEYTERM") {
+      const h = /heard (\d+) of (\d+)/.exec(m[2]);
+      if (!h || Number(h[1]) >= Number(h[2])) continue;
+    }
+    const label = { MISSED: "Missed", INVENTED: "Invented", DISAGREE: "Disagrees", INVALID: "Invalid citation", MISSING: "Missing", KEYTERM: "Misheard" }[m[1]];
+    out.push(`${label}: ${m[2].replace(/^gold \d+ /, "").trim()}`);
+  }
+  return out;
+}
+
+/** "rule_recall 0.98 < 1.00 (cases: paraphrase)" -> "Rule recall 98% (min 100%) · paraphrase" */
+function gateLine(f: string): string {
+  const m = /^(\w+) ([\d.]+) < ([\d.]+)(?: \(cases: (.+)\))?/.exec(f);
+  if (!m) return f;
+  const label = m[1].replace(/_/g, " ").replace(/^\w/, (c) => c.toUpperCase());
+  return `${label} ${Math.round(Number(m[2]) * 100)}% (min ${Math.round(Number(m[3]) * 100)}%)${m[4] ? ` · ${m[4]}` : ""}`;
+}
+
 const fails = (m: (typeof METRICS)[number], x: number | null) => m.gate !== undefined && x != null && x < m.gate;
 const fmtMetric = (m: (typeof METRICS)[number], x: number | null | undefined) => (x == null ? "" : m.key === "wer" ? fmtPct(x, 1) : fmtPct(x));
 
@@ -228,9 +252,9 @@ export function EvalsTab({ d, version }: { d: WorkflowDetail; version: number })
               <div className={`text-[13px] ${MUTED}`}>Gate</div>
               <div className="mt-1.5">{run.gate.passed ? <Pill tone="good">Passed</Pill> : <Pill tone="bad">Blocked</Pill>}</div>
               {run.gate.failures.length > 0 && (
-                <ul className="mt-3 space-y-1 font-mono text-[12px] text-[#9b1c12]">
+                <ul className="mt-3 space-y-1 text-[12.5px] text-[#9b1c12]">
                   {run.gate.failures.map((f) => (
-                    <li key={f}>{f}</li>
+                    <li key={f}>{gateLine(f)}</li>
                   ))}
                 </ul>
               )}
@@ -255,8 +279,8 @@ export function EvalsTab({ d, version }: { d: WorkflowDetail; version: number })
                 <tr>
                   <th className={`${th} pl-5`}>Case</th>
                   {METRICS.filter((m) => m.key !== "consistency").map((m) => (
-                    <th key={m.key} className={`${th} text-right`}>
-                      {m.label}
+                    <th key={m.key} className={`${th} whitespace-nowrap px-4 text-right`}>
+                      {m.label === "Rule recall" ? "Recall" : m.label}
                     </th>
                   ))}
                   <th className={`${th} pl-6 pr-5`}>Notes</th>
@@ -264,22 +288,22 @@ export function EvalsTab({ d, version }: { d: WorkflowDetail; version: number })
               </thead>
               <tbody>
                 {run.results.map((r) => {
-                  const notes = Object.values(r.notes).flat();
+                  const notes = problemNotes(r.notes);
                   return (
                     <tr key={r.case_id} data-case={r.case_id} className="border-t border-[rgb(234,231,228)] align-top">
                       <td className="py-3 pl-5">
-                        <div className="font-mono text-[12.5px]">{r.case_id}</div>
-                        {r.variant !== r.case_id && <div className={`text-[12px] ${MUTED}`}>{r.variant}</div>}
+                        <div className="whitespace-nowrap font-mono text-[12.5px]">{r.case_id}</div>
                       </td>
                       {METRICS.filter((m) => m.key !== "consistency").map((m) => (
-                        <td key={m.key} className={`tabular py-3 text-right ${fails(m, r.metrics[m.key]) ? "text-[#b42318]" : ""}`}>
+                        <td key={m.key} className={`tabular whitespace-nowrap px-4 py-3 text-right ${fails(m, r.metrics[m.key]) ? "text-[#b42318]" : ""}`}>
                           {fmtMetric(m, r.metrics[m.key])}
                         </td>
                       ))}
                       <td className={`py-3 pl-6 pr-5 text-[13px] leading-[18px] ${MUTED}`}>
-                        {notes.map((n, i) => (
+                        {notes.slice(0, 3).map((n, i) => (
                           <div key={i}>{n}</div>
                         ))}
+                        {notes.length > 3 && <div>+{notes.length - 3} more</div>}
                       </td>
                     </tr>
                   );

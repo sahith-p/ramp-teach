@@ -28,7 +28,7 @@ export function gradeVoice(rec: Recording, reference: string | null): VoiceGrade
   const ops = wordEditOps(ref, hyp);
   const wer = ref.length ? ops.distance / ref.length : 0;
   notes.push(
-    `WER ${(wer * 100).toFixed(1)}% over ${ref.length} reference words (${ops.sub} substituted, ${ops.del} dropped, ${ops.ins} inserted). Speech: ${rec.speech ? `${rec.speech.provider}, mode ${rec.speech.mode}` : "none (transcript lines)"}.`,
+    `WER ${(wer * 100).toFixed(1)}% over ${ref.length} reference words (${ops.sub} substituted, ${ops.del} dropped, ${ops.ins} inserted).`,
   );
 
   // Keyterms compare without possessives ("Maya Chen's" contains "Maya Chen").

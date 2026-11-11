@@ -59,7 +59,14 @@ export function EvidenceTab({ run, rules, names }: { run: RunView; rules: SkillR
   const mismatched = rows.filter((r) => r.status === "mismatch").length;
   // A fact the rule depends on is the same rule for every row: show it once, above the list.
   const ruleIds = new Set(rows.map((r) => ruleForFact(rules, r.key)?.id ?? ""));
-  const anyImage = rows.some((r) => r.image);
+  // One row per timecard (employee + week), with that page's facts side by side.
+  const groups: { id: string; rows: FactRow[] }[] = [];
+  for (const r of rows) {
+    const id = `${r.subject.employee_id ?? ""}|${r.subject.week_ending ?? ""}|${r.source}`;
+    const g = groups.find((x) => x.id === id);
+    if (g) g.rows.push(r);
+    else groups.push({ id, rows: [r] });
+  }
   const oneKey = new Set(rows.map((r) => r.key)).size === 1;
   const shared = ruleIds.size === 1 ? ruleForFact(rules, rows[0].key) : null;
   return (
@@ -75,53 +82,45 @@ export function EvidenceTab({ run, rules, names }: { run: RunView; rules: SkillR
             )}
           </div>
           <div className={`tabular flex shrink-0 gap-4 text-[13px] ${MUTED}`}>
+            <span>{groups.length} timecards</span>
             <span>{rows.length} facts</span>
             {run.evidence && <span>{checked} checked</span>}
             {mismatched > 0 && <span className="text-[#9b1c12]">{mismatched} mismatch</span>}
           </div>
         </div>
         <ul>
-          {rows.map((r, i) => {
-            const rule = shared ? null : ruleForFact(rules, r.key);
-            const who = subjectLabel(r.subject);
-            const name = names[r.subject.employee_id ?? ""] ?? who;
-            const unit = /hours/.test(r.key) ? " h" : "";
-            const path = r.source.replace(/^fixture:/, "");
+          {groups.map((g) => {
+            const first = g.rows[0];
+            const name = names[first.subject.employee_id ?? ""] ?? subjectLabel(first.subject);
+            const path = first.source.replace(/^fixture:/, "");
+            const status = g.rows.some((r) => r.status === "mismatch") ? "mismatch" : g.rows.every((r) => r.status === "match") ? "match" : g.rows.some((r) => r.status === "unavailable") ? "unavailable" : null;
             return (
-              <li key={i} data-testid="fact" data-status={r.status ?? "none"} className={`grid ${anyImage ? "grid-cols-[280px_minmax(0,1fr)_120px_110px]" : "grid-cols-[minmax(0,1fr)_120px_110px]"} items-center gap-6 border-t border-[rgb(234,231,228)] px-5 py-4 first:border-t-0`}>
-                {anyImage && (
-                <div className="flex h-[64px] items-center overflow-hidden">
-                  {r.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={runFileUrl(run.invoice_id, r.image)} alt={`${humanize(r.key)} on the page`} className="max-h-full max-w-full border border-[rgb(234,231,228)] bg-white object-contain object-left-top" />
-                  ) : null}
-                </div>
-                )}
-                <div className="min-w-0">
-                  <div className="text-[14px]">
-                    {name}
-                    {r.subject.week_ending && <span className={MUTED}> · week ending {fmtDay(r.subject.week_ending)}</span>}
-                  </div>
-                  <a href={path} className={`mt-0.5 block truncate font-mono text-[11.5px] ${MUTED} hover:text-[rgb(26,25,25)]`}>
-                    {urlPath(path)}
-                  </a>
-                  {rule && <div className={`mt-1 text-[12.5px] ${MUTED}`}>Rule {rule.id.replace(/^r/, "")}: {rule.text}</div>}
-                </div>
-                <div className="tabular text-right">
-                  {!oneKey && <div className={`text-[12px] ${MUTED}`}>{humanize(r.key)}</div>}
-                  <div className="text-[20px] leading-7">
-                    {r.value}
-                    {unit}
-                  </div>
-                  {r.status === "mismatch" && r.rechecked != null && (
-                    <div className="text-[12.5px] text-[#9b1c12]">
-                      page shows {r.rechecked}
-                      {unit}
+              <li key={g.id} data-testid="fact" data-status={status ?? "none"} className="grid grid-cols-[minmax(0,1fr)_auto_110px] items-center gap-8 border-t border-[rgb(234,231,228)] px-5 py-4 first:border-t-0">
+                <div className="flex min-w-0 items-center gap-4">
+                  <div className="min-w-0">
+                    <div className="text-[14px]">
+                      {name}
+                      {first.subject.week_ending && <span className={MUTED}> · week ending {fmtDay(first.subject.week_ending)}</span>}
                     </div>
-                  )}
+                    <a href={path} className={`mt-0.5 block truncate font-mono text-[11.5px] ${MUTED} hover:text-[rgb(26,25,25)]`}>
+                      {urlPath(path)}
+                    </a>
+                  </div>
                 </div>
+                <dl className="flex gap-8">
+                  {g.rows.map((r) => (
+                    <div key={r.key} className="text-right">
+                      <dt className={`text-[12px] ${MUTED}`}>{humanize(r.key)}</dt>
+                      <dd className={`tabular text-[15px] ${r.status === "mismatch" ? "text-[#9b1c12]" : ""}`}>
+                        {r.value}
+                        {/hours/.test(r.key) ? " h" : ""}
+                        {r.status === "mismatch" && r.rechecked != null && <span className="text-[12px]"> (page {r.rechecked})</span>}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
                 <div className="flex justify-end">
-                  <StatusBadge row={r} />
+                  <StatusBadge row={{ ...first, status }} />
                 </div>
               </li>
             );

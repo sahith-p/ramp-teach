@@ -63,7 +63,8 @@ const FIELD_HINTS: Record<string, string[]> = {
   ],
 };
 
-const VENDOR_PATTERN = /\bverifying\s+(?!invoice\b)(.+?)\s+invoice\b/i;
+/** "verifying Halcyon Staffing Group invoice ..." or "... invoice from Halcyon Staffing." (capitalized name only). */
+const VENDOR_PATTERN = /\b(?:[Vv]erifying\s+(?!invoice\b)|[Ii]nvoices?\s+from\s+)([A-Z][\w&-]*(?:\s+[A-Z][\w&-]*)*)/;
 export const VENDOR_NOT_STATED = "Not stated in recording";
 const CONTRACT_MENTION = /\b(rate card|contract|allowed list|allowed charges?)\b/i;
 

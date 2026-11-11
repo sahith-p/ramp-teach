@@ -311,7 +311,7 @@ export function keywordConsistency(input: ConsistencyInput): ConsistencyJudgeOut
 export class KeywordJudge implements Judge {
   readonly mode: PillarMode = "deterministic";
   readonly model = null;
-  readonly label = "keyword matcher (offline heuristic, no LLM)";
+  readonly label = "keyword matcher (offline, plain code)";
   async runAll(tasks: JudgeTask[]): Promise<Record<string, JudgeOutcome>> {
     const out: Record<string, JudgeOutcome> = {};
     for (const t of tasks) {

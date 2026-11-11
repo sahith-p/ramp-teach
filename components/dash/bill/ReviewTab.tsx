@@ -221,7 +221,7 @@ export function ReviewTab({ run, titles, reviewing }: { run: RunView; titles: Re
   return (
     <div data-testid="review-tab" className="space-y-6">
       <RouteCard run={run} titles={titles} reviewing={reviewing} />
-      {(run.spans.length > 0 || run.live.running || run.live.has_frame || reviewing) && (
+      {!(run.route && !run.route.workflow_id) && (run.spans.length > 0 || run.live.running || run.live.has_frame || reviewing) && (
       <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
         <LiveView run={run} />
         <StepList run={run} />
