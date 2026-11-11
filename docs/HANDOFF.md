@@ -210,7 +210,7 @@ cloud sessions; don't reinstall), system fonts are optional (Inter and JetBrains
   `npm run eval:skill -- --yes` (prints a cost estimate first), then deliver an invoice in Bill Pay and watch the run.
   Commit only real skill versions and eval runs (the guard enforces it).
 - Walkthrough video: `demo/video/ramp-teach-walkthrough.mp4` (old flow).
-- **Product film:** the committed `ramp-teach-film.mp4` is the previous cut (old flow). The film script is being
+- **Product film:** the committed `ramp-teach-demo.mp4` is the previous cut (old flow). The film script is being
   re-cut for the new flow (no sign-in, Bill Pay → Workflows learning, routing, the triggered run, live view inside
   the bill page, new diagrams). A real take needs `RAMP_ANTHROPIC_API_KEY` visible:
   ```bash

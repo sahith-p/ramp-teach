@@ -19,27 +19,20 @@
       "rule_ids": [
         "r1"
       ],
-      "file": "skills/halcyon-invoice-review/v1/checks/no_duplicate_lines.py"
-    },
-    {
-      "check": "hours_match_timecards",
-      "rule_ids": [
-        "r2"
-      ],
-      "file": "skills/halcyon-invoice-review/v1/checks/hours_match_timecards.py"
+      "file": "skills/halcyon-invoice-review/v2/checks/no_duplicate_lines.py"
     }
   ],
   "sandbox": {
     "tool": "code_execution_20260521",
-    "container_id": "container_01MLVj65giHgRK6FZQbpuwsV",
-    "file_id": "file_01Fc133Jr9eD5JtwAmwShQ6N",
+    "container_id": "container_01Ga9VLtSSPp4TJSs4EiTqpu",
+    "file_id": "file_01G27qPb6mYmMvP6FRS14Qcu",
     "cache_hit": false,
     "requests": [
       {
-        "request_id": "req_011CgvgGV4xqpXzongCSjgT9",
-        "message_id": "msg_011CgvgGVQ4N82WM4VWdQvL5",
+        "request_id": "req_011CgvhQSrM8SSSCoEt7Qkox",
+        "message_id": "msg_011CgvhQTFeoA6ni4udFey7o",
         "usage": {
-          "input_tokens": 7051,
+          "input_tokens": 6672,
           "cache_creation_input_tokens": 0,
           "cache_read_input_tokens": 0,
           "cache_creation": {
@@ -49,7 +42,7 @@
           "iterations": [
             {
               "input_tokens": 2992,
-              "output_tokens": 96,
+              "output_tokens": 181,
               "cache_read_input_tokens": 0,
               "cache_creation_input_tokens": 0,
               "cache_creation": {
@@ -60,8 +53,8 @@
               "model": null
             },
             {
-              "input_tokens": 4059,
-              "output_tokens": 42,
+              "input_tokens": 3680,
+              "output_tokens": 3,
               "cache_read_input_tokens": 0,
               "cache_creation_input_tokens": 0,
               "cache_creation": {
@@ -72,9 +65,9 @@
               "model": null
             }
           ],
-          "output_tokens": 138,
+          "output_tokens": 184,
           "output_tokens_details": {
-            "thinking_tokens": 39
+            "thinking_tokens": 84
           },
           "service_tier": "standard",
           "inference_geo": "global",
@@ -91,7 +84,7 @@
   "agreement": [
     {
       "check": "no_duplicate_lines",
-      "file": "skills/halcyon-invoice-review/v1/checks/no_duplicate_lines.py",
+      "file": "skills/halcyon-invoice-review/v2/checks/no_duplicate_lines.py",
       "rule_ids": [
         "r1"
       ],
@@ -105,17 +98,6 @@
           "calc": "fail [4]"
         }
       ]
-    },
-    {
-      "check": "hours_match_timecards",
-      "file": "skills/halcyon-invoice-review/v1/checks/hours_match_timecards.py",
-      "rule_ids": [
-        "r2"
-      ],
-      "invoices": 10,
-      "agree": 10,
-      "agreement": 1,
-      "disagreements": []
     }
   ]
 }

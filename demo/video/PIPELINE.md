@@ -1,6 +1,6 @@
 # Product film pipeline: how it is made
 
-Everything needed to re-make, edit or extend `ramp-teach-film.mp4` (the voice-over product film). Read
+Everything needed to re-make, edit or extend `ramp-teach-demo.mp4` (the voice-over product film). Read
 `demo/video/README.md` for what the film shows and the live-vs-staged table; this file is the **how**.
 
 ## One command
@@ -42,7 +42,7 @@ no API calls and no raw footage:
 1. Edit the screen in `demo/video/diagrams.ts` (a section's body or its `captions`), or a footage caption in
    `voiceover()` in `demo/video/film.ts`.
 2. Preview: render stills of one section (see "Deterministic animation rendering" below).
-3. `npx tsx demo/video/film.ts --phase post` writes `demo/video/ramp-teach-film.mp4` + `.voiceover.srt`.
+3. `npx tsx demo/video/film.ts --phase post` writes `demo/video/ramp-teach-demo.mp4` + `.voiceover.srt`.
 4. `npx tsx scripts/guard-artifacts.ts`, `git status`, commit the source change and the two outputs.
 
 Only a change to the **recorded app footage** (the dashboard, the extension, the stage page, the take's clicks
@@ -56,7 +56,7 @@ or timing) needs a new take. `--phase post --offline` does the same for a rehear
 | `shoot` | Backs up every path a take touches (fresh when they match git; else the earlier backup is reused), `npx next build`, starts `next start` on :3000 (detached, killed by process group) with `RAMP_TEACH_NO_CACHE=1`, `RAMP_TEACH_VIEWPORT=1280x800` and `RAMP_TEACH_ROUTER=deterministic`, resets Bill Pay, then plays the whole take in Playwright on the stage page. At the end it **archives** the take and **restores** the repo (a failed archive in a real take leaves the outputs in place and says so). | `film.webm`, `marks.json`, `film-recording.json`, `evals.log`, `next.log`, `backup/` |
 | `archive` | (runs inside `shoot`; standalone only to redo it before a restore) Copies the take's outputs to `film-run/` (real) or `work-film/rehearsal-run/` (rehearsal): see "What a take archives". | `film-run/*` (committed for a real take) |
 | `assemble` | Trims pre-roll, cuts the eval wait and fits the other waits so the film lands on `--target` (the six learning stages, the agent in the live view after 4.5 s at real speed, the rest of the run on the run page, the second review; then, only if still too long, the footage holds up to 1.35x). Writes the **master take**: H.264 crf 21, no captions, no screens, plus `take.json`. Then runs `post`. | `demo/video/master/take.{mp4,json}` (real take, committed) or `work-film/master/` (rehearsal) |
-| `post` | From the master take + the archive only: renders the eight screens of `diagrams.ts` (intro, the five technical sections, close, outro), burns the footage captions, **composes** intro + (footage part + screen) x 5 + close + outro with 0.5 s crossfades, and writes the `.srt`. Refuses banned wording (`BANNED` in `diagrams.ts`: the owner's banned word, em dash, middle dot, the approximately sign) in any screen, caption or script line. `diagrams` and `captions` are other names for it. | `work-film/post/` (intermediates), then `ramp-teach-film.mp4` + `.voiceover.srt` |
+| `post` | From the master take + the archive only: renders the eight screens of `diagrams.ts` (intro, the five technical sections, close, outro), burns the footage captions, **composes** intro + (footage part + screen) x 5 + close + outro with 0.5 s crossfades, and writes the `.srt`. Refuses banned wording (`BANNED` in `diagrams.ts`: the owner's banned word, em dash, middle dot, the approximately sign) in any screen, caption or script line. `diagrams` and `captions` are other names for it. | `work-film/post/` (intermediates), then `ramp-teach-demo.mp4` + `.voiceover.srt` |
 | `restore` | Puts the touched paths back as they were before the take (runs inside `shoot`; standalone after a manual `archive`). | — |
 
 `--phase all` = shoot (with archive + restore) → assemble (master) → post.

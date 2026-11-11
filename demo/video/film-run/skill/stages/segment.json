@@ -1,59 +1,59 @@
 {
-  "session_id": "rec_20261111T063450Z_sftc",
+  "session_id": "rec_20261111T064955Z_y3bn",
   "utterance_source": "speech",
   "utterances": [
     {
       "id": "u1",
       "text": "I'm checking this month's invoice from Halcyon Staffing.",
-      "start": 2.027,
-      "end": 5.023,
+      "start": 1.969,
+      "end": 4.965,
       "words": [
         {
           "text": "I'm",
-          "start": 2.027,
-          "end": 2.253,
+          "start": 1.969,
+          "end": 2.195,
           "confidence": 1
         },
         {
           "text": "checking",
-          "start": 2.303,
-          "end": 2.672,
+          "start": 2.245,
+          "end": 2.614,
           "confidence": 1
         },
         {
           "text": "this",
-          "start": 2.753,
-          "end": 3.026,
+          "start": 2.695,
+          "end": 2.968,
           "confidence": 1
         },
         {
           "text": "month's",
-          "start": 3.087,
-          "end": 3.408,
+          "start": 3.029,
+          "end": 3.35,
           "confidence": 1
         },
         {
           "text": "invoice",
-          "start": 3.478,
-          "end": 3.824,
+          "start": 3.42,
+          "end": 3.766,
           "confidence": 1
         },
         {
           "text": "from",
-          "start": 3.899,
-          "end": 4.173,
+          "start": 3.841,
+          "end": 4.115,
           "confidence": 1
         },
         {
           "text": "Halcyon",
-          "start": 4.233,
-          "end": 4.578,
+          "start": 4.175,
+          "end": 4.52,
           "confidence": 1
         },
         {
           "text": "Staffing.",
-          "start": 4.654,
-          "end": 5.023,
+          "start": 4.596,
+          "end": 4.965,
           "confidence": 1
         }
       ],
@@ -65,61 +65,61 @@
     {
       "id": "u2",
       "text": "Every rate on it has to match our contract.",
-      "start": 7.257,
-      "end": 9.618,
+      "start": 7.192,
+      "end": 9.459,
       "words": [
         {
           "text": "Every",
-          "start": 7.257,
-          "end": 7.502,
+          "start": 7.192,
+          "end": 7.427,
           "confidence": 1
         },
         {
           "text": "rate",
-          "start": 7.556,
-          "end": 7.782,
+          "start": 7.479,
+          "end": 7.696,
           "confidence": 1
         },
         {
           "text": "on",
-          "start": 7.831,
-          "end": 8.017,
+          "start": 7.743,
+          "end": 7.922,
           "confidence": 1
         },
         {
           "text": "it",
-          "start": 8.058,
-          "end": 8.245,
+          "start": 7.961,
+          "end": 8.14,
           "confidence": 1
         },
         {
           "text": "has",
-          "start": 8.286,
-          "end": 8.492,
+          "start": 8.18,
+          "end": 8.377,
           "confidence": 1
         },
         {
           "text": "to",
-          "start": 8.537,
-          "end": 8.723,
+          "start": 8.421,
+          "end": 8.6,
           "confidence": 1
         },
         {
           "text": "match",
-          "start": 8.764,
-          "end": 9.009,
+          "start": 8.639,
+          "end": 8.874,
           "confidence": 1
         },
         {
           "text": "our",
-          "start": 9.063,
-          "end": 9.269,
+          "start": 8.926,
+          "end": 9.124,
           "confidence": 1
         },
         {
           "text": "contract.",
-          "start": 9.314,
-          "end": 9.618,
+          "start": 9.167,
+          "end": 9.459,
           "confidence": 1
         }
       ],
@@ -131,67 +131,67 @@
     {
       "id": "u3",
       "text": "And nobody should be billed twice for the same week.",
-      "start": 9.835,
-      "end": 12.061,
+      "start": 9.673,
+      "end": 11.962,
       "words": [
         {
           "text": "And",
-          "start": 9.835,
-          "end": 10.002,
+          "start": 9.673,
+          "end": 9.844,
           "confidence": 1
         },
         {
           "text": "nobody",
-          "start": 10.038,
-          "end": 10.253,
+          "start": 9.882,
+          "end": 10.103,
           "confidence": 1
         },
         {
           "text": "should",
-          "start": 10.3,
-          "end": 10.514,
+          "start": 10.151,
+          "end": 10.371,
           "confidence": 1
         },
         {
           "text": "be",
-          "start": 10.561,
-          "end": 10.712,
+          "start": 10.42,
+          "end": 10.575,
           "confidence": 1
         },
         {
           "text": "billed",
-          "start": 10.745,
-          "end": 10.96,
+          "start": 10.609,
+          "end": 10.829,
           "confidence": 1
         },
         {
           "text": "twice",
-          "start": 11.007,
-          "end": 11.205,
+          "start": 10.878,
+          "end": 11.082,
           "confidence": 1
         },
         {
           "text": "for",
-          "start": 11.249,
-          "end": 11.416,
+          "start": 11.127,
+          "end": 11.298,
           "confidence": 1
         },
         {
           "text": "the",
-          "start": 11.452,
-          "end": 11.619,
+          "start": 11.336,
+          "end": 11.507,
           "confidence": 1
         },
         {
           "text": "same",
-          "start": 11.656,
-          "end": 11.838,
+          "start": 11.545,
+          "end": 11.733,
           "confidence": 1
         },
         {
           "text": "week.",
-          "start": 11.878,
-          "end": 12.061,
+          "start": 11.774,
+          "end": 11.962,
           "confidence": 1
         }
       ],
@@ -204,61 +204,61 @@
     {
       "id": "u4",
       "text": "Then I check each person's hours against their timecard.",
-      "start": 12.251,
-      "end": 14.259,
+      "start": 12.153,
+      "end": 14.299,
       "words": [
         {
           "text": "Then",
-          "start": 12.251,
-          "end": 12.422,
+          "start": 12.153,
+          "end": 12.336,
           "confidence": 1
         },
         {
           "text": "I",
-          "start": 12.46,
-          "end": 12.586,
+          "start": 12.376,
+          "end": 12.511,
           "confidence": 1
         },
         {
           "text": "check",
-          "start": 12.614,
-          "end": 12.8,
+          "start": 12.541,
+          "end": 12.739,
           "confidence": 1
         },
         {
           "text": "each",
-          "start": 12.841,
-          "end": 13.012,
+          "start": 12.783,
+          "end": 12.966,
           "confidence": 1
         },
         {
           "text": "person's",
-          "start": 13.049,
-          "end": 13.265,
+          "start": 13.006,
+          "end": 13.236,
           "confidence": 1
         },
         {
           "text": "hours",
-          "start": 13.312,
-          "end": 13.498,
+          "start": 13.287,
+          "end": 13.486,
           "confidence": 1
         },
         {
           "text": "against",
-          "start": 13.539,
-          "end": 13.755,
+          "start": 13.529,
+          "end": 13.76,
           "confidence": 1
         },
         {
           "text": "their",
-          "start": 13.802,
-          "end": 13.988,
+          "start": 13.81,
+          "end": 14.009,
           "confidence": 1
         },
         {
           "text": "timecard.",
-          "start": 14.029,
-          "end": 14.259,
+          "start": 14.053,
+          "end": 14.299,
           "confidence": 1
         }
       ],
@@ -272,43 +272,43 @@
     {
       "id": "u5",
       "text": "Maya is approved for 40 hours.",
-      "start": 14.46,
-      "end": 16.676,
+      "start": 14.503,
+      "end": 16.719,
       "words": [
         {
           "text": "Maya",
-          "start": 14.46,
-          "end": 14.773,
+          "start": 14.503,
+          "end": 14.816,
           "confidence": 1
         },
         {
           "text": "is",
-          "start": 14.842,
-          "end": 15.101,
+          "start": 14.885,
+          "end": 15.144,
           "confidence": 1
         },
         {
           "text": "approved",
-          "start": 15.157,
-          "end": 15.579,
+          "start": 15.2,
+          "end": 15.622,
           "confidence": 1
         },
         {
           "text": "for",
-          "start": 15.672,
-          "end": 15.958,
+          "start": 15.715,
+          "end": 16.001,
           "confidence": 1
         },
         {
           "text": "40",
-          "start": 16.021,
-          "end": 16.279,
+          "start": 16.064,
+          "end": 16.322,
           "confidence": 1
         },
         {
           "text": "hours.",
-          "start": 16.336,
-          "end": 16.676,
+          "start": 16.379,
+          "end": 16.719,
           "confidence": 1
         }
       ],
@@ -320,43 +320,43 @@
     {
       "id": "u6",
       "text": "Billed hours can't go over that.",
-      "start": 16.751,
-      "end": 19.007,
+      "start": 16.794,
+      "end": 19.05,
       "words": [
         {
           "text": "Billed",
-          "start": 16.751,
-          "end": 17.119,
+          "start": 16.794,
+          "end": 17.162,
           "confidence": 1
         },
         {
           "text": "hours",
-          "start": 17.199,
-          "end": 17.54,
+          "start": 17.242,
+          "end": 17.583,
           "confidence": 1
         },
         {
           "text": "can't",
-          "start": 17.614,
-          "end": 17.928,
+          "start": 17.657,
+          "end": 17.971,
           "confidence": 1
         },
         {
           "text": "go",
-          "start": 17.996,
-          "end": 18.255,
+          "start": 18.039,
+          "end": 18.298,
           "confidence": 1
         },
         {
           "text": "over",
-          "start": 18.312,
-          "end": 18.625,
+          "start": 18.355,
+          "end": 18.668,
           "confidence": 1
         },
         {
           "text": "that.",
-          "start": 18.694,
-          "end": 19.007,
+          "start": 18.737,
+          "end": 19.05,
           "confidence": 1
         }
       ],
@@ -368,37 +368,37 @@
     {
       "id": "u7",
       "text": "Sam is approved for 36.",
-      "start": 20.902,
-      "end": 22.766,
+      "start": 21.009,
+      "end": 22.873,
       "words": [
         {
           "text": "Sam",
-          "start": 20.902,
-          "end": 21.2,
+          "start": 21.009,
+          "end": 21.307,
           "confidence": 1
         },
         {
           "text": "is",
-          "start": 21.266,
-          "end": 21.536,
+          "start": 21.373,
+          "end": 21.643,
           "confidence": 1
         },
         {
           "text": "approved",
-          "start": 21.595,
-          "end": 22.035,
+          "start": 21.702,
+          "end": 22.142,
           "confidence": 1
         },
         {
           "text": "for",
-          "start": 22.132,
-          "end": 22.43,
+          "start": 22.239,
+          "end": 22.537,
           "confidence": 1
         },
         {
           "text": "36.",
-          "start": 22.496,
-          "end": 22.766,
+          "start": 22.603,
+          "end": 22.873,
           "confidence": 1
         }
       ],
@@ -410,79 +410,79 @@
     {
       "id": "u8",
       "text": "If anything is off, I dispute it and ask for a credit.",
-      "start": 23.773,
-      "end": 28.303,
+      "start": 23.906,
+      "end": 28.436,
       "words": [
         {
           "text": "If",
-          "start": 23.773,
-          "end": 24.047,
+          "start": 23.906,
+          "end": 24.18,
           "confidence": 1
         },
         {
           "text": "anything",
-          "start": 24.108,
-          "end": 24.556,
+          "start": 24.241,
+          "end": 24.689,
           "confidence": 1
         },
         {
           "text": "is",
-          "start": 24.654,
-          "end": 24.928,
+          "start": 24.787,
+          "end": 25.061,
           "confidence": 1
         },
         {
           "text": "off,",
-          "start": 24.989,
-          "end": 25.292,
+          "start": 25.122,
+          "end": 25.425,
           "confidence": 1
         },
         {
           "text": "I",
-          "start": 25.358,
-          "end": 25.604,
+          "start": 25.491,
+          "end": 25.737,
           "confidence": 1
         },
         {
           "text": "dispute",
-          "start": 25.658,
-          "end": 26.077,
+          "start": 25.791,
+          "end": 26.21,
           "confidence": 1
         },
         {
           "text": "it",
-          "start": 26.169,
-          "end": 26.443,
+          "start": 26.302,
+          "end": 26.576,
           "confidence": 1
         },
         {
           "text": "and",
-          "start": 26.503,
-          "end": 26.807,
+          "start": 26.636,
+          "end": 26.94,
           "confidence": 1
         },
         {
           "text": "ask",
-          "start": 26.873,
-          "end": 27.177,
+          "start": 27.006,
+          "end": 27.31,
           "confidence": 1
         },
         {
           "text": "for",
-          "start": 27.243,
-          "end": 27.547,
+          "start": 27.376,
+          "end": 27.68,
           "confidence": 1
         },
         {
           "text": "a",
-          "start": 27.613,
-          "end": 27.859,
+          "start": 27.746,
+          "end": 27.992,
           "confidence": 1
         },
         {
           "text": "credit.",
-          "start": 27.913,
-          "end": 28.303,
+          "start": 28.046,
+          "end": 28.436,
           "confidence": 1
         }
       ],
@@ -531,7 +531,8 @@
       "step_indices": [
         8,
         9,
-        10
+        10,
+        11
       ],
       "dom_step_indices": [
         8,
@@ -548,13 +549,12 @@
       "page": "/portal/invoices/<invoice_id>",
       "title": "Invoice · Halcyon Staffing client portal",
       "step_indices": [
-        11,
         12,
         13,
         14
       ],
       "dom_step_indices": [
-        11,
+        12,
         14
       ],
       "utterance_ids": [
@@ -761,6 +761,17 @@
     },
     {
       "index": 11,
+      "kind": "narration",
+      "event": "narration",
+      "url": "http://localhost:3000/portal/invoices",
+      "page": "/portal/invoices",
+      "title": "Invoices · Halcyon Staffing client portal",
+      "selector": null,
+      "text": "And nobody should be billed twice for the same week.",
+      "value": null
+    },
+    {
+      "index": 12,
       "kind": "dom",
       "event": "navigate",
       "url": "http://localhost:3000/portal/invoices/HSG-1010",
@@ -768,17 +779,6 @@
       "title": "Invoice · Halcyon Staffing client portal",
       "selector": null,
       "text": null,
-      "value": null
-    },
-    {
-      "index": 12,
-      "kind": "narration",
-      "event": "narration",
-      "url": "http://localhost:3000/portal/invoices/HSG-1010",
-      "page": "/portal/invoices/<invoice_id>",
-      "title": "Invoice · Halcyon Staffing client portal",
-      "selector": null,
-      "text": "And nobody should be billed twice for the same week.",
       "value": null
     },
     {

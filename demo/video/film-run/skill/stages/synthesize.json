@@ -1,12 +1,12 @@
 {
   "mode": "real",
   "draft": {
-    "title": "Review Halcyon Staffing invoice against contract and approved timecards",
+    "title": "Review Halcyon Staffing invoices against contract and approved timecards",
     "vendor": "Halcyon Staffing",
     "rules": [
       {
         "id": "r1",
-        "text": "Every labor line's hourly bill rate must equal the contract rate card rate for that line's role.",
+        "text": "Every labor line's hourly bill rate (unit_rate) must equal the contract rate for that role.",
         "kind": "check",
         "source": "said",
         "citations": [
@@ -21,7 +21,7 @@
       },
       {
         "id": "r2",
-        "text": "No employee may appear on more than one labor line for the same week ending date.",
+        "text": "No employee may be billed on more than one labor line for the same week ending date.",
         "kind": "check",
         "source": "said",
         "citations": [
@@ -36,9 +36,9 @@
       },
       {
         "id": "r3",
-        "text": "For each labor line, billed hours must be less than or equal to the approved_hours shown on that employee's timecard for the billed week.",
+        "text": "For each labor line, billed hours (quantity) must be less than or equal to the employee's approved timecard hours for that week.",
         "kind": "check",
-        "source": "said",
+        "source": "both",
         "citations": [
           {
             "utterance_id": "u4",
@@ -58,7 +58,7 @@
       },
       {
         "id": "r4",
-        "text": "If any check fails, recommend disputing the invoice and requesting a credit; otherwise the invoice passes review.",
+        "text": "If any check fails, recommend disputing the invoice and requesting a credit; otherwise recommend approval for payment.",
         "kind": "decision",
         "source": "said",
         "citations": [
@@ -73,7 +73,7 @@
       },
       {
         "id": "r5",
-        "text": "Sign in to the Halcyon Staffing client portal, open the invoices list, and open the invoice under review by its invoice number.",
+        "text": "Sign in to the Halcyon Staffing client portal, open the Invoices list, and open the invoice under review by its invoice number link.",
         "kind": "procedure",
         "source": "shown",
         "citations": [
@@ -95,17 +95,10 @@
       },
       {
         "id": "r6",
-        "text": "For each person billed on the invoice, click that line's \"View timecard\" link to open the employee's timecard for the billed week, read the approved_hours field, then return to the invoice before opening the next person's timecard.",
+        "text": "For each billed person on the invoice page, click \"View timecard\" to open their timecard for the billed week, read the approved hours field ([data-field=\"approved_hours\"]), then return to the invoice page before opening the next person's timecard.",
         "kind": "procedure",
         "source": "both",
         "citations": [
-          {
-            "utterance_id": "u4",
-            "quote": "Then I check each person's hours against their timecard.",
-            "step_index": 14,
-            "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
-            "url": "http://localhost:3000/portal/invoices/HSG-1010"
-          },
           {
             "utterance_id": null,
             "quote": "View timecard",
@@ -121,10 +114,17 @@
             "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
           },
           {
+            "utterance_id": "u4",
+            "quote": "Then I check each person's hours against their timecard.",
+            "step_index": 16,
+            "selector": "[data-field=\"approved_hours\"]",
+            "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+          },
+          {
             "utterance_id": null,
-            "quote": "View timecard",
-            "step_index": 19,
-            "selector": "a[href=\"/portal/employees/E-104?week=2026-10-11\"]",
+            "quote": "navigate",
+            "step_index": 18,
+            "selector": null,
             "url": "http://localhost:3000/portal/invoices/HSG-1010"
           }
         ]
@@ -160,19 +160,19 @@
       }
     ],
     "open_questions": [
-      "Where are the contract rates found? The reviewer says every rate must match the contract but never opens it, and no per-role rates were stated.",
-      "How should duplicate billing for the same week be detected? It was stated as a rule but not demonstrated.",
-      "How is a dispute filed and a credit requested? This was not demonstrated.",
-      "Does a small difference (e.g. rounding) count as \"off\", or is any difference a failure?",
-      "Which non-labor charges are allowed and what are their caps? None were stated in the recording."
+      "What are the contract rates per role, and where are they found to compare against invoice rates?",
+      "How should the reviewer check whether someone is billed twice for the same week?",
+      "Where on the invoice are billed hours read for comparison against the timecard?",
+      "Which non-labor charges are allowed and what are their caps? This was never mentioned.",
+      "How is the dispute or credit request filed when something is off?"
     ]
   },
   "model_output": {
-    "title": "Review Halcyon Staffing invoice against contract and approved timecards",
+    "title": "Review Halcyon Staffing invoices against contract and approved timecards",
     "vendor": "Halcyon Staffing",
     "rules": [
       {
-        "text": "Every labor line's hourly bill rate must equal the contract rate card rate for that line's role.",
+        "text": "Every labor line's hourly bill rate (unit_rate) must equal the contract rate for that role.",
         "kind": "check",
         "source": "said",
         "citations": [
@@ -184,7 +184,7 @@
         ]
       },
       {
-        "text": "No employee may appear on more than one labor line for the same week ending date.",
+        "text": "No employee may be billed on more than one labor line for the same week ending date.",
         "kind": "check",
         "source": "said",
         "citations": [
@@ -196,9 +196,9 @@
         ]
       },
       {
-        "text": "For each labor line, billed hours must be less than or equal to the approved_hours shown on that employee's timecard for the billed week.",
+        "text": "For each labor line, billed hours (quantity) must be less than or equal to the employee's approved timecard hours for that week.",
         "kind": "check",
-        "source": "said",
+        "source": "both",
         "citations": [
           {
             "utterance_id": "u4",
@@ -213,7 +213,7 @@
         ]
       },
       {
-        "text": "If any check fails, recommend disputing the invoice and requesting a credit; otherwise the invoice passes review.",
+        "text": "If any check fails, recommend disputing the invoice and requesting a credit; otherwise recommend approval for payment.",
         "kind": "decision",
         "source": "said",
         "citations": [
@@ -225,7 +225,7 @@
         ]
       },
       {
-        "text": "Sign in to the Halcyon Staffing client portal, open the invoices list, and open the invoice under review by its invoice number.",
+        "text": "Sign in to the Halcyon Staffing client portal, open the Invoices list, and open the invoice under review by its invoice number link.",
         "kind": "procedure",
         "source": "shown",
         "citations": [
@@ -242,15 +242,10 @@
         ]
       },
       {
-        "text": "For each person billed on the invoice, click that line's \"View timecard\" link to open the employee's timecard for the billed week, read the approved_hours field, then return to the invoice before opening the next person's timecard.",
+        "text": "For each billed person on the invoice page, click \"View timecard\" to open their timecard for the billed week, read the approved hours field ([data-field=\"approved_hours\"]), then return to the invoice page before opening the next person's timecard.",
         "kind": "procedure",
         "source": "both",
         "citations": [
-          {
-            "utterance_id": "u4",
-            "quote": "Then I check each person's hours against their timecard.",
-            "step_index": 14
-          },
           {
             "utterance_id": null,
             "quote": "View timecard",
@@ -262,9 +257,14 @@
             "step_index": 16
           },
           {
+            "utterance_id": "u4",
+            "quote": "Then I check each person's hours against their timecard.",
+            "step_index": 16
+          },
+          {
             "utterance_id": null,
-            "quote": "View timecard",
-            "step_index": 19
+            "quote": "navigate",
+            "step_index": 18
           }
         ]
       }
@@ -316,11 +316,11 @@
       }
     ],
     "open_questions": [
-      "Where are the contract rates found? The reviewer says every rate must match the contract but never opens it, and no per-role rates were stated.",
-      "How should duplicate billing for the same week be detected? It was stated as a rule but not demonstrated.",
-      "How is a dispute filed and a credit requested? This was not demonstrated.",
-      "Does a small difference (e.g. rounding) count as \"off\", or is any difference a failure?",
-      "Which non-labor charges are allowed and what are their caps? None were stated in the recording."
+      "What are the contract rates per role, and where are they found to compare against invoice rates?",
+      "How should the reviewer check whether someone is billed twice for the same week?",
+      "Where on the invoice are billed hours read for comparison against the timecard?",
+      "Which non-labor charges are allowed and what are their caps? This was never mentioned.",
+      "How is the dispute or credit request filed when something is off?"
     ]
   },
   "rejected_citations": 0,

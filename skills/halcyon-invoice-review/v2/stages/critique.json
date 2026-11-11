@@ -1,0 +1,226 @@
+{
+  "mode": "real",
+  "draft": {
+    "title": "Review Halcyon Staffing invoices against contract and approved timecards",
+    "vendor": "Halcyon Staffing",
+    "rules": [
+      {
+        "id": "r1",
+        "text": "No employee may be billed on more than one labor line for the same week ending date.",
+        "kind": "check",
+        "source": "said",
+        "citations": [
+          {
+            "utterance_id": "u3",
+            "quote": "And nobody should be billed twice for the same week.",
+            "step_index": 14,
+            "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+            "url": "http://localhost:3000/portal/invoices/HSG-1010"
+          }
+        ]
+      },
+      {
+        "id": "r2",
+        "text": "Sign in to the Halcyon Staffing client portal, open the Invoices list, and open the invoice under review by its invoice number link.",
+        "kind": "procedure",
+        "source": "shown",
+        "citations": [
+          {
+            "utterance_id": null,
+            "quote": "Sign in",
+            "step_index": 6,
+            "selector": "main > div > form > button",
+            "url": "http://localhost:3000/portal/login"
+          },
+          {
+            "utterance_id": null,
+            "quote": "HSG-1010",
+            "step_index": 10,
+            "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+            "url": "http://localhost:3000/portal/invoices"
+          }
+        ]
+      },
+      {
+        "id": "r3",
+        "text": "For each billed person on the invoice page, click \"View timecard\" to open their timecard for the billed week, read the approved hours field ([data-field=\"approved_hours\"]), then return to the invoice page before opening the next person's timecard.",
+        "kind": "procedure",
+        "source": "both",
+        "citations": [
+          {
+            "utterance_id": null,
+            "quote": "View timecard",
+            "step_index": 14,
+            "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+            "url": "http://localhost:3000/portal/invoices/HSG-1010"
+          },
+          {
+            "utterance_id": null,
+            "quote": "40",
+            "step_index": 16,
+            "selector": "[data-field=\"approved_hours\"]",
+            "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+          },
+          {
+            "utterance_id": "u4",
+            "quote": "Then I check each person's hours against their timecard.",
+            "step_index": 16,
+            "selector": "[data-field=\"approved_hours\"]",
+            "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+          },
+          {
+            "utterance_id": null,
+            "quote": "navigate",
+            "step_index": 18,
+            "selector": null,
+            "url": "http://localhost:3000/portal/invoices/HSG-1010"
+          }
+        ]
+      }
+    ],
+    "portal_map": [
+      {
+        "page": "/portal/invoices",
+        "fields": [
+          {
+            "name": "invoice link",
+            "selector": "a[href^=\"/portal/invoices/\"]"
+          }
+        ]
+      },
+      {
+        "page": "/portal/invoices/<invoice_id>",
+        "fields": [
+          {
+            "name": "View timecard link",
+            "selector": "a[href^=\"/portal/employees/\"]"
+          }
+        ]
+      },
+      {
+        "page": "/portal/employees/<employee_id>?week=<YYYY-MM-DD>",
+        "fields": [
+          {
+            "name": "approved_hours",
+            "selector": "[data-field=\"approved_hours\"]"
+          }
+        ]
+      }
+    ],
+    "open_questions": [
+      "What are the contract rates per role, and where are they found to compare against invoice rates?",
+      "How should the reviewer check whether someone is billed twice for the same week?",
+      "Where on the invoice are billed hours read for comparison against the timecard?",
+      "Which non-labor charges are allowed and what are their caps? This was never mentioned.",
+      "How is the dispute or credit request filed when something is off?",
+      "Are the spoken approved hours (Maya 40, Sam 36) fixed caps the reviewer knows independently, or just read aloud from the timecard? Should the timecard value always be the source of truth?",
+      "Which timecard belongs to which person (E-101 vs E-104)? How are billed persons on the invoice matched to their timecards?",
+      "How does the reviewer pick 'this month's' invoice from the invoices list, given that HSG-1010 was clicked without a stated criterion?",
+      "What should the reviewer conclude or do when every check passes, since only the dispute path was described?",
+      "What did the reviewer do on the invoice page after returning from the last timecard (step 23)?"
+    ]
+  },
+  "dropped": [
+    {
+      "rule": {
+        "id": "r1",
+        "text": "Every labor line's hourly bill rate (unit_rate) must equal the contract rate for that role.",
+        "kind": "check",
+        "source": "said",
+        "citations": [
+          {
+            "utterance_id": "u2",
+            "quote": "Every rate on it has to match our contract.",
+            "step_index": 10,
+            "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+            "url": "http://localhost:3000/portal/invoices"
+          }
+        ]
+      },
+      "reason": "invented: u2 supports matching every rate to the contract. The field name 'unit_rate', the 'labor line' framing and the 'for that role' qualifier appear nowhere in the recording."
+    },
+    {
+      "rule": {
+        "id": "r3",
+        "text": "For each labor line, billed hours (quantity) must be less than or equal to the employee's approved timecard hours for that week.",
+        "kind": "check",
+        "source": "both",
+        "citations": [
+          {
+            "utterance_id": "u4",
+            "quote": "Then I check each person's hours against their timecard.",
+            "step_index": 14,
+            "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+            "url": "http://localhost:3000/portal/invoices/HSG-1010"
+          },
+          {
+            "utterance_id": "u6",
+            "quote": "Billed hours can't go over that.",
+            "step_index": 16,
+            "selector": "[data-field=\"approved_hours\"]",
+            "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+          }
+        ]
+      },
+      "reason": "invented: u4 and u6, with step 16, support the rule that billed hours must not exceed approved timecard hours. The field name 'quantity' for billed hours is never said or shown."
+    },
+    {
+      "rule": {
+        "id": "r4",
+        "text": "If any check fails, recommend disputing the invoice and requesting a credit; otherwise recommend approval for payment.",
+        "kind": "decision",
+        "source": "said",
+        "citations": [
+          {
+            "utterance_id": "u8",
+            "quote": "If anything is off, I dispute it and ask for a credit.",
+            "step_index": 21,
+            "selector": "[data-field=\"approved_hours\"]",
+            "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11"
+          }
+        ]
+      },
+      "reason": "invented: u8 supports disputing and asking for a credit when something is off. The 'otherwise recommend approval for payment' branch is never mentioned."
+    }
+  ],
+  "added_questions": [
+    "Are the spoken approved hours (Maya 40, Sam 36) fixed caps the reviewer knows independently, or just read aloud from the timecard? Should the timecard value always be the source of truth?",
+    "Which timecard belongs to which person (E-101 vs E-104)? How are billed persons on the invoice matched to their timecards?",
+    "How does the reviewer pick 'this month's' invoice from the invoices list, given that HSG-1010 was clicked without a stated criterion?",
+    "What should the reviewer conclude or do when every check passes, since only the dispute path was described?",
+    "What did the reviewer do on the invoice page after returning from the last timecard (step 23)?"
+  ],
+  "verdicts": [
+    {
+      "rule_id": "r1",
+      "verdict": "invented",
+      "reason": "u2 supports matching every rate to the contract. The field name 'unit_rate', the 'labor line' framing and the 'for that role' qualifier appear nowhere in the recording."
+    },
+    {
+      "rule_id": "r2",
+      "verdict": "supported",
+      "reason": "u3 says nobody should be billed twice for the same week. The rule restates this, and the week appears as a URL parameter in the recorded steps."
+    },
+    {
+      "rule_id": "r3",
+      "verdict": "invented",
+      "reason": "u4 and u6, with step 16, support the rule that billed hours must not exceed approved timecard hours. The field name 'quantity' for billed hours is never said or shown."
+    },
+    {
+      "rule_id": "r4",
+      "verdict": "invented",
+      "reason": "u8 supports disputing and asking for a credit when something is off. The 'otherwise recommend approval for payment' branch is never mentioned."
+    },
+    {
+      "rule_id": "r5",
+      "verdict": "supported",
+      "reason": "Steps 2-7 show sign-in, step 8 shows navigation to /portal/invoices, and step 10 shows opening invoice HSG-1010 by its link."
+    },
+    {
+      "rule_id": "r6",
+      "verdict": "supported",
+      "reason": "Steps 14-18 and 19-23 show clicking 'View timecard', reading [data-field=\"approved_hours\"] and returning to the invoice before the next person's timecard. u4 also supports it."
+    }
+  ],
+  "fallback_reason": null
+}

@@ -1,10 +1,10 @@
 {
   "invoice_id": "HSG-1012",
-  "decided_at": "2026-11-11T06:38:51.493Z",
+  "decided_at": "2026-11-11T06:53:46.266Z",
   "workflow_id": "halcyon-invoice-review",
-  "version": 1,
+  "version": 2,
   "confidence": 0.96,
-  "reason": "Matches Review Halcyon Staffing invoice against contract and approved timecards v1: same vendor, labor lines by employee and week.",
+  "reason": "Matches Review Halcyon Staffing invoices against contract and approved timecards v2: same vendor, labor lines by employee and week.",
   "candidates": [
     {
       "workflow_id": "halcyon-invoice-review",

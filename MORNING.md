@@ -23,7 +23,7 @@ Every ticket is DONE (`board/tickets.md`). Nothing is BLOCKED. **Outstanding:** 
 
 ## Demo videos
 
-- **Product film for voice-over: `demo/video/ramp-teach-film.mp4`** (192 s, 1080p, 8.1 MB):
+- **Product film for voice-over: `demo/video/ramp-teach-demo.mp4`** (192 s, 1080p, 8.1 MB):
   - Recording with the real Recorder extension, with subtitles.
   - **Send to Ramp**, then Ramp Teach inside the Ramp-style dashboard learns the rules (a live Claude call).
   - An invoice arrives and the agent reviews it live, with its own browser in a second window: "Needs a second look", then Dispute.

@@ -1,8 +1,8 @@
 {
-  "id": "eval_halcyon-invoice-review_v1_20261111T063719Z",
+  "id": "eval_halcyon-invoice-review_v2_20261111T065213Z",
   "skill_id": "halcyon-invoice-review",
-  "version": 1,
-  "created_at": "2026-11-11T06:37:19.384Z",
+  "version": 2,
+  "created_at": "2026-11-11T06:52:13.373Z",
   "mode": "deterministic",
   "results": [
     {

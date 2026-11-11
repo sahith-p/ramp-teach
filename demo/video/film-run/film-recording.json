@@ -1,9 +1,9 @@
 {
-  "session_id": "rec_20261111T063450Z_sftc",
-  "started_at": "2026-11-11T06:34:50.887Z",
+  "session_id": "rec_20261111T064955Z_y3bn",
+  "started_at": "2026-11-11T06:49:55.752Z",
   "steps": [
     {
-      "ts": "2026-11-11T06:34:50.887Z",
+      "ts": "2026-11-11T06:49:55.753Z",
       "kind": "dom",
       "detail": {
         "event": "navigate",
@@ -12,7 +12,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:34:52.914Z",
+      "ts": "2026-11-11T06:49:57.721Z",
       "kind": "narration",
       "detail": {
         "event": "narration",
@@ -22,7 +22,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:34:54.207Z",
+      "ts": "2026-11-11T06:49:59.028Z",
       "kind": "dom",
       "detail": {
         "event": "click",
@@ -32,7 +32,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:34:55.068Z",
+      "ts": "2026-11-11T06:49:59.948Z",
       "kind": "dom",
       "detail": {
         "event": "input",
@@ -43,7 +43,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:34:55.856Z",
+      "ts": "2026-11-11T06:50:00.709Z",
       "kind": "dom",
       "detail": {
         "event": "click",
@@ -53,7 +53,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:34:56.480Z",
+      "ts": "2026-11-11T06:50:01.306Z",
       "kind": "dom",
       "detail": {
         "event": "input",
@@ -64,7 +64,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:34:57.494Z",
+      "ts": "2026-11-11T06:50:02.241Z",
       "kind": "dom",
       "detail": {
         "event": "click",
@@ -75,7 +75,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:34:57.497Z",
+      "ts": "2026-11-11T06:50:02.245Z",
       "kind": "dom",
       "detail": {
         "event": "submit",
@@ -85,7 +85,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:34:57.640Z",
+      "ts": "2026-11-11T06:50:02.394Z",
       "kind": "dom",
       "detail": {
         "event": "navigate",
@@ -94,7 +94,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:34:58.144Z",
+      "ts": "2026-11-11T06:50:02.944Z",
       "kind": "narration",
       "detail": {
         "event": "narration",
@@ -104,7 +104,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:35:00.065Z",
+      "ts": "2026-11-11T06:50:04.835Z",
       "kind": "dom",
       "detail": {
         "event": "click",
@@ -115,7 +115,17 @@
       }
     },
     {
-      "ts": "2026-11-11T06:35:00.692Z",
+      "ts": "2026-11-11T06:50:05.425Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "text": "And nobody should be billed twice for the same week.",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices · Halcyon Staffing client portal"
+      }
+    },
+    {
+      "ts": "2026-11-11T06:50:05.449Z",
       "kind": "dom",
       "detail": {
         "event": "navigate",
@@ -124,17 +134,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:35:00.722Z",
-      "kind": "narration",
-      "detail": {
-        "event": "narration",
-        "text": "And nobody should be billed twice for the same week.",
-        "url": "http://localhost:3000/portal/invoices/HSG-1010",
-        "title": "Invoice · Halcyon Staffing client portal"
-      }
-    },
-    {
-      "ts": "2026-11-11T06:35:03.138Z",
+      "ts": "2026-11-11T06:50:07.905Z",
       "kind": "narration",
       "detail": {
         "event": "narration",
@@ -144,7 +144,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:35:03.819Z",
+      "ts": "2026-11-11T06:50:08.626Z",
       "kind": "dom",
       "detail": {
         "event": "click",
@@ -155,7 +155,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:35:04.290Z",
+      "ts": "2026-11-11T06:50:09.044Z",
       "kind": "dom",
       "detail": {
         "event": "navigate",
@@ -164,7 +164,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:35:05.329Z",
+      "ts": "2026-11-11T06:50:10.216Z",
       "kind": "dom",
       "detail": {
         "event": "click",
@@ -175,7 +175,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:35:05.347Z",
+      "ts": "2026-11-11T06:50:10.255Z",
       "kind": "narration",
       "detail": {
         "event": "narration",
@@ -185,7 +185,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:35:08.675Z",
+      "ts": "2026-11-11T06:50:13.615Z",
       "kind": "dom",
       "detail": {
         "event": "navigate",
@@ -194,7 +194,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:35:10.296Z",
+      "ts": "2026-11-11T06:50:15.202Z",
       "kind": "dom",
       "detail": {
         "event": "click",
@@ -205,7 +205,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:35:10.699Z",
+      "ts": "2026-11-11T06:50:15.844Z",
       "kind": "dom",
       "detail": {
         "event": "navigate",
@@ -214,7 +214,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:35:11.768Z",
+      "ts": "2026-11-11T06:50:16.752Z",
       "kind": "dom",
       "detail": {
         "event": "click",
@@ -225,7 +225,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:35:11.789Z",
+      "ts": "2026-11-11T06:50:16.761Z",
       "kind": "narration",
       "detail": {
         "event": "narration",
@@ -235,7 +235,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:35:14.395Z",
+      "ts": "2026-11-11T06:50:19.394Z",
       "kind": "dom",
       "detail": {
         "event": "navigate",
@@ -244,7 +244,7 @@
       }
     },
     {
-      "ts": "2026-11-11T06:35:14.660Z",
+      "ts": "2026-11-11T06:50:19.658Z",
       "kind": "narration",
       "detail": {
         "event": "narration",

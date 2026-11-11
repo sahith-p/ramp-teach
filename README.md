@@ -10,7 +10,7 @@
 <p align="center">
   <a href="docs/TECHNICAL.md">How it works</a> &nbsp;&nbsp;
   <a href="docs/HANDOFF.md">Handoff</a> &nbsp;&nbsp;
-  <a href="demo/video/ramp-teach-film.mp4">Product demo</a>
+  <a href="demo/video/ramp-teach-demo.mp4">Product demo</a>
 </p>
 
 ---
