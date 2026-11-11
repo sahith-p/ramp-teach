@@ -28,7 +28,7 @@ export function RouteCard({ run, titles, reviewing }: { run: RunView; titles: Re
     <section data-testid="route-card" className="grid border border-[rgb(234,231,228)] bg-white md:grid-cols-2">
       <div className="p-5">
         <div className={`flex items-center gap-2 text-[13px] ${MUTED}`}>
-          Routing <ModeTag label={route ? realTag(route.mode) : null} />
+          Routing <ModeTag label={route ? (route.mode === "real" && route.model?.startsWith("jev") ? "Jev" : realTag(route.mode)) : null} />
         </div>
         {!route && <div className="mt-1.5 text-[17px]">{reviewing ? "Choosing a workflow" : "Not routed yet"}</div>}
         {route && wf && (

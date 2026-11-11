@@ -102,6 +102,13 @@ async function main() {
     }
   }
 
+  // 6a. TypeSafe key (routing with Jev; optional)
+  if (process.env.TYPESAFE_API_KEY) add("typesafe key", "ok", "found (routing with Jev)");
+  else {
+    add("typesafe key", "warn", "not found: routing uses Claude");
+    manual.push("Optional, for routing with TypeSafe Jev: add the environment variable TYPESAFE_API_KEY (keys at console.typesafe.ai; never commit it).");
+  }
+
   // 6b. ElevenLabs key (voice; optional)
   if (process.env.ELEVENLABS_API_KEY) add("elevenlabs key", "ok", "found (voice transcription available)");
   else {

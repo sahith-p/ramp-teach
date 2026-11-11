@@ -16,6 +16,7 @@
  * Never reads data/answer_key.json.
  */
 import fs from "node:fs";
+import { callJev, decisionFromJev, jevKey, jevModel, jevRequest } from "./jev";
 import path from "node:path";
 import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
@@ -85,6 +86,8 @@ export interface RouteOptions {
   outFile?: string | false;
   /** Spans: a "route" span (and a "route.model" child for a real call) under parentId. */
   spans?: { recorder: SpanRecorder; parentId: string | null };
+  /** fetch used for the Jev call (tests). */
+  jevFetch?: Parameters<typeof callJev>[2];
   /** Trace hook (the CLI writes agent/trace.jsonl). */
   trace?: (step: string, mode: PillarMode, detail: Record<string, unknown>) => void;
 }
@@ -306,6 +309,16 @@ function defaultClient(): RouterClient | null {
   return new Anthropic({ apiKey: cred.key, baseURL: anthropicBaseUrl }) as unknown as RouterClient;
 }
 
+/** Which routing model runs: Jev (TYPESAFE_API_KEY), else Claude, unless RAMP_TEACH_ROUTER forces one. */
+export function routerProvider(opts: RouteOptions = {}): "jev" | "claude" | "plain" {
+  if (routerForcedPlain(opts)) return "plain";
+  if (opts.client !== undefined) return opts.client ? "claude" : "plain"; // tests inject a Claude client
+  const forced = process.env.RAMP_TEACH_ROUTER;
+  if (forced === "claude") return "claude";
+  if (forced === "jev" || jevKey()) return jevKey() ? "jev" : "plain";
+  return "claude";
+}
+
 /** True when the router should take the plain-code path for this run. */
 export function routerForcedPlain(opts: RouteOptions = {}): boolean {
   return Boolean(opts.offline) || process.env.RAMP_TEACH_ROUTER === "deterministic";
@@ -376,23 +389,46 @@ export async function routeInvoice(invoiceId: string, opts: RouteOptions = {}): 
   const catalog = opts.catalog ?? buildCatalog();
   const trace = opts.trace ?? (() => {});
   const forced = routerForcedPlain(opts);
-  const client = forced ? null : opts.client === undefined ? defaultClient() : opts.client;
-  const model = opts.model ?? routerModel();
-  const span = opts.spans?.recorder.start("route", "run", client ? "real" : "deterministic", opts.spans.parentId, {
+  const provider = routerProvider(opts);
+  const client = provider !== "claude" ? null : opts.client === undefined ? defaultClient() : opts.client;
+  const useJev = provider === "jev";
+  const model = useJev ? jevModel() : (opts.model ?? routerModel());
+  const live = Boolean(client) || useJev;
+  const span = opts.spans?.recorder.start("route", "run", live ? "real" : "deterministic", opts.spans.parentId, {
     invoice_id: invoiceId,
     vendor: inv.vendor,
     catalog: catalog.map((c) => `${c.workflow_id}${c.version ? ` v${c.version}` : ""}`),
   });
-  trace("route.start", client ? "real" : "deterministic", {
+  trace("route.start", live ? "real" : "deterministic", {
     invoice_id: invoiceId,
     vendor: inv.vendor,
     catalog: catalog.map((c) => ({ workflow_id: c.workflow_id, version: c.version, vendor: c.vendor, source: c.source })),
-    model: client ? model : null,
-    plain_reason: client ? null : opts.offline ? "offline" : forced ? "RAMP_TEACH_ROUTER=deterministic" : "no credentials",
+    model: live ? model : null,
+    provider: useJev ? "typesafe-jev" : client ? "anthropic" : "plain",
+    plain_reason: live ? null : opts.offline ? "offline" : forced ? "RAMP_TEACH_ROUTER=deterministic" : "no credentials",
   });
 
   let base: Omit<RouteDecision, "decided_at">;
-  if (client) {
+  if (useJev) {
+    try {
+      const mspan = opts.spans?.recorder.start("route.model", "model", "real", span?.id ?? null, { model });
+      const call = await callJev(jevRequest(summary, catalog, model), jevKey()!, opts.jevFetch);
+      mspan?.end({
+        model: call.response.model,
+        provider: "typesafe",
+        request_id: call.request_id,
+        input_tokens: call.response.usage.input_tokens,
+        output_tokens: call.response.usage.output_tokens,
+        probabilities: call.response.answers.workflow.probabilities,
+        fit: call.response.answers.fits.noul,
+      });
+      base = decisionFromJev(invoiceId, catalog, call);
+    } catch (e) {
+      const error = (e instanceof Error ? e.message : String(e)).slice(0, 300);
+      trace("route.real_failed", "real", { error, next: "plain-code routing" });
+      base = plainDecision(invoiceId, summary, catalog);
+    }
+  } else if (client) {
     try {
       base = await realDecision(client, model, invoiceId, summary, catalog, opts.spans, span?.id ?? null);
     } catch (e) {

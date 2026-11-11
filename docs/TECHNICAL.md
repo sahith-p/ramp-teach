@@ -6,14 +6,14 @@ Pay. Three technical pillars do the work, and every step leaves a trace:
 ```
  VOICE + RECORDING           SKILL + EVALS                       EXECUTION
  ─────────────────           ─────────────                       ─────────
- Chrome extension            6-stage learner (Claude)            Routing model picks a workflow
+ Chrome extension            6-stage learner (Claude)            Jev routes to a workflow       
  ElevenLabs Scribe v2  ──►   citations to words + clicks   ──►   Workflow agent (Claude + browser tools)
  words ↔ clicks              Agent Skill package (Skills API)    Evidence re-checked by code
                              8 eval cases, gate → active         Receipt → a person decides
                      └──────────── OBSERVABILITY: traces, spans, request IDs, usage ──────────┘
 ```
 
-Models and services: **claude-opus-5-5** (learning, routing, browser agent, receipt, eval judge), Anthropic **Skills
+Models and services: **claude-opus-5-5** (learning, browser agent, receipt, eval judge), TypeSafe **Jev** (routing), Anthropic **Skills
 API**, **code execution** sandbox, **Files API**, **citations**, **structured outputs**, **Message Batches**,
 **ElevenLabs Scribe v2** (batch) and **Scribe v2 Realtime** (live preview). Contracts for everything below:
 `contracts/pillars.ts`; shared paths and readers: `lib/pillars.ts`.
@@ -92,12 +92,15 @@ failure it is marked blocked with the failing cases listed.
 
 ## 3. Execution
 
-**Routing (`agent/router.ts`).** When an invoice arrives in Bill Pay, a routing model sees the catalog of active
-workflows (title, vendor, `SKILL.md` description, rules) and the invoice (vendor, line items), and returns the
-workflow or none, a confidence, a reason and per-candidate scores (Claude, structured output, low effort). A code path
-(vendor match plus document shape) is used offline or when `RAMP_TEACH_ROUTER=deterministic`. The decision is saved
-to `runs/<id>/route.json`; no match means manual review and no agent run (example: OFS-2201 from an office-supply
-vendor).
+**Routing (`agent/router.ts`, `agent/jev.ts`).** When an invoice arrives in Bill Pay, TypeSafe's **Jev** (a System
+One decision model) decides which workflow handles it. One request to `POST https://api.typesafe.ai/v1/systemone`
+carries the invoice and the catalog of active workflows as state, and two typed questions: a **Choice** across the
+workflows (a probability per workflow plus confidence) and a companion **Noul**, "does any workflow cover this vendor
+and kind of invoice?" (TypeSafe's recommended alternative to a "none of the above" option). The invoice routes to
+the chosen workflow when the fit is at least 50%; otherwise it goes to manual review and no agent runs (example:
+OFS-2201 from an office-supply vendor). Without a TypeSafe key the same decision is made by Claude (structured output,
+low effort), and offline or with `RAMP_TEACH_ROUTER=deterministic` by a code path (vendor match plus document shape).
+The decision, model and request ID are saved to `runs/<id>/route.json` and a span.
 
 **Workflow agent (`agent/`).** Claude drives a real Chromium through Anthropic's `browser_toolset_20260801`, served
 by a Playwright driver:
@@ -160,5 +163,5 @@ npm run eval:skill -- --yes
 npm run agent -- HSG-1011
 ```
 
-Keys: `RAMP_ANTHROPIC_API_KEY` (required for real mode) and `ELEVENLABS_API_KEY` (voice). Without them everything runs
+Keys: `RAMP_ANTHROPIC_API_KEY` (required for real mode), `TYPESAFE_API_KEY` (routing with Jev) and `ELEVENLABS_API_KEY` (voice). Without them everything runs
 in labeled offline modes. See `docs/HANDOFF.md` for configuration and `demo/video/PIPELINE.md` for the film.

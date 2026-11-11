@@ -160,8 +160,10 @@ hosts can't take a key through the network-secrets card).
 | Variable | Default | Effect |
 |---|---|---|
 | `ELEVENLABS_API_KEY` | unset | Speech-to-text (Scribe v2 batch + Realtime tokens). Server-side only; without it the voice path falls back to browser dictation and the demo narration. Network host `api.elevenlabs.io` is allowed in the cloud environment. |
-| `RAMP_TEACH_ROUTER` | unset | `deterministic` forces the code routing path (the product film uses it) |
-| `RAMP_TEACH_ROUTER_MODEL` | `claude-opus-5-5` | Routing model |
+| `TYPESAFE_API_KEY` | unset | Routing with TypeSafe Jev (`api.typesafe.ai`, allowed in the cloud environment). Without it routing uses Claude |
+| `RAMP_TEACH_JEV_MODEL` | `jev-latest` | Pin a Jev version, e.g. `jev-1.13.0` |
+| `RAMP_TEACH_ROUTER` | unset | `deterministic` forces the code routing path (the product film uses it); `jev` or `claude` forces that model |
+| `RAMP_TEACH_ROUTER_MODEL` | `claude-opus-5-5` | Claude routing model (when Jev is not used) |
 | `RAMP_TEACH_TASK_BUDGET` | `60000` | Browser-agent task budget in tokens (`0` turns it off) |
 | `RAMP_TEACH_LIVE` | on | `0` turns off the live screencast of the agent browser |
 | `RAMP_ANTHROPIC_BASE_URL` | `https://api.anthropic.com` | API base URL. Set explicitly because cloud sessions export `ANTHROPIC_BASE_URL` for Claude Code itself. |
