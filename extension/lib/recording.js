@@ -52,6 +52,7 @@
  * @property {string} started_at
  * @property {Step[]} steps
  * @property {{ url: string, title: string } | null} [last_page]
+ * @property {string[]} [page_terms]   names, IDs and field labels seen on recorded pages (speech keyterms)
  */
 
 export const REDACTED = "[redacted]";
@@ -316,4 +317,98 @@ export function toRecording(session) {
  */
 export function exportFilename(sessionId) {
   return `recording-${sessionId}.json`;
+}
+
+/* ------------------------------------------------------------------- voice helpers */
+
+/** Most page terms kept per session (the server trims to the speech model's limits). */
+export const MAX_PAGE_TERMS = 300;
+
+/**
+ * Merge page terms (names, IDs, field labels seen on recorded pages) into a session's list:
+ * cleaned, de-duplicated case-insensitively (first spelling wins), capped.
+ * @param {string[] | undefined | null} existing
+ * @param {unknown[] | undefined | null} incoming
+ * @param {number} [cap]
+ * @returns {string[]}
+ */
+export function mergeTerms(existing, incoming, cap = MAX_PAGE_TERMS) {
+  const out = [...(existing ?? [])];
+  const seen = new Set(out.map((t) => t.toLowerCase()));
+  for (const raw of incoming ?? []) {
+    if (out.length >= cap) break;
+    if (typeof raw !== "string") continue;
+    const t = cleanText(raw, 60);
+    if (t.length < 2 || t.length > 50) continue;
+    const k = t.toLowerCase();
+    if (seen.has(k)) continue;
+    seen.add(k);
+    out.push(t);
+  }
+  return out;
+}
+
+/**
+ * Short label for a step, for compact UI chips: a data-field / name attribute, else the visible text,
+ * else the last URL path segment.
+ * @param {Step | undefined | null} step
+ * @param {number} [max]
+ * @returns {string}
+ */
+export function shortStepLabel(step, max = 22) {
+  if (!step) return "";
+  const d = step.detail ?? {};
+  const attr = /(?:data-field|name)="([^"]+)"/.exec(d.selector ?? "");
+  let label = attr ? attr[1] : d.text || d.value || "";
+  if (!label && d.url) {
+    try {
+      const u = new URL(d.url);
+      label = u.pathname.split("/").filter(Boolean).pop() ?? u.pathname;
+    } catch {
+      label = d.url;
+    }
+  }
+  if (!label) label = d.event ?? step.kind;
+  return cleanText(label, max);
+}
+
+/**
+ * @typedef {{ text: string, start: number, end: number, confidence?: number }} Word
+ * @typedef {{ id: string, text: string, start: number, end: number, words: Word[], step_refs: number[], low_confidence: string[] }} Utterance
+ */
+
+/** Below this confidence a word is underlined for review (matches lib/speech LOW_CONFIDENCE). */
+export const LOW_CONFIDENCE = 0.6;
+
+/**
+ * A reviewer corrected one word: returns a new utterance list with that word's text replaced, its
+ * confidence set to 1 (a person confirmed it), and the utterance text and low-confidence list rebuilt.
+ * @param {Utterance[]} utterances
+ * @param {number} u utterance index
+ * @param {number} w word index
+ * @param {string} text
+ * @returns {Utterance[]}
+ */
+export function applyWordEdit(utterances, u, w, text) {
+  const t = String(text ?? "").replace(/\s+/g, " ").trim();
+  return utterances.map((utt, i) => {
+    if (i !== u || !utt.words[w] || !t) return utt;
+    const words = utt.words.map((word, j) => (j === w ? { ...word, text: t, confidence: 1 } : word));
+    return {
+      ...utt,
+      words,
+      text: words.map((x) => x.text).join(" "),
+      low_confidence: words.filter((x) => typeof x.confidence === "number" && x.confidence < LOW_CONFIDENCE).map((x) => x.text),
+    };
+  });
+}
+
+/**
+ * m:ss for a duration in seconds.
+ * @param {number} s
+ * @returns {string}
+ */
+export function clock(s) {
+  const n = Math.max(0, Math.floor(Number(s) || 0));
+  return `${Math.floor(n / 60)}:${String(n % 60).padStart(2, "0")}`;
 }

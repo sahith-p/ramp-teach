@@ -3,8 +3,13 @@ import fs from "node:fs";
 import path from "node:path";
 import { RecordingSchema } from "@/contracts";
 import {
+  MAX_PAGE_TERMS,
   REDACTED,
   appendStep,
+  applyWordEdit,
+  clock,
+  mergeTerms,
+  shortStepLabel,
   buildNarrationStep,
   buildStep,
   cleanText,
@@ -264,5 +269,62 @@ describe("committed artifacts", () => {
     expect(raw).not.toContain("demo-only");
     expect(rec.steps.some((s) => s.detail.value === REDACTED)).toBe(true);
     expect(rec.steps.some((s) => s.detail.selector === '[data-field="approved_hours"]' || s.detail.event === "navigate")).toBe(true);
+  });
+});
+
+describe("voice helpers", () => {
+  it("mergeTerms de-duplicates case-insensitively, drops junk and caps", () => {
+    expect(mergeTerms(["HSG-1010"], ["hsg-1010", "Maya Chen", "x", 42, "  Approved   hours "])).toEqual(["HSG-1010", "Maya Chen", "Approved hours"]);
+    expect(mergeTerms([], Array.from({ length: 500 }, (_, i) => `Term ${i}`)).length).toBe(MAX_PAGE_TERMS);
+  });
+
+  it("shortStepLabel prefers data-field / name, then text, then the URL's last segment", () => {
+    const step = (detail: Record<string, string>) => ({ ts: T0.toISOString(), kind: "dom" as const, detail });
+    expect(shortStepLabel(step({ event: "click", selector: '[data-field="approved_hours"]', text: "40" }))).toBe("approved_hours");
+    expect(shortStepLabel(step({ event: "click", selector: "a > span", text: "View timecard" }))).toBe("View timecard");
+    expect(shortStepLabel(step({ event: "navigate", url: URL_INV }))).toBe("HSG-1010");
+  });
+
+  it("applyWordEdit replaces one word, marks it confirmed and rebuilds the utterance", () => {
+    const utts = [
+      {
+        id: "u1",
+        text: "Sem is approved for 36.",
+        start: 0,
+        end: 2,
+        step_refs: [3],
+        low_confidence: ["Sem", "36."],
+        words: [
+          { text: "Sem", start: 0, end: 0.3, confidence: 0.3 },
+          { text: "is", start: 0.3, end: 0.4, confidence: 0.99 },
+          { text: "approved", start: 0.4, end: 0.9, confidence: 0.95 },
+          { text: "for", start: 0.9, end: 1.0, confidence: 0.99 },
+          { text: "36.", start: 1.0, end: 2, confidence: 0.45 },
+        ],
+      },
+    ];
+    const out = applyWordEdit(utts, 0, 0, " Sam ");
+    expect(out[0].text).toBe("Sam is approved for 36.");
+    expect(out[0].words[0]).toMatchObject({ text: "Sam", confidence: 1, start: 0 });
+    expect(out[0].low_confidence).toEqual(["36."]);
+    expect(out[0].step_refs).toEqual([3]);
+    expect(utts[0].words[0].text).toBe("Sem"); // input not mutated
+    expect(applyWordEdit(utts, 0, 0, "   ")[0]).toBe(utts[0]); // empty edit is ignored
+  });
+
+  it("clock formats m:ss", () => {
+    expect(clock(0)).toBe("0:00");
+    expect(clock(74.9)).toBe("1:14");
+  });
+
+  it("the side panel keeps the controls the film and the record:session driver use, and never says 'Simulated'", () => {
+    const html = fs.readFileSync(path.join(__dirname, "sidepanel.html"), "utf8");
+    for (const id of ["btn-start", "btn-stop", "btn-mic", "btn-send", "btn-export", "btn-clear", "btn-narrate", "narration", "status-text", "message", "steps", "step-count", "viz", "transcript"]) {
+      expect(html).toContain(`id="${id}"`);
+    }
+    expect(html).not.toMatch(/simulat/i);
+    // No user-facing string in the panel script mentions it either (the data value "simulated" is fine).
+    const literals = fs.readFileSync(path.join(__dirname, "sidepanel.js"), "utf8").match(/"[^"\n]*"|`[^`\n]*`/g) ?? [];
+    expect(literals.filter((s) => /simulat/i.test(s) && s !== '"simulated"')).toEqual([]);
   });
 });

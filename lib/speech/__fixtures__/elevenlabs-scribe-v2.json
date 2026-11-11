@@ -1,0 +1,32 @@
+{
+  "language_code": "eng",
+  "language_probability": 0.99,
+  "text": "Maya is approved for 40 hours. (paper rustling) Sam is approved for 36.",
+  "words": [
+    { "text": "Maya", "start": 0.12, "end": 0.48, "type": "word", "speaker_id": "speaker_0", "logprob": -0.02 },
+    { "text": " ", "start": 0.48, "end": 0.52, "type": "spacing", "speaker_id": "speaker_0", "logprob": 0 },
+    { "text": "is", "start": 0.52, "end": 0.64, "type": "word", "speaker_id": "speaker_0", "logprob": -0.01 },
+    { "text": " ", "start": 0.64, "end": 0.66, "type": "spacing", "speaker_id": "speaker_0", "logprob": 0 },
+    { "text": "approved", "start": 0.66, "end": 1.1, "type": "word", "speaker_id": "speaker_0", "logprob": -0.05 },
+    { "text": " ", "start": 1.1, "end": 1.12, "type": "spacing", "speaker_id": "speaker_0", "logprob": 0 },
+    { "text": "for", "start": 1.12, "end": 1.26, "type": "word", "speaker_id": "speaker_0", "logprob": -0.01 },
+    { "text": " ", "start": 1.26, "end": 1.3, "type": "spacing", "speaker_id": "speaker_0", "logprob": 0 },
+    { "text": "40", "start": 1.3, "end": 1.62, "type": "word", "speaker_id": "speaker_0", "logprob": -0.1 },
+    { "text": " ", "start": 1.62, "end": 1.64, "type": "spacing", "speaker_id": "speaker_0", "logprob": 0 },
+    { "text": "hours.", "start": 1.64, "end": 2.02, "type": "word", "speaker_id": "speaker_0", "logprob": -0.03 },
+    { "text": " ", "start": 2.02, "end": 2.2, "type": "spacing", "speaker_id": "speaker_0", "logprob": 0 },
+    { "text": "(paper rustling)", "start": 2.2, "end": 3.1, "type": "audio_event", "speaker_id": "speaker_0", "logprob": -0.4 },
+    { "text": " ", "start": 3.1, "end": 3.4, "type": "spacing", "speaker_id": "speaker_0", "logprob": 0 },
+    { "text": "Sam", "start": 3.4, "end": 3.7, "type": "word", "speaker_id": "speaker_0", "logprob": -1.2 },
+    { "text": " ", "start": 3.7, "end": 3.72, "type": "spacing", "speaker_id": "speaker_0", "logprob": 0 },
+    { "text": "is", "start": 3.72, "end": 3.84, "type": "word", "speaker_id": "speaker_0", "logprob": -0.02 },
+    { "text": " ", "start": 3.84, "end": 3.86, "type": "spacing", "speaker_id": "speaker_0", "logprob": 0 },
+    { "text": "approved", "start": 3.86, "end": 4.3, "type": "word", "speaker_id": "speaker_0", "logprob": -0.04 },
+    { "text": " ", "start": 4.3, "end": 4.32, "type": "spacing", "speaker_id": "speaker_0", "logprob": 0 },
+    { "text": "for", "start": 4.32, "end": 4.46, "type": "word", "speaker_id": "speaker_0", "logprob": -0.01 },
+    { "text": " ", "start": 4.46, "end": 4.5, "type": "spacing", "speaker_id": "speaker_0", "logprob": 0 },
+    { "text": "36.", "start": 4.5, "end": 5.0, "type": "word", "speaker_id": "speaker_0", "logprob": -0.8 }
+  ],
+  "transcription_id": "tr_fixture_0001",
+  "audio_duration_secs": 5.2
+}

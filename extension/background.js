@@ -11,8 +11,9 @@
  *   rt:start    { tabId? }     start (or resume) recording; refuses non-localhost tabs
  *   rt:stop                    stop recording (session kept for export)
  *   rt:narrate  { text }       append a narration step (typed or dictated)
+ *   rt:terms    { terms }      content script → page terms (names, IDs, labels) for speech keyterms
  *   rt:status                  → { recording, session }
- *   rt:export                  → { recording: Recording } (RecordingSchema shape)
+ *   rt:export                  → { recording: Recording (RecordingSchema shape), page_terms: string[] }
  *   rt:clear                   stop and delete the session
  * Every reply is { ok: true, ... } or { ok: false, error }.
  */
@@ -21,6 +22,7 @@ import {
   buildNarrationStep,
   buildStep,
   isAllowedUrl,
+  mergeTerms,
   newSession,
   toRecording,
 } from "./lib/recording.js";
@@ -149,12 +151,26 @@ async function handle(msg, sender) {
       });
     }
 
+    case "rt:terms": {
+      // Names, IDs and field labels the content script saw on a recorded page (keyterms for speech to text).
+      const pageUrl = sender.tab?.url ?? msg.url;
+      if (!isAllowedUrl(pageUrl)) return { ok: false, error: NOT_LOCALHOST };
+      if (!Array.isArray(msg.terms)) return { ok: false, error: "terms must be an array" };
+      return withState((s) => {
+        if (!s.recording || !s.session) return { ok: false, error: "not recording" };
+        s.session.page_terms = mergeTerms(s.session.page_terms, msg.terms);
+        return { ok: true, count: s.session.page_terms.length };
+      });
+    }
+
     case "rt:status":
       return withState((s) => ({ ok: true, recording: s.recording, session: s.session }));
 
     case "rt:export":
       return withState((s) =>
-        s.session ? { ok: true, recording: toRecording(s.session) } : { ok: false, error: "no session to export" },
+        s.session
+          ? { ok: true, recording: toRecording(s.session), page_terms: s.session.page_terms ?? [] }
+          : { ok: false, error: "no session to export" },
       );
 
     case "rt:clear":

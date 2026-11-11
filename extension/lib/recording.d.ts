@@ -36,6 +36,8 @@ export interface Session {
   started_at: string;
   steps: Step[];
   last_page?: { url: string; title: string } | null;
+  /** Names, IDs and field labels seen on recorded pages (keyterms for the speech model). */
+  page_terms?: string[];
 }
 
 export interface RecordingExport {
@@ -68,3 +70,25 @@ export function newSessionId(now?: Date, rand?: () => number): string;
 export function newSession(now?: Date): Session;
 export function toRecording(session: Session): RecordingExport;
 export function exportFilename(sessionId: string): string;
+
+export interface Word {
+  text: string;
+  start: number;
+  end: number;
+  confidence?: number;
+}
+export interface Utterance {
+  id: string;
+  text: string;
+  start: number;
+  end: number;
+  words: Word[];
+  step_refs: number[];
+  low_confidence: string[];
+}
+export const MAX_PAGE_TERMS: number;
+export const LOW_CONFIDENCE: number;
+export function mergeTerms(existing: string[] | undefined | null, incoming: unknown[] | undefined | null, cap?: number): string[];
+export function shortStepLabel(step: Step | undefined | null, max?: number): string;
+export function applyWordEdit(utterances: Utterance[], u: number, w: number, text: string): Utterance[];
+export function clock(s: number): string;

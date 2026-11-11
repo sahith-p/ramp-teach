@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Microphone · Ramp Teach Recorder (demo)</title>
+    <link rel="stylesheet" href="sidepanel.css" />
+    <style>
+      body { max-width: 420px; margin: 72px auto; padding: 0 20px; }
+      h1 { font: 400 20px/1.3 Lausanne, Inter, sans-serif; margin: 18px 0 6px; }
+      p { color: var(--muted); margin: 0 0 16px; }
+    </style>
+  </head>
+  <body>
+    <div class="brand"><span class="product" style="border:0;padding:0">Ramp Teach</span></div>
+    <h1>Microphone</h1>
+    <p id="state">Allow the microphone when Chrome asks.</p>
+    <button id="retry" class="primary" type="button" hidden>Try again</button>
+    <script type="module" src="permission.js"></script>
+  </body>
+</html>

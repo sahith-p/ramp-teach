@@ -18,12 +18,32 @@ Plain JS with no build step: load the folder unpacked.
 2. In the side panel, click **Start recording**. It refuses unless the active tab is `http://localhost` or `http://127.0.0.1`.
 3. Work as usual: sign in (`ap.reviewer` / `demo-only`), open an invoice, open each **View timecard** link.
    Every step appears live in the panel. Recording carries on across page loads, because state lives in `chrome.storage.local`.
-4. Narrate as you go. Type in the box and click **Add narration** (Ctrl/Cmd+Enter works too), or click
-   **Dictate (mic)** to use the Web Speech API. Each final phrase becomes a narration step. The button
-   is hidden when the browser has no speech API. A side panel may be refused mic access; if so, open
-   `chrome-extension://<id>/sidepanel.html` in a tab once to grant it, or just type.
-5. **Stop**, then **Export JSON**. This downloads `recording-<session_id>.json`. **Clear** deletes the session.
-   **Start** after Stop resumes the same session.
+4. Press the **mic** to talk as you go (press it again to pause). The panel records the audio with
+   `MediaRecorder`, shows the level on the visualizer, and shows a live preview: ElevenLabs Scribe v2
+   Realtime when the app has `ELEVENLABS_API_KEY` (a single-use token from `GET /api/stt/token`), else the
+   browser's dictation (labeled "Browser dictation"). Each final phrase also becomes a narration step, as
+   before. Side panels cannot show Chrome's mic prompt: the first time, the panel opens `permission.html`
+   in a tab to ask once. You can also type a note in **Add a note**.
+5. **Stop** uploads the audio takes and the recording to `POST /api/stt`, which returns the word-timed
+   transcript aligned to your clicks (`recording.speech`). Each sentence lists the steps it is about
+   (`#16 approved_hours`); hover it to highlight them. Words the model was unsure of (confidence < 0.6) are
+   underlined: click any word to correct it.
+6. **Send to Ramp** posts the recording (with its transcript) to `/api/learn` and opens
+   Bill Pay > Workflows (`/bills/workflows?recording=<session_id>`). **Export** downloads
+   `recording-<session_id>.json`. **Clear** deletes the session. **Resume** after Stop continues the same session.
+
+### Voice: providers and labels
+| Path | When | `speech.provider` / `mode` | Label in the panel |
+|---|---|---|---|
+| ElevenLabs Scribe v2 (batch) | audio + `ELEVENLABS_API_KEY` on the app | `elevenlabs` / `real` | ElevenLabs Scribe v2 |
+| Live preview, Realtime | while talking, key set | (preview only) | ElevenLabs Scribe v2 Realtime |
+| Live preview, browser | while talking, no key | (preview only) | Browser dictation |
+| Demo voice (film) | `window.__RT_VOICE = "simulated"` or a scripted operator | `simulated` / `scripted` | none |
+| No key, a person's audio | | 503, audio saved | error message |
+
+The film's stage (`public/stage/chrome-shim.js`) has no mic: the narrator's lines drive the visualizer and
+arrive through the dictation code path, and Stop asks `/api/stt` for the transcript built from the narration
+steps' timestamps (`lib/speech/simulated.ts`, ~2.6 words/s, confidence 1). Server side: `lib/speech/`.
 
 ### Export format (exactly `RecordingSchema`)
 ```json
@@ -54,17 +74,21 @@ Plain JS with no build step: load the folder unpacked.
 - **Localhost only.** Host permissions and content-script matches cover only `http://localhost/*` and
   `http://127.0.0.1/*`. The background refuses to start on any other tab and drops captures from
   any other URL.
-- Nothing leaves the browser until you click Export. The extension makes no network calls.
+- Network calls go only to the localhost app the page was recorded on (`/api/stt`, `/api/stt/token`,
+  `/api/learn`), plus, when the app hands out a Realtime token, the ElevenLabs Realtime WebSocket for the live
+  preview. The ElevenLabs API key stays on the server. Audio is saved to `runtime/recordings/` (gitignored).
+- Page terms (names, IDs, field labels visible on recorded pages) are collected as speech keyterms only while recording.
 
 ## Files
 | File | Role |
 |---|---|
 | `manifest.json` | MV3 manifest: side panel, module service worker, localhost content script |
-| `background.js` | State in `chrome.storage.local`, the message API (`rt:start/stop/capture/narrate/status/export/clear`), the localhost guard |
-| `content.js` | DOM capture. It turns the event target into a plain element descriptor and redacts passwords |
-| `sidepanel.html/.css/.js` | Panel UI: Start/Stop, live steps, narration, mic, Export, Clear |
-| `lib/recording.js` (+ `.d.ts`) | Pure helpers: `buildStep`, `buildNarrationStep`, `appendStep`, `selectorFor`, `redact`, `toRecording`, `isAllowedUrl` |
-| `recording.test.ts` | Vitest: schema validity, redaction, selector logic (fake element descriptors), manifest, smoke recording |
+| `background.js` | State in `chrome.storage.local`, the message API (`rt:start/stop/capture/narrate/terms/status/export/clear`), the localhost guard |
+| `content.js` | DOM capture (event target to a plain element descriptor, passwords redacted) and the page-term collector |
+| `sidepanel.html/.css/.js` | Panel UI: Start/Stop, mic + visualizer, live and final transcript, steps, Send, Export, Clear |
+| `permission.html/.js` | One-time mic grant in a tab (side panels cannot prompt) |
+| `lib/recording.js` (+ `.d.ts`) | Pure helpers: `buildStep`, `buildNarrationStep`, `appendStep`, `selectorFor`, `redact`, `toRecording`, `isAllowedUrl`, `mergeTerms`, `shortStepLabel`, `applyWordEdit`, `clock` |
+| `recording.test.ts` | Vitest: schema validity, redaction, selector logic (fake element descriptors), manifest, smoke recording, voice helpers |
 | `scripts/record-session.ts` | Scripted Playwright driver that runs the real extension (below) |
 | `scripts/fixture-test-server.ts` | Small self-contained portal look-alike on :3013, for the smoke run |
 | `recordings/smoke.json` | Sample recording captured by the real extension against the smoke fixture |

@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "Ramp Teach Recorder (demo)",
   "short_name": "Teach Recorder",
-  "version": "0.1.0",
-  "description": "Unofficial demo inspired by Ramp's design. Records a reviewer's clicks, inputs and narration on localhost fixture pages only. Synthetic data only; passwords are always redacted.",
+  "version": "0.2.0",
+  "description": "Unofficial demo inspired by Ramp's design. Records a reviewer's clicks, inputs and voice on localhost fixture pages only. Synthetic data only; passwords are always redacted.",
   "permissions": [
     "storage",
     "sidePanel",
