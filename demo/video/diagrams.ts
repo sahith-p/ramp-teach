@@ -10,6 +10,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { chromium } from "playwright";
+import { fontFaceCss } from "./fonts";
 
 const W = 1920;
 const H = 1080;
@@ -103,8 +104,7 @@ export function diagramHtml(d: Diagram, logos: Logos): string {
     `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96"><path d="M48 43v10M43 48h10" stroke="rgba(255,255,255,0.075)" stroke-width="1.2"/></svg>`,
   );
   return `<!doctype html><html><head><meta charset="utf-8"><style>
-    @font-face { font-family: Lausanne; font-weight: 300; src: url("https://assets.ramp.com/fonts/lausanne/lausanne-300/TWKLausanne-300.woff2") format("woff2"); }
-    @font-face { font-family: Lausanne; font-weight: 400; src: url("https://assets.ramp.com/fonts/lausanne/lausanne-400/TWKLausanne-400.woff2") format("woff2"); }
+    ${fontFaceCss()}
     html,body { margin:0; width:${W}px; height:${H}px; overflow:hidden; background:#121211; font-family: Lausanne, Inter, sans-serif; color:#fff; -webkit-font-smoothing: antialiased; }
     body { background-image: url("data:image/svg+xml,${plus}"); background-position: -48px -48px; }
     body > * { position:absolute; }

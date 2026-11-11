@@ -11,6 +11,7 @@ approve / dispute / review. A human decides, and the receipt attaches to a Ramp-
 RECORD (MV3 extension) → LEARN (spec + evals) → VERIFY (calc + browser agent) → RECEIPT (Claude) → DECIDE + ATTACH (human)
 ```
 
+**New to the repo (agent or person)? Start with [docs/HANDOFF.md](docs/HANDOFF.md).** The product film and how to re-make it: [demo/video/README.md](demo/video/README.md), [demo/video/PIPELINE.md](demo/video/PIPELINE.md).
 How it works, what is real AI vs scripted vs mock, and the limitations: **[docs/workflow.md](docs/workflow.md)**.
 Morning status and a 3-minute demo script: **[MORNING.md](MORNING.md)**.
 Two-minute walkthrough video (real app, live Claude run): **[demo/video/ramp-teach-walkthrough.mp4](demo/video/ramp-teach-walkthrough.mp4)**.

@@ -22,6 +22,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { chromium, type Page } from "playwright";
 import { DIAGRAMS, renderDiagram } from "./diagrams";
+import { fontFaceCss } from "./fonts";
+import { resolveAnthropicKey } from "../../config/engine";
 
 const ROOT = process.cwd();
 const args = process.argv.slice(2);
@@ -34,8 +36,8 @@ const PORT = opt("port", "3000");
 /** Rehearsal: the agent runs in its labeled offline mode (scripted evidence, mock receipt). No API cost. */
 const OFFLINE = args.includes("--offline");
 // A real take without a key would silently fall back to offline mode and film a fake run.
-if (!OFFLINE && ["all", "shoot"].includes(PHASE) && !process.env.RAMP_ANTHROPIC_API_KEY && !process.env.ANTHROPIC_API_KEY) {
-  console.error("No RAMP_ANTHROPIC_API_KEY / ANTHROPIC_API_KEY: refusing a real take. Use --offline to rehearse.");
+if (!OFFLINE && ["all", "shoot"].includes(PHASE) && !resolveAnthropicKey()) {
+  console.error("No Anthropic key (RAMP_ANTHROPIC_API_KEY, ANTHROPIC_API_KEY or $HOME/ramp-teach.env): refusing a real take. Use --offline to rehearse.");
   process.exit(2);
 }
 const BASE = `http://localhost:${PORT}`;
@@ -400,8 +402,7 @@ async function outro() {
   const MARK = /const MARK = "([^"]+)"/.exec(logoSrc)![1];
   const ease = "cubic-bezier(.2,.8,.2,1)";
   const html = `<!doctype html><html><head><meta charset="utf-8"><style>
-    @font-face { font-family: Lausanne; font-weight: 300; src: url("https://assets.ramp.com/fonts/lausanne/lausanne-300/TWKLausanne-300.woff2") format("woff2"); }
-    @font-face { font-family: Lausanne; font-weight: 400; src: url("https://assets.ramp.com/fonts/lausanne/lausanne-400/TWKLausanne-400.woff2") format("woff2"); }
+    ${fontFaceCss()}
     html,body { margin:0; width:${W}px; height:${H}px; background: #121211; overflow:hidden; font-family: Lausanne, Inter, sans-serif; color: #fff; }
     .stage { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:44px; }
     .lockup { display:flex; align-items:center; gap:34px; }
@@ -502,7 +503,7 @@ async function captions() {
   const page = await browser.newPage({ viewport: { width: W, height: H } });
   for (const [i, l] of lines.entries()) {
     await page.setContent(
-      `<!doctype html><html><body style="margin:0;background:transparent;width:${W}px;height:${H}px;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased">` +
+      `<!doctype html><html><head><style>${fontFaceCss([])}</style></head><body style="margin:0;background:transparent;width:${W}px;height:${H}px;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased">` +
         `<div style="position:absolute;left:50%;bottom:46px;transform:translateX(-50%);max-width:1300px;width:max-content;background:rgba(18,18,18,.84);color:#fff;font-size:30px;line-height:1.35;font-weight:500;text-align:center;padding:14px 28px;border-radius:14px">${l.text.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</div></body></html>`,
     );
     await page.screenshot({ path: path.join(dir, `c${i}.png`), omitBackground: true });
