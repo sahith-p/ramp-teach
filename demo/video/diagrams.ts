@@ -372,7 +372,9 @@ function reviewBody(logos: Logos): string {
 }
 
 /** 04 · The take's own logs (read at render time from demo/video/film-run/, so they match the take shown). */
-const RUN = () => path.join(ROOT, "demo", "video", "film-run");
+let RUN_DIR = path.join(ROOT, "demo", "video", "film-run");
+export const setRunDir = (d: string) => (RUN_DIR = d);
+const RUN = () => RUN_DIR;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type J = any;
 const jsonl = (f: string): J[] =>
