@@ -1,27 +1,250 @@
-# Ramp Teach
+<p align="center">
+  <img src="docs/assets/header.png" alt="Ramp Teach" width="100%">
+</p>
 
-**Unofficial demo inspired by Ramp's design. Not affiliated with Ramp. All data is synthetic.**
+<p align="center">
+  <b>Show a review once. Ramp Teach turns it into a tested workflow, and the next invoice arrives with evidence.</b><br>
+  <sub>Unofficial hackathon demo inspired by Ramp's design. Not affiliated with Ramp. All data is synthetic.</sub>
+</p>
 
-An AP specialist reviews one staffing vendor's invoice once while narrating, with a Chrome extension recording.
-Ramp Teach learns a versioned workflow from that recording, tests it, and when a new invoice arrives in Bill Pay a
-routing model picks the workflow and its agent reviews the invoice in a real browser. A person decides.
+<p align="center">
+  <a href="docs/TECHNICAL.md">How it works</a> &nbsp;&nbsp;
+  <a href="docs/HANDOFF.md">Handoff</a> &nbsp;&nbsp;
+  <a href="demo/video/ramp-teach-film.mp4">Product film</a> &nbsp;&nbsp;
+  <a href="demo/video/STORYBOARD.md">Film storyboard</a>
+</p>
 
-Three technical pillars, with observability across all of them (details: **[docs/TECHNICAL.md](docs/TECHNICAL.md)**):
+---
 
-- **Voice and recording:** ElevenLabs Scribe v2 transcription with word timing and page-aware key terms, each
-  sentence linked to the clicks it is about.
-- **Skill and evals:** a six-stage Claude learner with citations to the exact words and clicks, packaged as an Agent
-  Skill (Skills API) with check scripts run in Anthropic's code-execution sandbox; eight eval cases and a promotion
-  gate decide which version goes live.
-- **Execution:** a routing model picks the workflow; the workflow agent drives Chromium through Claude's browser
-  tools with live progress notes and a task budget; every fact is re-checked against its page by plain code.
-- **Observability:** spans for every model turn and tool call (tokens, cost, Anthropic request IDs), a live view of
-  the agent's browser inside the bill page, traces labeled real / scripted / mock / deterministic.
+## The problem
 
-**New to the repo (agent or person)? Start with [docs/HANDOFF.md](docs/HANDOFF.md).** The product film and how to re-make it: [demo/video/README.md](demo/video/README.md), [demo/video/PIPELINE.md](demo/video/PIPELINE.md).
-How it works, what is real AI vs scripted vs mock, and the limitations: **[docs/workflow.md](docs/workflow.md)**.
-Morning status and a 3-minute demo script: **[MORNING.md](MORNING.md)**.
-Two-minute walkthrough video (real app, live Claude run): **[demo/video/ramp-teach-walkthrough.mp4](demo/video/ramp-teach-walkthrough.mp4)**.
+A staffing invoice lands in Bill Pay. Checking it means opening the contract for the rate card and the vendor's
+portal for each person's approved timecard, line by line. Every AP team does this by hand, every week, and the
+knowledge of *how* to check lives in one reviewer's head.
+
+## What Ramp Teach does
+
+1. **Record.** The reviewer checks one invoice in the vendor portal with the Ramp Teach Recorder (a Chrome extension)
+   open, narrating as they go. It captures what they click and what they say, not a video.
+2. **Learn.** Claude turns the recording into a versioned workflow: the rules, each cited to the words and click it
+   came from, and where the proof lives. Evals decide whether the version goes live.
+3. **Review.** A new invoice arrives. A decision model picks the matching workflow, and its agent opens the portal in
+   its own sandboxed browser, records each fact with its source, and code checks the numbers. Claude writes the
+   receipt. A person approves or disputes.
+
+---
+
+## System at a glance
+
+```mermaid
+flowchart LR
+  classDef ext fill:#1a1919,color:#fff,stroke:#1a1919
+  classDef app fill:#ffffff,color:#1a1919,stroke:#c9c6c2
+  classDef key fill:#E4F222,color:#1a1919,stroke:#1a1919
+  classDef store fill:#f4f2f0,color:#1a1919,stroke:#c9c6c2
+
+  subgraph BROWSER["Reviewer's Chrome"]
+    EXT["Ramp Teach Recorder<br/>Manifest V3 extension"]:::app
+  end
+
+  subgraph APP["Ramp Teach app, Next.js 16"]
+    API["API routes<br/>/api/stt, /api/learn<br/>/api/dash/deliver, /api/decisions"]:::app
+    LEARN["Learning job<br/>learn/skill"]:::app
+    SKILL["Learned workflow<br/>skills/halcyon-invoice-review/v1"]:::key
+    ROUTER["Router<br/>agent/router.ts"]:::app
+    HARNESS["Agent harness<br/>agent/providers/browser-loop.ts"]:::app
+    CALC["Checks<br/>calc/, TypeScript"]:::app
+    UI["Bill Pay UI<br/>bill page, Workflows tab"]:::app
+  end
+
+  subgraph SANDBOX["Agent sandbox"]
+    CHROMIUM["Headless Chromium<br/>Playwright, fresh profile per run"]:::app
+    PORTAL["Vendor portal<br/>fixture"]:::app
+  end
+
+  subgraph EXTERNAL["External APIs"]
+    CLAUDE["Anthropic<br/>claude-opus-5-5"]:::ext
+    EL["ElevenLabs<br/>Scribe v2"]:::ext
+    JEV["TypeSafe<br/>Jev"]:::ext
+  end
+
+  DISK[("JSON files<br/>recordings, skills, runs, receipts, traces")]:::store
+
+  EXT -->|"audio + key terms"| API
+  API -->|"audio"| EL
+  EXT -->|"recording JSON"| API
+  API --> LEARN
+  LEARN <-->|"transcript + steps,<br/>claims, rules, checks"| CLAUDE
+  LEARN --> SKILL
+  API -->|"new invoice"| ROUTER
+  ROUTER <-->|"invoice + workflows,<br/>choice + fit"| JEV
+  ROUTER --> HARNESS
+  SKILL -.->|"rules + where<br/>the proof lives"| HARNESS
+  HARNESS <-->|"page state,<br/>tool call"| CLAUDE
+  HARNESS -->|"actions"| CHROMIUM
+  CHROMIUM -->|"HTTP"| PORTAL
+  HARNESS -->|"sourced facts"| CALC
+  CALC -->|"results + credits"| HARNESS
+  HARNESS --> DISK
+  DISK --> UI
+```
+
+The learned workflow is the only thing that crosses from teaching to review. No video, audio or browser session
+crosses.
+
+---
+
+## 1. Recording and Transcription
+
+The recorder captures **events and words**. Each click is stored with the exact element it hit; each sentence the
+reviewer says is stored with word timing and linked to the clicks around it. The click locates the evidence; the
+sentence explains the rule.
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant P as Vendor portal page
+  participant C as content.js
+  participant W as Service worker
+  participant S as Side panel
+  participant A as /api/stt
+  participant E as ElevenLabs Scribe v2
+
+  P->>C: click "View timecard"
+  C->>W: rt:capture {event, url, target}
+  W->>W: buildStep(): selector, redaction, coalesce inputs<br/>session kept in chrome.storage.local
+  S->>S: mic via MediaRecorder, live words
+  Note over S: Stop
+  S->>A: audio .webm + recording + page key terms
+  A->>E: audio, scribe_v2, word timestamps, key terms
+  E-->>A: words with timings and confidence
+  A-->>S: recording + speech (sentences linked to steps)
+  S->>S: Send to Ramp: POST /api/learn
+```
+
+What one recorded moment looks like (from the film take):
+
+| t | kind | detail |
+|---|---|---|
+| 0:12 | click | `a[href="/portal/employees/E-101?week=2026-10-11"]` "View timecard" |
+| 0:14 | click | `[data-field="approved_hours"]` "40" |
+| 0:14 | say | "Maya is approved for 40 hours. Billed hours can't go over that." linked to the click above |
+| 0:05 | type | `input[name="password"]` `[redacted]` |
+
+- **Element identity:** `[data-field]`, then `tag[name]`, `#id`, `a[href]`, then a short CSS path.
+- **Privacy:** passwords are redacted in the page and again in the worker, before anything is sent.
+- **Speech:** ElevenLabs Scribe v2 with page-aware key terms (names, IDs, field labels seen on the recorded pages),
+  aligned to clicks in `lib/speech/align.ts`.
+
+---
+
+## 2. Agent Learning
+
+"Learn" means Claude writes a **versioned workflow (an Agent Skill)** from the recording. Every rule is cited, the
+version is tested, and only then does it go live.
+
+```mermaid
+flowchart LR
+  classDef claude fill:#1a1919,color:#fff,stroke:#1a1919
+  classDef code fill:#ffffff,color:#1a1919,stroke:#c9c6c2
+  classDef key fill:#E4F222,color:#1a1919,stroke:#1a1919
+
+  R["Recording<br/>steps + speech"]:::code --> S1["segment<br/>code"]:::code
+  S1 --> S2["claims<br/>Claude + citations"]:::claude
+  S2 --> S3["synthesize<br/>Claude, structured output"]:::claude
+  S3 --> S4["critique<br/>Claude"]:::claude
+  S4 --> S5["checks<br/>Claude-written Python<br/>in Anthropic's sandbox"]:::claude
+  S5 --> S6["package<br/>SKILL.md, Skills API"]:::code
+  S6 --> G{"evals gate"}:::code
+  G -->|pass| V["skill v1 active"]:::key
+  G -->|fail| B["blocked"]:::code
+```
+
+One worked example:
+
+| Recording | Claim (cited) | Learned rule | Where the proof lives |
+|---|---|---|---|
+| click `[data-field="approved_hours"]` "40" and "Billed hours can't go over that." | "Billed hours can't go over that" from sentence u5, step #16 | For each labor line, billed hours must not exceed the approved hours on that employee's timecard for the same week. | `/portal/employees/<employee_id>?week=<YYYY-MM-DD>`, field `approved_hours` |
+
+| Learned from the recording | Written by engineers |
+|---|---|
+| rules, where the proof lives, vendor, open questions, citations | the six checks in `calc/` (TypeScript), the evidence tasks, receipt enforcement, guardrails |
+
+**Skill evals** (`npm run eval:skill`): 8 recording variants with known answers (baseline, paraphrase, reordered,
+shown not said, said not shown, filler, a skipped step, speech-to-text noise), graded for rule recall and
+precision, citation validity, coverage of pages and fields, replay against past invoices, consistency and voice
+accuracy. The gate requires 100% recall, precision, citations and replay, and 90% coverage.
+
+---
+
+## 3. Agent execution and evaluation
+
+```mermaid
+flowchart TB
+  classDef claude fill:#1a1919,color:#fff,stroke:#1a1919
+  classDef code fill:#ffffff,color:#1a1919,stroke:#c9c6c2
+  classDef key fill:#E4F222,color:#1a1919,stroke:#1a1919
+  classDef person fill:#f4f2f0,color:#1a1919,stroke:#1a1919
+
+  INV["New invoice in Bill Pay"]:::code --> JEV["Jev routes it<br/>Choice across workflows + fit"]:::claude
+  JEV -->|"Halcyon review v1"| LOOP
+  JEV -->|"no fit"| MANUAL["Manual review"]:::person
+
+  subgraph LOOP["Agent harness"]
+    direction LR
+    M["Claude<br/>claude-opus-5-5"]:::claude -->|"tool call"| T["Playwright<br/>headless Chromium"]:::code
+    T -->|"page outline, text, result"| M
+    M -->|"record_evidence"| F["Sourced fact<br/>approved_hours = 38<br/>/portal/employees/E-104?week=2026-10-18"]:::key
+  end
+
+  F --> CHK["calc/ checks<br/>hours: billed 44 h vs approved 38 h<br/>credit 6 h x $88 = $528"]:::code
+  CHK --> RCPT["Claude writes the receipt"]:::claude
+  RCPT --> ENF["enforce.ts<br/>results and amounts must match code"]:::code
+  ENF --> YOU["You: Approve or Dispute"]:::person
+```
+
+- **Sees a page** as an outline where each usable element gets a `data-agent-ref`, so it acts by reference, not by
+  pixel. Tools: `browser_toolset_20260801` (navigate, click, form input, find, read page, page text, wait) plus
+  `record_evidence` and `sign_in`.
+- **Signs in from a vault:** the harness fills the portal login; the model never sees the password.
+- **Guardrails:** localhost portal only (checked in the toolset and the driver), no scripts, no uploads, 25-turn cap,
+  task budget. The agent never approves, pays or attaches.
+- **HSG-1011 in the film take:** 8 model turns, 12 facts, 44.8 s end to end, 9 Claude calls, about $0.18. Three
+  problems: a rate above contract ($400), a week billed twice ($2,520), hours over the timecard ($528). Credit
+  $3,448. Dispute. The clean HSG-1012 passes all six checks and is approved.
+
+### How we know it's right
+
+| Layer | What it tests | How | Result |
+|---|---|---|---|
+| Checks | The six checks in `calc/` | Replay 7 past corrections and 10 past invoices (`npm run eval`) | 7/7, precision 10/10 |
+| Learning | Did it learn the right workflow? | 8 recording variants, graders, gate (`npm run eval:skill`) | gate decides the active version |
+| End to end | The whole review | Live runs of HSG-1011 and HSG-1012 against the expected outcome (`npm run demo`, the film take) | dispute and approve as expected |
+
+---
+
+## Observability
+
+```mermaid
+flowchart LR
+  classDef f fill:#ffffff,color:#1a1919,stroke:#c9c6c2
+  RUN["run HSG-1011"]:::f --> ROUTE["route<br/>model, choice, fit"]:::f
+  RUN --> TURN["model turn x8<br/>tokens, cost, request ID, note"]:::f
+  TURN --> TOOL["tool calls<br/>input, result, page, screenshot"]:::f
+  RUN --> CHECK["calc + evidence re-check"]:::f
+  RUN --> SYN["receipt synthesis"]:::f
+```
+
+| What | Where |
+|---|---|
+| Spans for every model turn and tool call | `runs/<invoice>/spans.jsonl` (run page waterfall in Workflows → Runs) |
+| Routing decision | `runs/<invoice>/route.json` |
+| Live view of the agent's browser | `runs/<invoice>/live/` (shown inside the bill page) |
+| Every fact re-read from its page by code | `runs/<invoice>/evidence-check.json` |
+| Learning stages with request IDs | `skills/<id>/v<n>/stages/` |
+| Every Claude call with tokens and Anthropic request ID | `runtime/usage.jsonl` (`npx tsx scripts/usage.ts`) |
+
+---
 
 ## Quick start
 
@@ -29,59 +252,49 @@ Two-minute walkthrough video (real app, live Claude run): **[demo/video/ramp-tea
 npm install && npm run setup
 ```
 
-`npm run setup` checks everything (Chromium, ffmpeg, fonts, the API key, tests) and lists any manual steps.
-
-```bash
-npm run typecheck && npm test
-```
-
-```bash
-npm run eval
-```
-
-```bash
-npm run demo
-```
-
-`npm run demo` builds and starts the Next app on :3000, runs the agent on the test invoice `HSG-1011`,
-checks the result against the answer key, records one decision through the UI (a scripted stand-in for a
-human) and verifies the receipt is attached to the bill. It uses real Claude calls when a key is
-visible (`RAMP_ANTHROPIC_API_KEY`, then `ANTHROPIC_API_KEY`), and labeled offline modes otherwise
-(`--offline` forces them).
-
-Look around yourself:
+`npm run setup` checks Chromium, ffmpeg, fonts and your keys, runs the tests and lists anything you still need to do
+by hand. Keys: `RAMP_ANTHROPIC_API_KEY` (required for live runs), `TYPESAFE_API_KEY` (Jev routing),
+`ELEVENLABS_API_KEY` (speech). Without keys everything runs in offline mode.
 
 ```bash
 npm run build && npm run start
 ```
 
-Then open http://localhost:3000. The pages are `/` (overview), `/receipts/HSG-1011` (the review page),
-`/portal/login` (fixture vendor portal; demo creds `ap.reviewer` / `demo-only`) and `/bills` (fixture bill inbox).
-
-## Commands
+Open http://localhost:3000/bills. Bill Pay, the Workflows tab and the vendor portal (`/portal/login`) are all in
+the app.
 
 | Command | What it does |
 |---|---|
-| `npm run learn` | Distill the extension capture `extension/recordings/portal-HSG-1010.json` into `rules/workflow_spec.json` (one Claude call, cached; provenance in `rules/learn_meta.json`) plus `rules/evals.json`. `-- --offline` uses the deterministic distiller; `-- --recording data/recording.sample.json` uses the labeled fallback fixture. |
-| `npm run agent -- HSG-1011` | Engine run for one invoice (needs the app running): calc → browser evidence → receipt. `--offline` gives scripted evidence and a mock receipt. |
-| `npm run eval` | Correction-derived eval cases (recall) plus a precision guard over all past invoices. |
-| `npm run demo` | The end-to-end proof above. Flags: `--offline`, `--relearn`, `--no-build`, `--keep-server`. |
-| `npm run record:session` | Play a reviewer session in Chromium with the unpacked recorder extension capturing it. |
-| `npx tsx scripts/usage.ts` | Token usage and estimated cost of the real Claude calls recorded in `runtime/usage.jsonl`. |
+| `npm run skill:learn -- --recording <file>` | Learn a workflow version from a recording |
+| `npm run eval:skill -- --yes` | Skill evals and the promotion gate (prints a cost estimate first) |
+| `npm run eval` | Replay past corrections through the checks |
+| `npm run agent -- HSG-1011` | Route and review one invoice (app must be running) |
+| `npm run demo` | End-to-end check of one review, including the UI decision |
+| `npx tsx demo/video/film.ts --phase post` | Re-render the film's diagrams and captions from the saved take |
 
-## Layout
+## Stack
+
+| | |
+|---|---|
+| App | Next.js 16 App Router, React 19, TypeScript, Tailwind v4, Zod 4, JSON files |
+| Recorder | Chrome extension, Manifest V3 (content script, service worker, side panel) |
+| AI | Anthropic `claude-opus-5-5` via `@anthropic-ai/sdk`: browser toolset, citations, structured outputs, code execution, Files API, Skills API |
+| Speech | ElevenLabs Scribe v2 and Scribe v2 Realtime |
+| Routing | TypeSafe Jev (System One) |
+| Agent browser | Playwright 1.63, headless Chromium |
+| Tests | Vitest, skill evals, correction replay |
+
+## Repo map
 
 | Path | Contents |
 |---|---|
-| `contracts/` | Frozen Zod schemas + engine interfaces (`WorkflowDefinition`, `AIProvider`, `BrowserDriver`) |
-| `agent/` | Generic engine runner, Playwright driver, browser-use loop, receipt post-pass, Anthropic adapter |
-| `workflows/invoice-review/` | The first (and only) workflow on the engine |
-| `calc/` | Deterministic checks, with no LLM |
-| `learn/`, `rules/` | Distiller, evals; learned spec and eval cases |
-| `extension/` | Manifest V3 recorder |
-| `app/` | Receipt UI + decision API, fixture vendor portal, fixture bill inbox |
-| `data/` | Synthetic vendor, invoices, timecards, corrections, answer key (tests/demo only) |
-| `board/` | Build audit trail: tickets, lane outboxes, human decisions |
-
-Stack: Next.js 16 (App Router) · TypeScript · Tailwind v4 · `@anthropic-ai/sdk` (claude-opus-5-5,
-`browser_toolset_20260801`) · Playwright · Zod · Vitest · JSON files.
+| `extension/` | The recorder |
+| `lib/speech/`, `app/api/stt/` | Transcription and speech-to-click alignment |
+| `learn/skill/`, `lib/skills/`, `skills/` | The learner and learned workflow versions |
+| `evals/`, `lib/evals/` | Skill evals, graders, gate |
+| `agent/` | Router, harness, browser driver, evidence re-check, receipt enforcement |
+| `calc/` | The six checks |
+| `app/`, `components/` | Bill Pay UI, API routes, fixture vendor portal |
+| `contracts/` | Zod schemas shared by everything |
+| `demo/video/` | Product film, storyboard and pipeline |
+| `docs/` | Technical deep dive, handoff, design notes |
