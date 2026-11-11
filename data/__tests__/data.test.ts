@@ -131,11 +131,11 @@ describe("data: schemas and the synthetic world", () => {
     ]);
   });
 
-  it("has HSG-1001..1010 past and HSG-1011 new, with weekly dates", () => {
+  it("has HSG-1001..1010 past and HSG-1011 (3 planted errors) + HSG-1012 (clean) new, with weekly dates", () => {
     expect(past.map((i) => i.invoice_id)).toEqual(
       Array.from({ length: 10 }, (_, k) => `HSG-${1001 + k}`),
     );
-    expect(fresh.map((i) => i.invoice_id)).toEqual(["HSG-1011"]);
+    expect(fresh.map((i) => i.invoice_id)).toEqual(["HSG-1011", "HSG-1012"]);
     all.forEach((inv, k) => {
       const week = addDays("2026-08-09", 7 * k);
       expect(new Date(`${week}T00:00:00Z`).getUTCDay()).toBe(0); // Sunday
@@ -155,7 +155,7 @@ describe("data: schemas and the synthetic world", () => {
       expect(labor.length).toBeGreaterThanOrEqual(3);
       expect(labor.length).toBeLessThanOrEqual(5);
       expect(invoicePathFor(inv.invoice_id)).toBe(
-        `data/invoices/${inv.invoice_id === "HSG-1011" ? "new" : "past"}/${inv.invoice_id}.json`,
+        `data/invoices/${inv.invoice_id === "HSG-1011" || inv.invoice_id === "HSG-1012" ? "new" : "past"}/${inv.invoice_id}.json`,
       );
       // money is to the cent
       for (const n of [inv.total, ...inv.line_items.flatMap((l) => [l.amount, l.unit_rate])])
@@ -196,7 +196,7 @@ describe("data: schemas and the synthetic world", () => {
       expect(b.amount).toBe(inv.total);
       expect(b.vendor).toBe(vendor.vendor);
       expect(b.receipt_id).toBeNull();
-      const want = inv.invoice_id === "HSG-1011" ? "pending" : corrected.has(inv.invoice_id) ? "disputed" : "approved";
+      const want = inv.invoice_id === "HSG-1011" || inv.invoice_id === "HSG-1012" ? "pending" : corrected.has(inv.invoice_id) ? "disputed" : "approved";
       expect(b.status).toBe(want);
     }
   });

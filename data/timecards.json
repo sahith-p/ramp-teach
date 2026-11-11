@@ -313,5 +313,33 @@
     "approved_hours": 38,
     "approved_by": "Dana Whitfield",
     "status": "approved"
+  },
+  {
+    "employee_id": "E-101",
+    "week_ending": "2026-10-25",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-102",
+    "week_ending": "2026-10-25",
+    "approved_hours": 38,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-103",
+    "week_ending": "2026-10-25",
+    "approved_hours": 40,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
+  },
+  {
+    "employee_id": "E-104",
+    "week_ending": "2026-10-25",
+    "approved_hours": 36,
+    "approved_by": "Dana Whitfield",
+    "status": "approved"
   }
 ]

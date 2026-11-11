@@ -75,5 +75,12 @@
     "amount": 15677,
     "status": "pending",
     "receipt_id": null
+  },
+  {
+    "bill_id": "bill_HSG-1012",
+    "vendor": "Halcyon Staffing Group",
+    "amount": 12374,
+    "status": "pending",
+    "receipt_id": null
   }
 ]
