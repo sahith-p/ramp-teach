@@ -1,0 +1,43 @@
+{
+  "id": "reordered",
+  "variant": "reordered",
+  "recording_path": "evals/recordings/reordered.json",
+  "reference_transcript": "Whenever a check fails on one of these I recommend dispute and ask the vendor for a credit memo; when everything passes I approve. Let me sign in. I'll do the timecards first: billed hours must not exceed the approved hours on each timecard. Maya Chen is approved for 40 hours for week ending 2026-10-11. Jordan Alvarez is approved for 38 hours for week ending 2026-10-11. Priya Natarajan is approved for 40 hours for week ending 2026-10-11. Sam Okafor is approved for 36 hours for week ending 2026-10-11. Now the invoice itself. Line amounts and the total must tie. Non-labor charges must be on the allowed list and under their cap. No employee may be billed twice for the same week. And every labor rate must equal the contract rate card. Open question: is overtime above 40 hours a week billable at 1.5 times the rate?",
+  "gold": {
+    "rules": [
+      "Every labor line's hourly rate must equal the contract rate card rate for the employee's role.",
+      "No employee may be billed more than once for the same week.",
+      "Every non-labor charge must be on the contract's allowed list and must not exceed its cap.",
+      "Each line amount must equal quantity times unit rate.",
+      "The invoice total must equal the sum of the line amounts.",
+      "For each labor line, compare the billed hours with the approved hours on that employee's portal timecard for the week; billed hours must not exceed approved hours."
+    ],
+    "pages": [
+      "/portal/login",
+      "/portal/invoices",
+      "/portal/invoices/<invoice_id>",
+      "/portal/employees/<employee_id>?week=<week_ending>"
+    ],
+    "fields": [
+      "username",
+      "password",
+      "approved_hours"
+    ],
+    "decision_rule": "If any check fails, recommend dispute and ask the vendor for a credit memo; otherwise recommend approve."
+  },
+  "description": "Baseline rules and clicks, narration in a different order: decision rule first, hours rule before the rate card rules, rate card rules last.",
+  "gold_checks": [
+    "rate_matches_contract",
+    "no_duplicate_lines",
+    "no_unknown_charges",
+    "line_amounts_correct",
+    "total_matches_line_items",
+    "hours_match_timecards"
+  ],
+  "consistency_group": null,
+  "provenance": {
+    "kind": "hand_authored_variant",
+    "derived_from": "extension/recordings/portal-HSG-1010.json",
+    "note": "Hand-authored variant of the primary capture. Gold rules, pages and fields written by hand from what this recording says and shows. Not a real voice capture."
+  }
+}

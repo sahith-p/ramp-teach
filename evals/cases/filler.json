@@ -1,0 +1,43 @@
+{
+  "id": "filler",
+  "variant": "filler-talk",
+  "recording_path": "evals/recordings/filler.json",
+  "reference_transcript": "Okay, um, so. Morning. Coffee first, then this. Let me, uh, sign into the portal, it's always slow. Right. I usually do these on Monday mornings, just habit. So, the rules. Every labor rate must equal the contract rate card. Um, no employee may be billed twice for the same week. Non-labor charges must be on the allowed list and under their cap. And line amounts and the total must tie. This vendor is honestly kind of chatty on email. Anyway. Timecards. Maya, 40 approved. Billed hours must not exceed approved hours. Jordan, 38. Hmm, the page took forever. Priya, 40. Last quarter they had a lot of overtime, I didn't love it. Sam, 36. Okay. If any check fails I recommend dispute and ask the vendor for a credit memo; otherwise approve. Done, more coffee.",
+  "gold": {
+    "rules": [
+      "Every labor line's hourly rate must equal the contract rate card rate for the employee's role.",
+      "No employee may be billed more than once for the same week.",
+      "Every non-labor charge must be on the contract's allowed list and must not exceed its cap.",
+      "Each line amount must equal quantity times unit rate.",
+      "The invoice total must equal the sum of the line amounts.",
+      "For each labor line, compare the billed hours with the approved hours on that employee's portal timecard for the week; billed hours must not exceed approved hours."
+    ],
+    "pages": [
+      "/portal/login",
+      "/portal/invoices",
+      "/portal/invoices/<invoice_id>",
+      "/portal/employees/<employee_id>?week=<week_ending>"
+    ],
+    "fields": [
+      "username",
+      "password",
+      "approved_hours"
+    ],
+    "decision_rule": "If any check fails, recommend dispute and ask the vendor for a credit memo; otherwise recommend approve."
+  },
+  "description": "Baseline rules buried in filler and small talk, including remarks that sound like rules but are not (overtime grumbling, timing habits).",
+  "gold_checks": [
+    "rate_matches_contract",
+    "no_duplicate_lines",
+    "no_unknown_charges",
+    "line_amounts_correct",
+    "total_matches_line_items",
+    "hours_match_timecards"
+  ],
+  "consistency_group": null,
+  "provenance": {
+    "kind": "hand_authored_variant",
+    "derived_from": "extension/recordings/portal-HSG-1010.json",
+    "note": "Hand-authored variant of the primary capture. Gold rules, pages and fields written by hand from what this recording says and shows. Not a real voice capture."
+  }
+}

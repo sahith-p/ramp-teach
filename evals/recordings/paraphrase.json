@@ -1,0 +1,1374 @@
+{
+  "session_id": "rec_eval_paraphrase",
+  "started_at": "2026-11-09T08:53:07.816Z",
+  "steps": [
+    {
+      "ts": "2026-11-09T08:53:07.833Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:08.483Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "text": "Okay, this is the Halcyon invoice, HSG-1010. I log into their portal first."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:13.093Z",
+      "kind": "dom",
+      "detail": {
+        "event": "input",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "selector": "input[name=\"username\"]",
+        "value": "ap.reviewer"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:13.743Z",
+      "kind": "dom",
+      "detail": {
+        "event": "input",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "selector": "input[name=\"password\"]",
+        "value": "[redacted]"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:14.393Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "selector": "div:nth-of-type(2) > section > form > button",
+        "text": "Sign in"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:15.043Z",
+      "kind": "dom",
+      "detail": {
+        "event": "submit",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "selector": "div > div:nth-of-type(2) > section > form"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:15.693Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:16.343Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices — Fixture vendor portal",
+        "text": "What I look for: the hourly rate on each person has to be what the rate card in our contract says. Nobody gets billed two times for one week. Anything that isn't labor needs to be a charge the contract allows, and it can't go over the limit. And the math has to work, each line and the grand total."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:35.993Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices — Fixture vendor portal",
+        "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+        "text": "HSG-1010"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:36.643Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:37.293Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "text": "Then for every person on the invoice I pull up their timecard for that week."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:42.543Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:43.193Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:43.843Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "40"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:44.493Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "text": "Maya's approved for 40. You can't bill more hours than were approved."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:48.783Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:49.433Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "selector": "a[href=\"/portal/employees/E-102?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:50.083Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-102?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:50.733Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-102?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "38"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:51.383Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/employees/E-102?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "text": "Jordan, 38 approved."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:52.793Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:53.443Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "selector": "a[href=\"/portal/employees/E-103?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:54.093Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-103?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:54.743Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-103?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "40"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:55.393Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/employees/E-103?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "text": "Priya, 40."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:56.483Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:57.133Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "selector": "a[href=\"/portal/employees/E-104?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:57.783Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:58.433Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "36"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:59.083Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "text": "Sam is approved for 36."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:54:01.133Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:54:01.783Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "text": "If something's wrong anywhere, I dispute it and ask them for a credit memo. If it's all clean, I approve."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:54:08.633Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "text": "One thing I'm not sure about: do they get to bill overtime past 40 hours at time and a half?"
+      }
+    }
+  ],
+  "transcript": [
+    "Okay, this is the Halcyon invoice, HSG-1010. I log into their portal first.",
+    "What I look for: the hourly rate on each person has to be what the rate card in our contract says. Nobody gets billed two times for one week. Anything that isn't labor needs to be a charge the contract allows, and it can't go over the limit. And the math has to work, each line and the grand total.",
+    "Then for every person on the invoice I pull up their timecard for that week.",
+    "Maya's approved for 40. You can't bill more hours than were approved.",
+    "Jordan, 38 approved.",
+    "Priya, 40.",
+    "Sam is approved for 36.",
+    "If something's wrong anywhere, I dispute it and ask them for a credit memo. If it's all clean, I approve.",
+    "One thing I'm not sure about: do they get to bill overtime past 40 hours at time and a half?"
+  ],
+  "speech": {
+    "provider": "simulated",
+    "model": null,
+    "mode": "scripted",
+    "language": "en",
+    "keyterms": [
+      "HSG-1010",
+      "Halcyon",
+      "Maya Chen",
+      "Jordan Alvarez",
+      "Priya Natarajan",
+      "Sam Okafor",
+      "rate card",
+      "timecard",
+      "approved hours",
+      "credit memo"
+    ],
+    "utterances": [
+      {
+        "id": "u1",
+        "text": "Okay, this is the Halcyon invoice, HSG-1010. I log into their portal first.",
+        "start": 0.667,
+        "end": 4.827,
+        "words": [
+          {
+            "text": "Okay,",
+            "start": 0.667,
+            "end": 0.939,
+            "confidence": 0.97
+          },
+          {
+            "text": "this",
+            "start": 0.987,
+            "end": 1.259,
+            "confidence": 0.97
+          },
+          {
+            "text": "is",
+            "start": 1.307,
+            "end": 1.579,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 1.627,
+            "end": 1.899,
+            "confidence": 0.97
+          },
+          {
+            "text": "Halcyon",
+            "start": 1.947,
+            "end": 2.219,
+            "confidence": 0.97
+          },
+          {
+            "text": "invoice,",
+            "start": 2.267,
+            "end": 2.539,
+            "confidence": 0.97
+          },
+          {
+            "text": "HSG-1010.",
+            "start": 2.587,
+            "end": 2.859,
+            "confidence": 0.97
+          },
+          {
+            "text": "I",
+            "start": 2.907,
+            "end": 3.179,
+            "confidence": 0.97
+          },
+          {
+            "text": "log",
+            "start": 3.227,
+            "end": 3.499,
+            "confidence": 0.97
+          },
+          {
+            "text": "into",
+            "start": 3.547,
+            "end": 3.819,
+            "confidence": 0.97
+          },
+          {
+            "text": "their",
+            "start": 3.867,
+            "end": 4.139,
+            "confidence": 0.97
+          },
+          {
+            "text": "portal",
+            "start": 4.187,
+            "end": 4.459,
+            "confidence": 0.97
+          },
+          {
+            "text": "first.",
+            "start": 4.507,
+            "end": 4.779,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [],
+        "low_confidence": []
+      },
+      {
+        "id": "u2",
+        "text": "What I look for: the hourly rate on each person has to be what the rate card in our contract says. Nobody gets billed two times for one week. Anything that isn't labor needs to be a charge the contract allows, and it can't go over the limit. And the math has to work, each line and the grand total.",
+        "start": 8.527,
+        "end": 27.727,
+        "words": [
+          {
+            "text": "What",
+            "start": 8.527,
+            "end": 8.799,
+            "confidence": 0.97
+          },
+          {
+            "text": "I",
+            "start": 8.847,
+            "end": 9.119,
+            "confidence": 0.97
+          },
+          {
+            "text": "look",
+            "start": 9.167,
+            "end": 9.439,
+            "confidence": 0.97
+          },
+          {
+            "text": "for:",
+            "start": 9.487,
+            "end": 9.759,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 9.807,
+            "end": 10.079,
+            "confidence": 0.97
+          },
+          {
+            "text": "hourly",
+            "start": 10.127,
+            "end": 10.399,
+            "confidence": 0.97
+          },
+          {
+            "text": "rate",
+            "start": 10.447,
+            "end": 10.719,
+            "confidence": 0.97
+          },
+          {
+            "text": "on",
+            "start": 10.767,
+            "end": 11.039,
+            "confidence": 0.97
+          },
+          {
+            "text": "each",
+            "start": 11.087,
+            "end": 11.359,
+            "confidence": 0.97
+          },
+          {
+            "text": "person",
+            "start": 11.407,
+            "end": 11.679,
+            "confidence": 0.97
+          },
+          {
+            "text": "has",
+            "start": 11.727,
+            "end": 11.999,
+            "confidence": 0.97
+          },
+          {
+            "text": "to",
+            "start": 12.047,
+            "end": 12.319,
+            "confidence": 0.97
+          },
+          {
+            "text": "be",
+            "start": 12.367,
+            "end": 12.639,
+            "confidence": 0.97
+          },
+          {
+            "text": "what",
+            "start": 12.687,
+            "end": 12.959,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 13.007,
+            "end": 13.279,
+            "confidence": 0.97
+          },
+          {
+            "text": "rate",
+            "start": 13.327,
+            "end": 13.599,
+            "confidence": 0.97
+          },
+          {
+            "text": "card",
+            "start": 13.647,
+            "end": 13.919,
+            "confidence": 0.97
+          },
+          {
+            "text": "in",
+            "start": 13.967,
+            "end": 14.239,
+            "confidence": 0.97
+          },
+          {
+            "text": "our",
+            "start": 14.287,
+            "end": 14.559,
+            "confidence": 0.97
+          },
+          {
+            "text": "contract",
+            "start": 14.607,
+            "end": 14.879,
+            "confidence": 0.97
+          },
+          {
+            "text": "says.",
+            "start": 14.927,
+            "end": 15.199,
+            "confidence": 0.97
+          },
+          {
+            "text": "Nobody",
+            "start": 15.247,
+            "end": 15.519,
+            "confidence": 0.97
+          },
+          {
+            "text": "gets",
+            "start": 15.567,
+            "end": 15.839,
+            "confidence": 0.97
+          },
+          {
+            "text": "billed",
+            "start": 15.887,
+            "end": 16.159,
+            "confidence": 0.97
+          },
+          {
+            "text": "two",
+            "start": 16.207,
+            "end": 16.479,
+            "confidence": 0.97
+          },
+          {
+            "text": "times",
+            "start": 16.527,
+            "end": 16.799,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 16.847,
+            "end": 17.119,
+            "confidence": 0.97
+          },
+          {
+            "text": "one",
+            "start": 17.167,
+            "end": 17.439,
+            "confidence": 0.97
+          },
+          {
+            "text": "week.",
+            "start": 17.487,
+            "end": 17.759,
+            "confidence": 0.97
+          },
+          {
+            "text": "Anything",
+            "start": 17.807,
+            "end": 18.079,
+            "confidence": 0.97
+          },
+          {
+            "text": "that",
+            "start": 18.127,
+            "end": 18.399,
+            "confidence": 0.97
+          },
+          {
+            "text": "isn't",
+            "start": 18.447,
+            "end": 18.719,
+            "confidence": 0.97
+          },
+          {
+            "text": "labor",
+            "start": 18.767,
+            "end": 19.039,
+            "confidence": 0.97
+          },
+          {
+            "text": "needs",
+            "start": 19.087,
+            "end": 19.359,
+            "confidence": 0.97
+          },
+          {
+            "text": "to",
+            "start": 19.407,
+            "end": 19.679,
+            "confidence": 0.97
+          },
+          {
+            "text": "be",
+            "start": 19.727,
+            "end": 19.999,
+            "confidence": 0.97
+          },
+          {
+            "text": "a",
+            "start": 20.047,
+            "end": 20.319,
+            "confidence": 0.97
+          },
+          {
+            "text": "charge",
+            "start": 20.367,
+            "end": 20.639,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 20.687,
+            "end": 20.959,
+            "confidence": 0.97
+          },
+          {
+            "text": "contract",
+            "start": 21.007,
+            "end": 21.279,
+            "confidence": 0.97
+          },
+          {
+            "text": "allows,",
+            "start": 21.327,
+            "end": 21.599,
+            "confidence": 0.97
+          },
+          {
+            "text": "and",
+            "start": 21.647,
+            "end": 21.919,
+            "confidence": 0.97
+          },
+          {
+            "text": "it",
+            "start": 21.967,
+            "end": 22.239,
+            "confidence": 0.97
+          },
+          {
+            "text": "can't",
+            "start": 22.287,
+            "end": 22.559,
+            "confidence": 0.97
+          },
+          {
+            "text": "go",
+            "start": 22.607,
+            "end": 22.879,
+            "confidence": 0.97
+          },
+          {
+            "text": "over",
+            "start": 22.927,
+            "end": 23.199,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 23.247,
+            "end": 23.519,
+            "confidence": 0.97
+          },
+          {
+            "text": "limit.",
+            "start": 23.567,
+            "end": 23.839,
+            "confidence": 0.97
+          },
+          {
+            "text": "And",
+            "start": 23.887,
+            "end": 24.159,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 24.207,
+            "end": 24.479,
+            "confidence": 0.97
+          },
+          {
+            "text": "math",
+            "start": 24.527,
+            "end": 24.799,
+            "confidence": 0.97
+          },
+          {
+            "text": "has",
+            "start": 24.847,
+            "end": 25.119,
+            "confidence": 0.97
+          },
+          {
+            "text": "to",
+            "start": 25.167,
+            "end": 25.439,
+            "confidence": 0.97
+          },
+          {
+            "text": "work,",
+            "start": 25.487,
+            "end": 25.759,
+            "confidence": 0.97
+          },
+          {
+            "text": "each",
+            "start": 25.807,
+            "end": 26.079,
+            "confidence": 0.97
+          },
+          {
+            "text": "line",
+            "start": 26.127,
+            "end": 26.399,
+            "confidence": 0.97
+          },
+          {
+            "text": "and",
+            "start": 26.447,
+            "end": 26.719,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 26.767,
+            "end": 27.039,
+            "confidence": 0.97
+          },
+          {
+            "text": "grand",
+            "start": 27.087,
+            "end": 27.359,
+            "confidence": 0.97
+          },
+          {
+            "text": "total.",
+            "start": 27.407,
+            "end": 27.679,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [],
+        "low_confidence": []
+      },
+      {
+        "id": "u3",
+        "text": "Then for every person on the invoice I pull up their timecard for that week.",
+        "start": 29.477,
+        "end": 34.277,
+        "words": [
+          {
+            "text": "Then",
+            "start": 29.477,
+            "end": 29.749,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 29.797,
+            "end": 30.069,
+            "confidence": 0.97
+          },
+          {
+            "text": "every",
+            "start": 30.117,
+            "end": 30.389,
+            "confidence": 0.97
+          },
+          {
+            "text": "person",
+            "start": 30.437,
+            "end": 30.709,
+            "confidence": 0.97
+          },
+          {
+            "text": "on",
+            "start": 30.757,
+            "end": 31.029,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 31.077,
+            "end": 31.349,
+            "confidence": 0.97
+          },
+          {
+            "text": "invoice",
+            "start": 31.397,
+            "end": 31.669,
+            "confidence": 0.97
+          },
+          {
+            "text": "I",
+            "start": 31.717,
+            "end": 31.989,
+            "confidence": 0.97
+          },
+          {
+            "text": "pull",
+            "start": 32.037,
+            "end": 32.309,
+            "confidence": 0.97
+          },
+          {
+            "text": "up",
+            "start": 32.357,
+            "end": 32.629,
+            "confidence": 0.97
+          },
+          {
+            "text": "their",
+            "start": 32.677,
+            "end": 32.949,
+            "confidence": 0.97
+          },
+          {
+            "text": "timecard",
+            "start": 32.997,
+            "end": 33.269,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 33.317,
+            "end": 33.589,
+            "confidence": 0.97
+          },
+          {
+            "text": "that",
+            "start": 33.637,
+            "end": 33.909,
+            "confidence": 0.97
+          },
+          {
+            "text": "week.",
+            "start": 33.957,
+            "end": 34.229,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [],
+        "low_confidence": []
+      },
+      {
+        "id": "u4",
+        "text": "Maya's approved for 40. You can't bill more hours than were approved.",
+        "start": 36.677,
+        "end": 40.517,
+        "words": [
+          {
+            "text": "Maya's",
+            "start": 36.677,
+            "end": 36.949,
+            "confidence": 0.97
+          },
+          {
+            "text": "approved",
+            "start": 36.997,
+            "end": 37.269,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 37.317,
+            "end": 37.589,
+            "confidence": 0.97
+          },
+          {
+            "text": "40.",
+            "start": 37.637,
+            "end": 37.909,
+            "confidence": 0.97
+          },
+          {
+            "text": "You",
+            "start": 37.957,
+            "end": 38.229,
+            "confidence": 0.97
+          },
+          {
+            "text": "can't",
+            "start": 38.277,
+            "end": 38.549,
+            "confidence": 0.97
+          },
+          {
+            "text": "bill",
+            "start": 38.597,
+            "end": 38.869,
+            "confidence": 0.97
+          },
+          {
+            "text": "more",
+            "start": 38.917,
+            "end": 39.189,
+            "confidence": 0.97
+          },
+          {
+            "text": "hours",
+            "start": 39.237,
+            "end": 39.509,
+            "confidence": 0.97
+          },
+          {
+            "text": "than",
+            "start": 39.557,
+            "end": 39.829,
+            "confidence": 0.97
+          },
+          {
+            "text": "were",
+            "start": 39.877,
+            "end": 40.149,
+            "confidence": 0.97
+          },
+          {
+            "text": "approved.",
+            "start": 40.197,
+            "end": 40.469,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [
+          13
+        ],
+        "low_confidence": []
+      },
+      {
+        "id": "u5",
+        "text": "Jordan, 38 approved.",
+        "start": 43.567,
+        "end": 44.527,
+        "words": [
+          {
+            "text": "Jordan,",
+            "start": 43.567,
+            "end": 43.839,
+            "confidence": 0.97
+          },
+          {
+            "text": "38",
+            "start": 43.887,
+            "end": 44.159,
+            "confidence": 0.97
+          },
+          {
+            "text": "approved.",
+            "start": 44.207,
+            "end": 44.479,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [
+          18
+        ],
+        "low_confidence": []
+      },
+      {
+        "id": "u6",
+        "text": "Priya, 40.",
+        "start": 47.577,
+        "end": 48.217,
+        "words": [
+          {
+            "text": "Priya,",
+            "start": 47.577,
+            "end": 47.849,
+            "confidence": 0.97
+          },
+          {
+            "text": "40.",
+            "start": 47.897,
+            "end": 48.169,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [
+          23
+        ],
+        "low_confidence": []
+      },
+      {
+        "id": "u7",
+        "text": "Sam is approved for 36.",
+        "start": 51.267,
+        "end": 52.867,
+        "words": [
+          {
+            "text": "Sam",
+            "start": 51.267,
+            "end": 51.539,
+            "confidence": 0.97
+          },
+          {
+            "text": "is",
+            "start": 51.587,
+            "end": 51.859,
+            "confidence": 0.97
+          },
+          {
+            "text": "approved",
+            "start": 51.907,
+            "end": 52.179,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 52.227,
+            "end": 52.499,
+            "confidence": 0.97
+          },
+          {
+            "text": "36.",
+            "start": 52.547,
+            "end": 52.819,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [
+          28
+        ],
+        "low_confidence": []
+      },
+      {
+        "id": "u8",
+        "text": "If something's wrong anywhere, I dispute it and ask them for a credit memo. If it's all clean, I approve.",
+        "start": 53.967,
+        "end": 60.367,
+        "words": [
+          {
+            "text": "If",
+            "start": 53.967,
+            "end": 54.239,
+            "confidence": 0.97
+          },
+          {
+            "text": "something's",
+            "start": 54.287,
+            "end": 54.559,
+            "confidence": 0.97
+          },
+          {
+            "text": "wrong",
+            "start": 54.607,
+            "end": 54.879,
+            "confidence": 0.97
+          },
+          {
+            "text": "anywhere,",
+            "start": 54.927,
+            "end": 55.199,
+            "confidence": 0.97
+          },
+          {
+            "text": "I",
+            "start": 55.247,
+            "end": 55.519,
+            "confidence": 0.97
+          },
+          {
+            "text": "dispute",
+            "start": 55.567,
+            "end": 55.839,
+            "confidence": 0.97
+          },
+          {
+            "text": "it",
+            "start": 55.887,
+            "end": 56.159,
+            "confidence": 0.97
+          },
+          {
+            "text": "and",
+            "start": 56.207,
+            "end": 56.479,
+            "confidence": 0.97
+          },
+          {
+            "text": "ask",
+            "start": 56.527,
+            "end": 56.799,
+            "confidence": 0.97
+          },
+          {
+            "text": "them",
+            "start": 56.847,
+            "end": 57.119,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 57.167,
+            "end": 57.439,
+            "confidence": 0.97
+          },
+          {
+            "text": "a",
+            "start": 57.487,
+            "end": 57.759,
+            "confidence": 0.97
+          },
+          {
+            "text": "credit",
+            "start": 57.807,
+            "end": 58.079,
+            "confidence": 0.97
+          },
+          {
+            "text": "memo.",
+            "start": 58.127,
+            "end": 58.399,
+            "confidence": 0.97
+          },
+          {
+            "text": "If",
+            "start": 58.447,
+            "end": 58.719,
+            "confidence": 0.97
+          },
+          {
+            "text": "it's",
+            "start": 58.767,
+            "end": 59.039,
+            "confidence": 0.97
+          },
+          {
+            "text": "all",
+            "start": 59.087,
+            "end": 59.359,
+            "confidence": 0.97
+          },
+          {
+            "text": "clean,",
+            "start": 59.407,
+            "end": 59.679,
+            "confidence": 0.97
+          },
+          {
+            "text": "I",
+            "start": 59.727,
+            "end": 59.999,
+            "confidence": 0.97
+          },
+          {
+            "text": "approve.",
+            "start": 60.047,
+            "end": 60.319,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [],
+        "low_confidence": []
+      },
+      {
+        "id": "u9",
+        "text": "One thing I'm not sure about: do they get to bill overtime past 40 hours at time and a half?",
+        "start": 60.817,
+        "end": 67.217,
+        "words": [
+          {
+            "text": "One",
+            "start": 60.817,
+            "end": 61.089,
+            "confidence": 0.97
+          },
+          {
+            "text": "thing",
+            "start": 61.137,
+            "end": 61.409,
+            "confidence": 0.97
+          },
+          {
+            "text": "I'm",
+            "start": 61.457,
+            "end": 61.729,
+            "confidence": 0.97
+          },
+          {
+            "text": "not",
+            "start": 61.777,
+            "end": 62.049,
+            "confidence": 0.97
+          },
+          {
+            "text": "sure",
+            "start": 62.097,
+            "end": 62.369,
+            "confidence": 0.97
+          },
+          {
+            "text": "about:",
+            "start": 62.417,
+            "end": 62.689,
+            "confidence": 0.97
+          },
+          {
+            "text": "do",
+            "start": 62.737,
+            "end": 63.009,
+            "confidence": 0.97
+          },
+          {
+            "text": "they",
+            "start": 63.057,
+            "end": 63.329,
+            "confidence": 0.97
+          },
+          {
+            "text": "get",
+            "start": 63.377,
+            "end": 63.649,
+            "confidence": 0.97
+          },
+          {
+            "text": "to",
+            "start": 63.697,
+            "end": 63.969,
+            "confidence": 0.97
+          },
+          {
+            "text": "bill",
+            "start": 64.017,
+            "end": 64.289,
+            "confidence": 0.97
+          },
+          {
+            "text": "overtime",
+            "start": 64.337,
+            "end": 64.609,
+            "confidence": 0.97
+          },
+          {
+            "text": "past",
+            "start": 64.657,
+            "end": 64.929,
+            "confidence": 0.97
+          },
+          {
+            "text": "40",
+            "start": 64.977,
+            "end": 65.249,
+            "confidence": 0.97
+          },
+          {
+            "text": "hours",
+            "start": 65.297,
+            "end": 65.569,
+            "confidence": 0.97
+          },
+          {
+            "text": "at",
+            "start": 65.617,
+            "end": 65.889,
+            "confidence": 0.97
+          },
+          {
+            "text": "time",
+            "start": 65.937,
+            "end": 66.209,
+            "confidence": 0.97
+          },
+          {
+            "text": "and",
+            "start": 66.257,
+            "end": 66.529,
+            "confidence": 0.97
+          },
+          {
+            "text": "a",
+            "start": 66.577,
+            "end": 66.849,
+            "confidence": 0.97
+          },
+          {
+            "text": "half?",
+            "start": 66.897,
+            "end": 67.169,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [],
+        "low_confidence": []
+      }
+    ],
+    "request_id": null
+  },
+  "provenance": {
+    "capture": "hand_authored_fixture",
+    "operator": "synthetic",
+    "derived_from": "extension/recordings/portal-HSG-1010.json",
+    "variant": "consistency-paraphrase",
+    "note": "Hand-authored variant of the primary capture (extension/recordings/portal-HSG-1010.json): DOM steps copied from it, narration written by hand, speech word timings generated by evals/tools/build-recordings.ts (no audio, no speech model)."
+  }
+}

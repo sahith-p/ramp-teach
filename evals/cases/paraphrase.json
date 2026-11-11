@@ -1,0 +1,43 @@
+{
+  "id": "paraphrase",
+  "variant": "consistency-paraphrase",
+  "recording_path": "evals/recordings/paraphrase.json",
+  "reference_transcript": "Okay, this is the Halcyon invoice, HSG-1010. I log into their portal first. What I look for: the hourly rate on each person has to be what the rate card in our contract says. Nobody gets billed two times for one week. Anything that isn't labor needs to be a charge the contract allows, and it can't go over the limit. And the math has to work, each line and the grand total. Then for every person on the invoice I pull up their timecard for that week. Maya's approved for 40. You can't bill more hours than were approved. Jordan, 38 approved. Priya, 40. Sam is approved for 36. If something's wrong anywhere, I dispute it and ask them for a credit memo. If it's all clean, I approve. One thing I'm not sure about: do they get to bill overtime past 40 hours at time and a half?",
+  "gold": {
+    "rules": [
+      "Every labor line's hourly rate must equal the contract rate card rate for the employee's role.",
+      "No employee may be billed more than once for the same week.",
+      "Every non-labor charge must be on the contract's allowed list and must not exceed its cap.",
+      "Each line amount must equal quantity times unit rate.",
+      "The invoice total must equal the sum of the line amounts.",
+      "For each labor line, compare the billed hours with the approved hours on that employee's portal timecard for the week; billed hours must not exceed approved hours."
+    ],
+    "pages": [
+      "/portal/login",
+      "/portal/invoices",
+      "/portal/invoices/<invoice_id>",
+      "/portal/employees/<employee_id>?week=<week_ending>"
+    ],
+    "fields": [
+      "username",
+      "password",
+      "approved_hours"
+    ],
+    "decision_rule": "If any check fails, recommend dispute and ask the vendor for a credit memo; otherwise recommend approve."
+  },
+  "description": "Same review as baseline in different, casual words (consistency pair with baseline). Same clicks.",
+  "gold_checks": [
+    "rate_matches_contract",
+    "no_duplicate_lines",
+    "no_unknown_charges",
+    "line_amounts_correct",
+    "total_matches_line_items",
+    "hours_match_timecards"
+  ],
+  "consistency_group": "pair-1",
+  "provenance": {
+    "kind": "hand_authored_variant",
+    "derived_from": "extension/recordings/portal-HSG-1010.json",
+    "note": "Hand-authored variant of the primary capture. Gold rules, pages and fields written by hand from what this recording says and shows. Not a real voice capture."
+  }
+}

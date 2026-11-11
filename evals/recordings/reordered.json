@@ -1,0 +1,1329 @@
+{
+  "session_id": "rec_eval_reordered",
+  "started_at": "2026-11-09T08:53:07.816Z",
+  "steps": [
+    {
+      "ts": "2026-11-09T08:53:07.833Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:08.483Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "text": "Whenever a check fails on one of these I recommend dispute and ask the vendor for a credit memo; when everything passes I approve. Let me sign in."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:17.893Z",
+      "kind": "dom",
+      "detail": {
+        "event": "input",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "selector": "input[name=\"username\"]",
+        "value": "ap.reviewer"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:18.543Z",
+      "kind": "dom",
+      "detail": {
+        "event": "input",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "selector": "input[name=\"password\"]",
+        "value": "[redacted]"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:19.193Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "selector": "div:nth-of-type(2) > section > form > button",
+        "text": "Sign in"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:19.843Z",
+      "kind": "dom",
+      "detail": {
+        "event": "submit",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "selector": "div > div:nth-of-type(2) > section > form"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:20.493Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:21.143Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices — Fixture vendor portal",
+        "text": "I'll do the timecards first: billed hours must not exceed the approved hours on each timecard."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:26.713Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices — Fixture vendor portal",
+        "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+        "text": "HSG-1010"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:27.363Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:28.013Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:28.663Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:29.313Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "40"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:29.963Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "text": "Maya Chen is approved for 40 hours for week ending 2026-10-11."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:33.933Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:34.583Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "selector": "a[href=\"/portal/employees/E-102?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:35.233Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-102?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:35.883Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-102?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "38"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:36.533Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/employees/E-102?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "text": "Jordan Alvarez is approved for 38 hours for week ending 2026-10-11."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:40.503Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:41.153Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "selector": "a[href=\"/portal/employees/E-103?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:41.803Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-103?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:42.453Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-103?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "40"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:43.103Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/employees/E-103?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "text": "Priya Natarajan is approved for 40 hours for week ending 2026-10-11."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:47.073Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:47.723Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "selector": "a[href=\"/portal/employees/E-104?week=2026-10-11\"]",
+        "text": "View timecard"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:48.373Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:49.023Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "selector": "[data-field=\"approved_hours\"]",
+        "text": "36"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:49.673Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11",
+        "title": "Employee timecards — Fixture vendor portal",
+        "text": "Sam Okafor is approved for 36 hours for week ending 2026-10-11."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:53.643Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:54.293Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "text": "Now the invoice itself. Line amounts and the total must tie. Non-labor charges must be on the allowed list and under their cap. No employee may be billed twice for the same week. And every labor rate must equal the contract rate card."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:54:08.503Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "text": "Open question: is overtime above 40 hours a week billable at 1.5 times the rate?"
+      }
+    }
+  ],
+  "transcript": [
+    "Whenever a check fails on one of these I recommend dispute and ask the vendor for a credit memo; when everything passes I approve. Let me sign in.",
+    "I'll do the timecards first: billed hours must not exceed the approved hours on each timecard.",
+    "Maya Chen is approved for 40 hours for week ending 2026-10-11.",
+    "Jordan Alvarez is approved for 38 hours for week ending 2026-10-11.",
+    "Priya Natarajan is approved for 40 hours for week ending 2026-10-11.",
+    "Sam Okafor is approved for 36 hours for week ending 2026-10-11.",
+    "Now the invoice itself. Line amounts and the total must tie. Non-labor charges must be on the allowed list and under their cap. No employee may be billed twice for the same week. And every labor rate must equal the contract rate card.",
+    "Open question: is overtime above 40 hours a week billable at 1.5 times the rate?"
+  ],
+  "speech": {
+    "provider": "simulated",
+    "model": null,
+    "mode": "scripted",
+    "language": "en",
+    "keyterms": [
+      "HSG-1010",
+      "Halcyon",
+      "Maya Chen",
+      "Jordan Alvarez",
+      "Priya Natarajan",
+      "Sam Okafor",
+      "rate card",
+      "timecard",
+      "approved hours",
+      "credit memo"
+    ],
+    "utterances": [
+      {
+        "id": "u1",
+        "text": "Whenever a check fails on one of these I recommend dispute and ask the vendor for a credit memo; when everything passes I approve. Let me sign in.",
+        "start": 0.667,
+        "end": 9.627,
+        "words": [
+          {
+            "text": "Whenever",
+            "start": 0.667,
+            "end": 0.939,
+            "confidence": 0.97
+          },
+          {
+            "text": "a",
+            "start": 0.987,
+            "end": 1.259,
+            "confidence": 0.97
+          },
+          {
+            "text": "check",
+            "start": 1.307,
+            "end": 1.579,
+            "confidence": 0.97
+          },
+          {
+            "text": "fails",
+            "start": 1.627,
+            "end": 1.899,
+            "confidence": 0.97
+          },
+          {
+            "text": "on",
+            "start": 1.947,
+            "end": 2.219,
+            "confidence": 0.97
+          },
+          {
+            "text": "one",
+            "start": 2.267,
+            "end": 2.539,
+            "confidence": 0.97
+          },
+          {
+            "text": "of",
+            "start": 2.587,
+            "end": 2.859,
+            "confidence": 0.97
+          },
+          {
+            "text": "these",
+            "start": 2.907,
+            "end": 3.179,
+            "confidence": 0.97
+          },
+          {
+            "text": "I",
+            "start": 3.227,
+            "end": 3.499,
+            "confidence": 0.97
+          },
+          {
+            "text": "recommend",
+            "start": 3.547,
+            "end": 3.819,
+            "confidence": 0.97
+          },
+          {
+            "text": "dispute",
+            "start": 3.867,
+            "end": 4.139,
+            "confidence": 0.97
+          },
+          {
+            "text": "and",
+            "start": 4.187,
+            "end": 4.459,
+            "confidence": 0.97
+          },
+          {
+            "text": "ask",
+            "start": 4.507,
+            "end": 4.779,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 4.827,
+            "end": 5.099,
+            "confidence": 0.97
+          },
+          {
+            "text": "vendor",
+            "start": 5.147,
+            "end": 5.419,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 5.467,
+            "end": 5.739,
+            "confidence": 0.97
+          },
+          {
+            "text": "a",
+            "start": 5.787,
+            "end": 6.059,
+            "confidence": 0.97
+          },
+          {
+            "text": "credit",
+            "start": 6.107,
+            "end": 6.379,
+            "confidence": 0.97
+          },
+          {
+            "text": "memo;",
+            "start": 6.427,
+            "end": 6.699,
+            "confidence": 0.97
+          },
+          {
+            "text": "when",
+            "start": 6.747,
+            "end": 7.019,
+            "confidence": 0.97
+          },
+          {
+            "text": "everything",
+            "start": 7.067,
+            "end": 7.339,
+            "confidence": 0.97
+          },
+          {
+            "text": "passes",
+            "start": 7.387,
+            "end": 7.659,
+            "confidence": 0.97
+          },
+          {
+            "text": "I",
+            "start": 7.707,
+            "end": 7.979,
+            "confidence": 0.97
+          },
+          {
+            "text": "approve.",
+            "start": 8.027,
+            "end": 8.299,
+            "confidence": 0.97
+          },
+          {
+            "text": "Let",
+            "start": 8.347,
+            "end": 8.619,
+            "confidence": 0.97
+          },
+          {
+            "text": "me",
+            "start": 8.667,
+            "end": 8.939,
+            "confidence": 0.97
+          },
+          {
+            "text": "sign",
+            "start": 8.987,
+            "end": 9.259,
+            "confidence": 0.97
+          },
+          {
+            "text": "in.",
+            "start": 9.307,
+            "end": 9.579,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [],
+        "low_confidence": []
+      },
+      {
+        "id": "u2",
+        "text": "I'll do the timecards first: billed hours must not exceed the approved hours on each timecard.",
+        "start": 13.327,
+        "end": 18.447,
+        "words": [
+          {
+            "text": "I'll",
+            "start": 13.327,
+            "end": 13.599,
+            "confidence": 0.97
+          },
+          {
+            "text": "do",
+            "start": 13.647,
+            "end": 13.919,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 13.967,
+            "end": 14.239,
+            "confidence": 0.97
+          },
+          {
+            "text": "timecards",
+            "start": 14.287,
+            "end": 14.559,
+            "confidence": 0.97
+          },
+          {
+            "text": "first:",
+            "start": 14.607,
+            "end": 14.879,
+            "confidence": 0.97
+          },
+          {
+            "text": "billed",
+            "start": 14.927,
+            "end": 15.199,
+            "confidence": 0.97
+          },
+          {
+            "text": "hours",
+            "start": 15.247,
+            "end": 15.519,
+            "confidence": 0.97
+          },
+          {
+            "text": "must",
+            "start": 15.567,
+            "end": 15.839,
+            "confidence": 0.97
+          },
+          {
+            "text": "not",
+            "start": 15.887,
+            "end": 16.159,
+            "confidence": 0.97
+          },
+          {
+            "text": "exceed",
+            "start": 16.207,
+            "end": 16.479,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 16.527,
+            "end": 16.799,
+            "confidence": 0.97
+          },
+          {
+            "text": "approved",
+            "start": 16.847,
+            "end": 17.119,
+            "confidence": 0.97
+          },
+          {
+            "text": "hours",
+            "start": 17.167,
+            "end": 17.439,
+            "confidence": 0.97
+          },
+          {
+            "text": "on",
+            "start": 17.487,
+            "end": 17.759,
+            "confidence": 0.97
+          },
+          {
+            "text": "each",
+            "start": 17.807,
+            "end": 18.079,
+            "confidence": 0.97
+          },
+          {
+            "text": "timecard.",
+            "start": 18.127,
+            "end": 18.399,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [],
+        "low_confidence": []
+      },
+      {
+        "id": "u3",
+        "text": "Maya Chen is approved for 40 hours for week ending 2026-10-11.",
+        "start": 22.147,
+        "end": 25.667,
+        "words": [
+          {
+            "text": "Maya",
+            "start": 22.147,
+            "end": 22.419,
+            "confidence": 0.97
+          },
+          {
+            "text": "Chen",
+            "start": 22.467,
+            "end": 22.739,
+            "confidence": 0.97
+          },
+          {
+            "text": "is",
+            "start": 22.787,
+            "end": 23.059,
+            "confidence": 0.97
+          },
+          {
+            "text": "approved",
+            "start": 23.107,
+            "end": 23.379,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 23.427,
+            "end": 23.699,
+            "confidence": 0.97
+          },
+          {
+            "text": "40",
+            "start": 23.747,
+            "end": 24.019,
+            "confidence": 0.97
+          },
+          {
+            "text": "hours",
+            "start": 24.067,
+            "end": 24.339,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 24.387,
+            "end": 24.659,
+            "confidence": 0.97
+          },
+          {
+            "text": "week",
+            "start": 24.707,
+            "end": 24.979,
+            "confidence": 0.97
+          },
+          {
+            "text": "ending",
+            "start": 25.027,
+            "end": 25.299,
+            "confidence": 0.97
+          },
+          {
+            "text": "2026-10-11.",
+            "start": 25.347,
+            "end": 25.619,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [
+          12
+        ],
+        "low_confidence": []
+      },
+      {
+        "id": "u4",
+        "text": "Jordan Alvarez is approved for 38 hours for week ending 2026-10-11.",
+        "start": 28.717,
+        "end": 32.237,
+        "words": [
+          {
+            "text": "Jordan",
+            "start": 28.717,
+            "end": 28.989,
+            "confidence": 0.97
+          },
+          {
+            "text": "Alvarez",
+            "start": 29.037,
+            "end": 29.309,
+            "confidence": 0.97
+          },
+          {
+            "text": "is",
+            "start": 29.357,
+            "end": 29.629,
+            "confidence": 0.97
+          },
+          {
+            "text": "approved",
+            "start": 29.677,
+            "end": 29.949,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 29.997,
+            "end": 30.269,
+            "confidence": 0.97
+          },
+          {
+            "text": "38",
+            "start": 30.317,
+            "end": 30.589,
+            "confidence": 0.97
+          },
+          {
+            "text": "hours",
+            "start": 30.637,
+            "end": 30.909,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 30.957,
+            "end": 31.229,
+            "confidence": 0.97
+          },
+          {
+            "text": "week",
+            "start": 31.277,
+            "end": 31.549,
+            "confidence": 0.97
+          },
+          {
+            "text": "ending",
+            "start": 31.597,
+            "end": 31.869,
+            "confidence": 0.97
+          },
+          {
+            "text": "2026-10-11.",
+            "start": 31.917,
+            "end": 32.189,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [
+          17
+        ],
+        "low_confidence": []
+      },
+      {
+        "id": "u5",
+        "text": "Priya Natarajan is approved for 40 hours for week ending 2026-10-11.",
+        "start": 35.287,
+        "end": 38.807,
+        "words": [
+          {
+            "text": "Priya",
+            "start": 35.287,
+            "end": 35.559,
+            "confidence": 0.97
+          },
+          {
+            "text": "Natarajan",
+            "start": 35.607,
+            "end": 35.879,
+            "confidence": 0.97
+          },
+          {
+            "text": "is",
+            "start": 35.927,
+            "end": 36.199,
+            "confidence": 0.97
+          },
+          {
+            "text": "approved",
+            "start": 36.247,
+            "end": 36.519,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 36.567,
+            "end": 36.839,
+            "confidence": 0.97
+          },
+          {
+            "text": "40",
+            "start": 36.887,
+            "end": 37.159,
+            "confidence": 0.97
+          },
+          {
+            "text": "hours",
+            "start": 37.207,
+            "end": 37.479,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 37.527,
+            "end": 37.799,
+            "confidence": 0.97
+          },
+          {
+            "text": "week",
+            "start": 37.847,
+            "end": 38.119,
+            "confidence": 0.97
+          },
+          {
+            "text": "ending",
+            "start": 38.167,
+            "end": 38.439,
+            "confidence": 0.97
+          },
+          {
+            "text": "2026-10-11.",
+            "start": 38.487,
+            "end": 38.759,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [
+          22
+        ],
+        "low_confidence": []
+      },
+      {
+        "id": "u6",
+        "text": "Sam Okafor is approved for 36 hours for week ending 2026-10-11.",
+        "start": 41.857,
+        "end": 45.377,
+        "words": [
+          {
+            "text": "Sam",
+            "start": 41.857,
+            "end": 42.129,
+            "confidence": 0.97
+          },
+          {
+            "text": "Okafor",
+            "start": 42.177,
+            "end": 42.449,
+            "confidence": 0.97
+          },
+          {
+            "text": "is",
+            "start": 42.497,
+            "end": 42.769,
+            "confidence": 0.97
+          },
+          {
+            "text": "approved",
+            "start": 42.817,
+            "end": 43.089,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 43.137,
+            "end": 43.409,
+            "confidence": 0.97
+          },
+          {
+            "text": "36",
+            "start": 43.457,
+            "end": 43.729,
+            "confidence": 0.97
+          },
+          {
+            "text": "hours",
+            "start": 43.777,
+            "end": 44.049,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 44.097,
+            "end": 44.369,
+            "confidence": 0.97
+          },
+          {
+            "text": "week",
+            "start": 44.417,
+            "end": 44.689,
+            "confidence": 0.97
+          },
+          {
+            "text": "ending",
+            "start": 44.737,
+            "end": 45.009,
+            "confidence": 0.97
+          },
+          {
+            "text": "2026-10-11.",
+            "start": 45.057,
+            "end": 45.329,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [
+          27
+        ],
+        "low_confidence": []
+      },
+      {
+        "id": "u7",
+        "text": "Now the invoice itself. Line amounts and the total must tie. Non-labor charges must be on the allowed list and under their cap. No employee may be billed twice for the same week. And every labor rate must equal the contract rate card.",
+        "start": 46.477,
+        "end": 60.237,
+        "words": [
+          {
+            "text": "Now",
+            "start": 46.477,
+            "end": 46.749,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 46.797,
+            "end": 47.069,
+            "confidence": 0.97
+          },
+          {
+            "text": "invoice",
+            "start": 47.117,
+            "end": 47.389,
+            "confidence": 0.97
+          },
+          {
+            "text": "itself.",
+            "start": 47.437,
+            "end": 47.709,
+            "confidence": 0.97
+          },
+          {
+            "text": "Line",
+            "start": 47.757,
+            "end": 48.029,
+            "confidence": 0.97
+          },
+          {
+            "text": "amounts",
+            "start": 48.077,
+            "end": 48.349,
+            "confidence": 0.97
+          },
+          {
+            "text": "and",
+            "start": 48.397,
+            "end": 48.669,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 48.717,
+            "end": 48.989,
+            "confidence": 0.97
+          },
+          {
+            "text": "total",
+            "start": 49.037,
+            "end": 49.309,
+            "confidence": 0.97
+          },
+          {
+            "text": "must",
+            "start": 49.357,
+            "end": 49.629,
+            "confidence": 0.97
+          },
+          {
+            "text": "tie.",
+            "start": 49.677,
+            "end": 49.949,
+            "confidence": 0.97
+          },
+          {
+            "text": "Non-labor",
+            "start": 49.997,
+            "end": 50.269,
+            "confidence": 0.97
+          },
+          {
+            "text": "charges",
+            "start": 50.317,
+            "end": 50.589,
+            "confidence": 0.97
+          },
+          {
+            "text": "must",
+            "start": 50.637,
+            "end": 50.909,
+            "confidence": 0.97
+          },
+          {
+            "text": "be",
+            "start": 50.957,
+            "end": 51.229,
+            "confidence": 0.97
+          },
+          {
+            "text": "on",
+            "start": 51.277,
+            "end": 51.549,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 51.597,
+            "end": 51.869,
+            "confidence": 0.97
+          },
+          {
+            "text": "allowed",
+            "start": 51.917,
+            "end": 52.189,
+            "confidence": 0.97
+          },
+          {
+            "text": "list",
+            "start": 52.237,
+            "end": 52.509,
+            "confidence": 0.97
+          },
+          {
+            "text": "and",
+            "start": 52.557,
+            "end": 52.829,
+            "confidence": 0.97
+          },
+          {
+            "text": "under",
+            "start": 52.877,
+            "end": 53.149,
+            "confidence": 0.97
+          },
+          {
+            "text": "their",
+            "start": 53.197,
+            "end": 53.469,
+            "confidence": 0.97
+          },
+          {
+            "text": "cap.",
+            "start": 53.517,
+            "end": 53.789,
+            "confidence": 0.97
+          },
+          {
+            "text": "No",
+            "start": 53.837,
+            "end": 54.109,
+            "confidence": 0.97
+          },
+          {
+            "text": "employee",
+            "start": 54.157,
+            "end": 54.429,
+            "confidence": 0.97
+          },
+          {
+            "text": "may",
+            "start": 54.477,
+            "end": 54.749,
+            "confidence": 0.97
+          },
+          {
+            "text": "be",
+            "start": 54.797,
+            "end": 55.069,
+            "confidence": 0.97
+          },
+          {
+            "text": "billed",
+            "start": 55.117,
+            "end": 55.389,
+            "confidence": 0.97
+          },
+          {
+            "text": "twice",
+            "start": 55.437,
+            "end": 55.709,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 55.757,
+            "end": 56.029,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 56.077,
+            "end": 56.349,
+            "confidence": 0.97
+          },
+          {
+            "text": "same",
+            "start": 56.397,
+            "end": 56.669,
+            "confidence": 0.97
+          },
+          {
+            "text": "week.",
+            "start": 56.717,
+            "end": 56.989,
+            "confidence": 0.97
+          },
+          {
+            "text": "And",
+            "start": 57.037,
+            "end": 57.309,
+            "confidence": 0.97
+          },
+          {
+            "text": "every",
+            "start": 57.357,
+            "end": 57.629,
+            "confidence": 0.97
+          },
+          {
+            "text": "labor",
+            "start": 57.677,
+            "end": 57.949,
+            "confidence": 0.97
+          },
+          {
+            "text": "rate",
+            "start": 57.997,
+            "end": 58.269,
+            "confidence": 0.97
+          },
+          {
+            "text": "must",
+            "start": 58.317,
+            "end": 58.589,
+            "confidence": 0.97
+          },
+          {
+            "text": "equal",
+            "start": 58.637,
+            "end": 58.909,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 58.957,
+            "end": 59.229,
+            "confidence": 0.97
+          },
+          {
+            "text": "contract",
+            "start": 59.277,
+            "end": 59.549,
+            "confidence": 0.97
+          },
+          {
+            "text": "rate",
+            "start": 59.597,
+            "end": 59.869,
+            "confidence": 0.97
+          },
+          {
+            "text": "card.",
+            "start": 59.917,
+            "end": 60.189,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [],
+        "low_confidence": []
+      },
+      {
+        "id": "u8",
+        "text": "Open question: is overtime above 40 hours a week billable at 1.5 times the rate?",
+        "start": 60.687,
+        "end": 65.487,
+        "words": [
+          {
+            "text": "Open",
+            "start": 60.687,
+            "end": 60.959,
+            "confidence": 0.97
+          },
+          {
+            "text": "question:",
+            "start": 61.007,
+            "end": 61.279,
+            "confidence": 0.97
+          },
+          {
+            "text": "is",
+            "start": 61.327,
+            "end": 61.599,
+            "confidence": 0.97
+          },
+          {
+            "text": "overtime",
+            "start": 61.647,
+            "end": 61.919,
+            "confidence": 0.97
+          },
+          {
+            "text": "above",
+            "start": 61.967,
+            "end": 62.239,
+            "confidence": 0.97
+          },
+          {
+            "text": "40",
+            "start": 62.287,
+            "end": 62.559,
+            "confidence": 0.97
+          },
+          {
+            "text": "hours",
+            "start": 62.607,
+            "end": 62.879,
+            "confidence": 0.97
+          },
+          {
+            "text": "a",
+            "start": 62.927,
+            "end": 63.199,
+            "confidence": 0.97
+          },
+          {
+            "text": "week",
+            "start": 63.247,
+            "end": 63.519,
+            "confidence": 0.97
+          },
+          {
+            "text": "billable",
+            "start": 63.567,
+            "end": 63.839,
+            "confidence": 0.97
+          },
+          {
+            "text": "at",
+            "start": 63.887,
+            "end": 64.159,
+            "confidence": 0.97
+          },
+          {
+            "text": "1.5",
+            "start": 64.207,
+            "end": 64.479,
+            "confidence": 0.97
+          },
+          {
+            "text": "times",
+            "start": 64.527,
+            "end": 64.799,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 64.847,
+            "end": 65.119,
+            "confidence": 0.97
+          },
+          {
+            "text": "rate?",
+            "start": 65.167,
+            "end": 65.439,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [],
+        "low_confidence": []
+      }
+    ],
+    "request_id": null
+  },
+  "provenance": {
+    "capture": "hand_authored_fixture",
+    "operator": "synthetic",
+    "derived_from": "extension/recordings/portal-HSG-1010.json",
+    "variant": "reordered",
+    "note": "Hand-authored variant of the primary capture (extension/recordings/portal-HSG-1010.json): DOM steps copied from it, narration written by hand, speech word timings generated by evals/tools/build-recordings.ts (no audio, no speech model)."
+  }
+}

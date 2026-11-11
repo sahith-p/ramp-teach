@@ -1,0 +1,43 @@
+{
+  "id": "stt-noise",
+  "variant": "stt-noise",
+  "recording_path": "evals/recordings/stt-noise.json",
+  "reference_transcript": "I'm verifying invoice HSG-1010 against the vendor timecard portal. First I sign in. Rules I apply: every labor rate must equal the contract rate card; no employee may be billed twice for the same week; non-labor charges must be on the allowed list and under their cap; line amounts and the total must tie. Now I open each employee's timecard for that week and compare billed hours to approved hours. Maya Chen's approved timecard shows forty hours. Billed hours must not exceed approved hours. Jordan Alvarez's approved timecard shows thirty eight hours. Billed hours must not exceed approved hours. Priya Natarajan's approved timecard shows forty hours. Billed hours must not exceed approved hours. Sam Okafor's approved timecard shows thirty six hours. Billed hours must not exceed approved hours. If any check fails I recommend dispute and ask the vendor for a credit memo; otherwise approve.",
+  "gold": {
+    "rules": [
+      "Every labor line's hourly rate must equal the contract rate card rate for the employee's role.",
+      "No employee may be billed more than once for the same week.",
+      "Every non-labor charge must be on the contract's allowed list and must not exceed its cap.",
+      "Each line amount must equal quantity times unit rate.",
+      "The invoice total must equal the sum of the line amounts.",
+      "For each labor line, compare the billed hours with the approved hours on that employee's portal timecard for the week; billed hours must not exceed approved hours."
+    ],
+    "pages": [
+      "/portal/login",
+      "/portal/invoices",
+      "/portal/invoices/<invoice_id>",
+      "/portal/employees/<employee_id>?week=<week_ending>"
+    ],
+    "fields": [
+      "username",
+      "password",
+      "approved_hours"
+    ],
+    "decision_rule": "If any check fails, recommend dispute and ask the vendor for a credit memo; otherwise recommend approve."
+  },
+  "description": "Baseline review with planted speech-to-text errors in speech.words and the transcript (e.g. 'forty' heard as 'for tea', misspelled names). Rules must come out clean.",
+  "gold_checks": [
+    "rate_matches_contract",
+    "no_duplicate_lines",
+    "no_unknown_charges",
+    "line_amounts_correct",
+    "total_matches_line_items",
+    "hours_match_timecards"
+  ],
+  "consistency_group": null,
+  "provenance": {
+    "kind": "hand_authored_variant",
+    "derived_from": "extension/recordings/portal-HSG-1010.json",
+    "note": "Hand-authored variant of the primary capture. Gold rules, pages and fields written by hand from what this recording says and shows. Not a real voice capture."
+  }
+}

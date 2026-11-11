@@ -1,0 +1,765 @@
+{
+  "session_id": "rec_eval_said_not_shown",
+  "started_at": "2026-11-09T08:53:07.816Z",
+  "steps": [
+    {
+      "ts": "2026-11-09T08:53:07.833Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:08.483Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "text": "I'm verifying invoice HSG-1010 against the vendor timecard portal. First I sign in."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:13.093Z",
+      "kind": "dom",
+      "detail": {
+        "event": "input",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "selector": "input[name=\"username\"]",
+        "value": "ap.reviewer"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:13.743Z",
+      "kind": "dom",
+      "detail": {
+        "event": "input",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "selector": "input[name=\"password\"]",
+        "value": "[redacted]"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:14.393Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "selector": "div:nth-of-type(2) > section > form > button",
+        "text": "Sign in"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:15.043Z",
+      "kind": "dom",
+      "detail": {
+        "event": "submit",
+        "url": "http://localhost:3000/portal/login",
+        "title": "Sign in — Fixture vendor portal",
+        "selector": "div > div:nth-of-type(2) > section > form"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:15.693Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:16.343Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices — Fixture vendor portal",
+        "text": "Rules I apply: every labor rate must equal the contract rate card; no employee may be billed twice for the same week; non-labor charges must be on the allowed list and under their cap; line amounts and the total must tie."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:29.913Z",
+      "kind": "dom",
+      "detail": {
+        "event": "click",
+        "url": "http://localhost:3000/portal/invoices",
+        "title": "Invoices — Fixture vendor portal",
+        "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+        "text": "HSG-1010"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:30.563Z",
+      "kind": "dom",
+      "detail": {
+        "event": "navigate",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal"
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:31.213Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "text": "Billed hours must not exceed the approved hours on each employee's timecard for that week. I'm not opening the timecards in this recording."
+      }
+    },
+    {
+      "ts": "2026-11-09T08:53:39.023Z",
+      "kind": "narration",
+      "detail": {
+        "event": "narration",
+        "url": "http://localhost:3000/portal/invoices/HSG-1010",
+        "title": "Invoice — Fixture vendor portal",
+        "text": "If any check fails I recommend dispute and ask the vendor for a credit memo; otherwise approve."
+      }
+    }
+  ],
+  "transcript": [
+    "I'm verifying invoice HSG-1010 against the vendor timecard portal. First I sign in.",
+    "Rules I apply: every labor rate must equal the contract rate card; no employee may be billed twice for the same week; non-labor charges must be on the allowed list and under their cap; line amounts and the total must tie.",
+    "Billed hours must not exceed the approved hours on each employee's timecard for that week. I'm not opening the timecards in this recording.",
+    "If any check fails I recommend dispute and ask the vendor for a credit memo; otherwise approve."
+  ],
+  "speech": {
+    "provider": "simulated",
+    "model": null,
+    "mode": "scripted",
+    "language": "en",
+    "keyterms": [
+      "HSG-1010",
+      "Halcyon",
+      "Maya Chen",
+      "Jordan Alvarez",
+      "Priya Natarajan",
+      "Sam Okafor",
+      "rate card",
+      "timecard",
+      "approved hours",
+      "credit memo"
+    ],
+    "utterances": [
+      {
+        "id": "u1",
+        "text": "I'm verifying invoice HSG-1010 against the vendor timecard portal. First I sign in.",
+        "start": 0.667,
+        "end": 4.827,
+        "words": [
+          {
+            "text": "I'm",
+            "start": 0.667,
+            "end": 0.939,
+            "confidence": 0.97
+          },
+          {
+            "text": "verifying",
+            "start": 0.987,
+            "end": 1.259,
+            "confidence": 0.97
+          },
+          {
+            "text": "invoice",
+            "start": 1.307,
+            "end": 1.579,
+            "confidence": 0.97
+          },
+          {
+            "text": "HSG-1010",
+            "start": 1.627,
+            "end": 1.899,
+            "confidence": 0.97
+          },
+          {
+            "text": "against",
+            "start": 1.947,
+            "end": 2.219,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 2.267,
+            "end": 2.539,
+            "confidence": 0.97
+          },
+          {
+            "text": "vendor",
+            "start": 2.587,
+            "end": 2.859,
+            "confidence": 0.97
+          },
+          {
+            "text": "timecard",
+            "start": 2.907,
+            "end": 3.179,
+            "confidence": 0.97
+          },
+          {
+            "text": "portal.",
+            "start": 3.227,
+            "end": 3.499,
+            "confidence": 0.97
+          },
+          {
+            "text": "First",
+            "start": 3.547,
+            "end": 3.819,
+            "confidence": 0.97
+          },
+          {
+            "text": "I",
+            "start": 3.867,
+            "end": 4.139,
+            "confidence": 0.97
+          },
+          {
+            "text": "sign",
+            "start": 4.187,
+            "end": 4.459,
+            "confidence": 0.97
+          },
+          {
+            "text": "in.",
+            "start": 4.507,
+            "end": 4.779,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [],
+        "low_confidence": []
+      },
+      {
+        "id": "u2",
+        "text": "Rules I apply: every labor rate must equal the contract rate card; no employee may be billed twice for the same week; non-labor charges must be on the allowed list and under their cap; line amounts and the total must tie.",
+        "start": 8.527,
+        "end": 21.647,
+        "words": [
+          {
+            "text": "Rules",
+            "start": 8.527,
+            "end": 8.799,
+            "confidence": 0.97
+          },
+          {
+            "text": "I",
+            "start": 8.847,
+            "end": 9.119,
+            "confidence": 0.97
+          },
+          {
+            "text": "apply:",
+            "start": 9.167,
+            "end": 9.439,
+            "confidence": 0.97
+          },
+          {
+            "text": "every",
+            "start": 9.487,
+            "end": 9.759,
+            "confidence": 0.97
+          },
+          {
+            "text": "labor",
+            "start": 9.807,
+            "end": 10.079,
+            "confidence": 0.97
+          },
+          {
+            "text": "rate",
+            "start": 10.127,
+            "end": 10.399,
+            "confidence": 0.97
+          },
+          {
+            "text": "must",
+            "start": 10.447,
+            "end": 10.719,
+            "confidence": 0.97
+          },
+          {
+            "text": "equal",
+            "start": 10.767,
+            "end": 11.039,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 11.087,
+            "end": 11.359,
+            "confidence": 0.97
+          },
+          {
+            "text": "contract",
+            "start": 11.407,
+            "end": 11.679,
+            "confidence": 0.97
+          },
+          {
+            "text": "rate",
+            "start": 11.727,
+            "end": 11.999,
+            "confidence": 0.97
+          },
+          {
+            "text": "card;",
+            "start": 12.047,
+            "end": 12.319,
+            "confidence": 0.97
+          },
+          {
+            "text": "no",
+            "start": 12.367,
+            "end": 12.639,
+            "confidence": 0.97
+          },
+          {
+            "text": "employee",
+            "start": 12.687,
+            "end": 12.959,
+            "confidence": 0.97
+          },
+          {
+            "text": "may",
+            "start": 13.007,
+            "end": 13.279,
+            "confidence": 0.97
+          },
+          {
+            "text": "be",
+            "start": 13.327,
+            "end": 13.599,
+            "confidence": 0.97
+          },
+          {
+            "text": "billed",
+            "start": 13.647,
+            "end": 13.919,
+            "confidence": 0.97
+          },
+          {
+            "text": "twice",
+            "start": 13.967,
+            "end": 14.239,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 14.287,
+            "end": 14.559,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 14.607,
+            "end": 14.879,
+            "confidence": 0.97
+          },
+          {
+            "text": "same",
+            "start": 14.927,
+            "end": 15.199,
+            "confidence": 0.97
+          },
+          {
+            "text": "week;",
+            "start": 15.247,
+            "end": 15.519,
+            "confidence": 0.97
+          },
+          {
+            "text": "non-labor",
+            "start": 15.567,
+            "end": 15.839,
+            "confidence": 0.97
+          },
+          {
+            "text": "charges",
+            "start": 15.887,
+            "end": 16.159,
+            "confidence": 0.97
+          },
+          {
+            "text": "must",
+            "start": 16.207,
+            "end": 16.479,
+            "confidence": 0.97
+          },
+          {
+            "text": "be",
+            "start": 16.527,
+            "end": 16.799,
+            "confidence": 0.97
+          },
+          {
+            "text": "on",
+            "start": 16.847,
+            "end": 17.119,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 17.167,
+            "end": 17.439,
+            "confidence": 0.97
+          },
+          {
+            "text": "allowed",
+            "start": 17.487,
+            "end": 17.759,
+            "confidence": 0.97
+          },
+          {
+            "text": "list",
+            "start": 17.807,
+            "end": 18.079,
+            "confidence": 0.97
+          },
+          {
+            "text": "and",
+            "start": 18.127,
+            "end": 18.399,
+            "confidence": 0.97
+          },
+          {
+            "text": "under",
+            "start": 18.447,
+            "end": 18.719,
+            "confidence": 0.97
+          },
+          {
+            "text": "their",
+            "start": 18.767,
+            "end": 19.039,
+            "confidence": 0.97
+          },
+          {
+            "text": "cap;",
+            "start": 19.087,
+            "end": 19.359,
+            "confidence": 0.97
+          },
+          {
+            "text": "line",
+            "start": 19.407,
+            "end": 19.679,
+            "confidence": 0.97
+          },
+          {
+            "text": "amounts",
+            "start": 19.727,
+            "end": 19.999,
+            "confidence": 0.97
+          },
+          {
+            "text": "and",
+            "start": 20.047,
+            "end": 20.319,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 20.367,
+            "end": 20.639,
+            "confidence": 0.97
+          },
+          {
+            "text": "total",
+            "start": 20.687,
+            "end": 20.959,
+            "confidence": 0.97
+          },
+          {
+            "text": "must",
+            "start": 21.007,
+            "end": 21.279,
+            "confidence": 0.97
+          },
+          {
+            "text": "tie.",
+            "start": 21.327,
+            "end": 21.599,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [],
+        "low_confidence": []
+      },
+      {
+        "id": "u3",
+        "text": "Billed hours must not exceed the approved hours on each employee's timecard for that week. I'm not opening the timecards in this recording.",
+        "start": 23.397,
+        "end": 30.757,
+        "words": [
+          {
+            "text": "Billed",
+            "start": 23.397,
+            "end": 23.669,
+            "confidence": 0.97
+          },
+          {
+            "text": "hours",
+            "start": 23.717,
+            "end": 23.989,
+            "confidence": 0.97
+          },
+          {
+            "text": "must",
+            "start": 24.037,
+            "end": 24.309,
+            "confidence": 0.97
+          },
+          {
+            "text": "not",
+            "start": 24.357,
+            "end": 24.629,
+            "confidence": 0.97
+          },
+          {
+            "text": "exceed",
+            "start": 24.677,
+            "end": 24.949,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 24.997,
+            "end": 25.269,
+            "confidence": 0.97
+          },
+          {
+            "text": "approved",
+            "start": 25.317,
+            "end": 25.589,
+            "confidence": 0.97
+          },
+          {
+            "text": "hours",
+            "start": 25.637,
+            "end": 25.909,
+            "confidence": 0.97
+          },
+          {
+            "text": "on",
+            "start": 25.957,
+            "end": 26.229,
+            "confidence": 0.97
+          },
+          {
+            "text": "each",
+            "start": 26.277,
+            "end": 26.549,
+            "confidence": 0.97
+          },
+          {
+            "text": "employee's",
+            "start": 26.597,
+            "end": 26.869,
+            "confidence": 0.97
+          },
+          {
+            "text": "timecard",
+            "start": 26.917,
+            "end": 27.189,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 27.237,
+            "end": 27.509,
+            "confidence": 0.97
+          },
+          {
+            "text": "that",
+            "start": 27.557,
+            "end": 27.829,
+            "confidence": 0.97
+          },
+          {
+            "text": "week.",
+            "start": 27.877,
+            "end": 28.149,
+            "confidence": 0.97
+          },
+          {
+            "text": "I'm",
+            "start": 28.197,
+            "end": 28.469,
+            "confidence": 0.97
+          },
+          {
+            "text": "not",
+            "start": 28.517,
+            "end": 28.789,
+            "confidence": 0.97
+          },
+          {
+            "text": "opening",
+            "start": 28.837,
+            "end": 29.109,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 29.157,
+            "end": 29.429,
+            "confidence": 0.97
+          },
+          {
+            "text": "timecards",
+            "start": 29.477,
+            "end": 29.749,
+            "confidence": 0.97
+          },
+          {
+            "text": "in",
+            "start": 29.797,
+            "end": 30.069,
+            "confidence": 0.97
+          },
+          {
+            "text": "this",
+            "start": 30.117,
+            "end": 30.389,
+            "confidence": 0.97
+          },
+          {
+            "text": "recording.",
+            "start": 30.437,
+            "end": 30.709,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [],
+        "low_confidence": []
+      },
+      {
+        "id": "u4",
+        "text": "If any check fails I recommend dispute and ask the vendor for a credit memo; otherwise approve.",
+        "start": 31.207,
+        "end": 36.647,
+        "words": [
+          {
+            "text": "If",
+            "start": 31.207,
+            "end": 31.479,
+            "confidence": 0.97
+          },
+          {
+            "text": "any",
+            "start": 31.527,
+            "end": 31.799,
+            "confidence": 0.97
+          },
+          {
+            "text": "check",
+            "start": 31.847,
+            "end": 32.119,
+            "confidence": 0.97
+          },
+          {
+            "text": "fails",
+            "start": 32.167,
+            "end": 32.439,
+            "confidence": 0.97
+          },
+          {
+            "text": "I",
+            "start": 32.487,
+            "end": 32.759,
+            "confidence": 0.97
+          },
+          {
+            "text": "recommend",
+            "start": 32.807,
+            "end": 33.079,
+            "confidence": 0.97
+          },
+          {
+            "text": "dispute",
+            "start": 33.127,
+            "end": 33.399,
+            "confidence": 0.97
+          },
+          {
+            "text": "and",
+            "start": 33.447,
+            "end": 33.719,
+            "confidence": 0.97
+          },
+          {
+            "text": "ask",
+            "start": 33.767,
+            "end": 34.039,
+            "confidence": 0.97
+          },
+          {
+            "text": "the",
+            "start": 34.087,
+            "end": 34.359,
+            "confidence": 0.97
+          },
+          {
+            "text": "vendor",
+            "start": 34.407,
+            "end": 34.679,
+            "confidence": 0.97
+          },
+          {
+            "text": "for",
+            "start": 34.727,
+            "end": 34.999,
+            "confidence": 0.97
+          },
+          {
+            "text": "a",
+            "start": 35.047,
+            "end": 35.319,
+            "confidence": 0.97
+          },
+          {
+            "text": "credit",
+            "start": 35.367,
+            "end": 35.639,
+            "confidence": 0.97
+          },
+          {
+            "text": "memo;",
+            "start": 35.687,
+            "end": 35.959,
+            "confidence": 0.97
+          },
+          {
+            "text": "otherwise",
+            "start": 36.007,
+            "end": 36.279,
+            "confidence": 0.97
+          },
+          {
+            "text": "approve.",
+            "start": 36.327,
+            "end": 36.599,
+            "confidence": 0.97
+          }
+        ],
+        "step_refs": [],
+        "low_confidence": []
+      }
+    ],
+    "request_id": null
+  },
+  "provenance": {
+    "capture": "hand_authored_fixture",
+    "operator": "synthetic",
+    "derived_from": "extension/recordings/portal-HSG-1010.json",
+    "variant": "said-not-shown",
+    "note": "Hand-authored variant of the primary capture (extension/recordings/portal-HSG-1010.json): DOM steps copied from it, narration written by hand, speech word timings generated by evals/tools/build-recordings.ts (no audio, no speech model)."
+  }
+}

@@ -14,6 +14,18 @@ if (r.mode !== "real") problems.push(`receipts/HSG-1011.json mode=${r.mode} (exp
 for (const p of ["receipts/HSG-1012.json", "runs/HSG-1012"]) if (fs.existsSync(p)) problems.push(`${p} exists (rehearsal/film output; archive it, do not commit)`);
 const ev = j("runs/HSG-1011/evidence.json");
 if (ev.mode !== "real") problems.push(`runs/HSG-1011/evidence.json mode=${ev.mode}`);
+// Skill evals and learned skills: only real runs/versions may be committed (offline output stays local).
+if (fs.existsSync("evals/runs"))
+  for (const f of fs.readdirSync("evals/runs").filter((x) => x.endsWith(".json"))) {
+    const run = j(`evals/runs/${f}`);
+    if (run.mode !== "real") problems.push(`evals/runs/${f} mode=${run.mode}`);
+  }
+if (fs.existsSync("skills"))
+  for (const id of fs.readdirSync("skills"))
+    for (const v of fs.existsSync(`skills/${id}`) ? fs.readdirSync(`skills/${id}`).filter((x) => /^v\d+$/.test(x)) : []) {
+      const sk = fs.existsSync(`skills/${id}/${v}/skill.json`) ? j(`skills/${id}/${v}/skill.json`) : null;
+      if (sk && sk.mode !== "real") problems.push(`skills/${id}/${v} mode=${sk.mode}`);
+    }
 if (problems.length) {
   console.error("artifact guard FAILED:\n  " + problems.join("\n  "));
   process.exit(1);
