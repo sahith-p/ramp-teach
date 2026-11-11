@@ -40,7 +40,8 @@ if (!OFFLINE && ["all", "shoot"].includes(PHASE) && !process.env.RAMP_ANTHROPIC_
 }
 const BASE = `http://localhost:${PORT}`;
 const WORK = path.join(ROOT, "demo", "video", "work-film");
-const OUT = path.join(ROOT, "demo", "video", "ramp-teach-film.mp4");
+// Rehearsals (--offline) never overwrite the committed film.
+const OUT = path.join(OFFLINE ? WORK : path.join(ROOT, "demo", "video"), OFFLINE ? "rehearsal.mp4" : "ramp-teach-film.mp4");
 const RUN_OUT = path.join(ROOT, "demo", "video", "film-run");
 const W = 1920;
 const H = 1080;
@@ -390,7 +391,6 @@ function assemble() {
 
 /* =============================== outro =============================== */
 
-export const OUTRO_TAGLINE = "Show it once. Ramp Teach handles the rest.";
 const OUTRO_SECONDS = 4;
 
 /** Ramp-style outro: logo + divider + "Teach" in Lausanne, tagline, lemon sweep. Rendered frame by frame (deterministic). */
