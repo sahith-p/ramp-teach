@@ -23,7 +23,7 @@ from the take's timestamps, in the same style as the recorded subtitles.
 
 | Part | How it was made |
 |---|---|
-| Learning the rules | **Live** claude-opus-5-5 call (cache bypassed) on the recording made in this take → `film-run/learned-spec.json` (4 rules), `film-run/sent-recording.json` |
+| Learning the rules | **Live** claude-opus-5-5 call (cache bypassed) on the recording made in this take → `film-run/learned-workflow_spec.json` (4 rules; provenance in `film-run/learned-learn_meta.json`), `film-run/sent-recording.json` |
 | Agent review of HSG-1011 and HSG-1012 | **Live** runs: Claude chose every browser action (8 turns, 12 facts each) and wrote each receipt (`film-run/receipt-*.json`, `film-run/trace.jsonl`). It used the rules learned seconds earlier. |
 | Agent window | The agent's **own** browser, recorded during the run and composited into the second window frame-by-frame by wall clock |
 | The six checks | Hand-written code (deterministic) |
