@@ -32,3 +32,13 @@ body {
 .tabular {
   font-variant-numeric: tabular-nums;
 }
+
+/* Bill Pay motion */
+@keyframes rowin {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes drawerin {
+  from { opacity: 0; transform: translateX(28px); }
+  to { opacity: 1; transform: none; }
+}
