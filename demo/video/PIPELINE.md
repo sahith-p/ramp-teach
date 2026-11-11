@@ -39,14 +39,40 @@ Everything that is not recorded app footage is rebuilt from two committed things
 speed-ups, slots and t0) and the **take's archive** (`demo/video/film-run/`). So in any container, with no take,
 no API calls and no raw footage:
 
-1. Edit the screen in `demo/video/diagrams.ts` (a section's body or its `captions`), or a footage caption in
-   `voiceover()` in `demo/video/film.ts`.
+1. Edit the screen in `demo/video/diagrams.ts` (a section's body), or a caption's wording or timing in
+   `demo/video/voiceover/lines.json` (see "Voice-over" below).
 2. Preview: render stills of one section (see "Deterministic animation rendering" below).
 3. `npx tsx demo/video/film.ts --phase post` writes `demo/video/ramp-teach-demo.mp4` + `.voiceover.srt`.
 4. `npx tsx scripts/guard-artifacts.ts`, `git status`, commit the source change and the two outputs.
 
 Only a change to the **recorded app footage** (the dashboard, the extension, the stage page, the take's clicks
-or timing) needs a new take. `--phase post --offline` does the same for a rehearsal (from `work-film/master/` and
+or timing) needs a new take.
+
+## Voice-over (`demo/video/voiceover/`)
+
+The film's audio is a recorded two-person voice-over: Rohin narrates the app footage, Sahith the screens.
+
+| File | What it is |
+|---|---|
+| `voiceover.m4a` | The recording, one take, both voices. |
+| `transcript.json` | Word-timed transcript from a local open-source Whisper (`transcribe.py`, faster-whisper `small.en`, CPU). |
+| `silences.txt` | Pauses (`ffmpeg silencedetect`), used to cut lines cleanly. |
+| `split.py` | Turned the transcript into the first `lines.json` (maps each script line to the words heard). |
+| `lines.json` | **The source of truth.** One entry per line: `a`/`b` (seconds in the recording), `text` (the caption, as said), `speaker`, `at` (where it lands), `caption: false` for audio only (the intro and the outro). |
+
+`at` is one of: `{sec, t}` seconds into a screen; `{mark, dt}` a take mark (`take.json`); `{said, dt}` the n-th
+narrator line the stage said during the recording; `{after}` seconds after the previous line. `post` places the
+lines in order (never closer than 0.25 s), and when a line would run past its part, holds that part longer: a
+screen plays longer, a footage part freezes on its last frame. With a voice-over, every caption is the line as
+said (footage captions and screen captions alike), and the take's own burned-in subtitles during the recording
+are covered by opaque captions that join up and are at least as large. Audio: lines cut from the recording,
+20 ms fades, high-pass, light denoise, loudness normalised to -16 LUFS, AAC 160k.
+
+To fix a caption's wording, edit `text` in `lines.json`; to move a line, edit `at`; then run `post`. For a new
+recording: `python3 transcribe.py voiceover.m4a transcript.json` (in a venv with `faster-whisper`; the model
+downloads from Hugging Face once), `ffmpeg -i voiceover.m4a -af silencedetect=noise=-38dB:d=0.12 -f null -`
+for `silences.txt`, update the list in `split.py`, run it, and write its output into `lines.json`. Without
+`lines.json`, `post` falls back to the written captions (`voiceover()` and each section's `captions`) and no audio. `--phase post --offline` does the same for a rehearsal (from `work-film/master/` and
 `work-film/rehearsal-run/`).
 
 ## Phases (`--phase <name>`)
@@ -117,7 +143,7 @@ is kept too. Everything else is restored. Rehearsals keep nothing. Commit the ke
 | Real extension in the stage | `app/stage-ext/[...path]/route.ts`, `public/stage/chrome-shim.js` | Serves the **real** `extension/sidepanel.*`, `content.js`, `lib/recording.js`. `chrome-shim.js` stands in for `chrome.*` (storage, runtime messages, tabs.create → `stage.openInMain`). Narration reaches the panel through a stand-in `SpeechRecognition` (`window.__ext.speak`), which also drives the panel's voice visualizer; at Stop the panel asks `/api/stt` for the scripted narration transcript (word timings from the narration steps, aligned to the clicks). The panel shows no provider name for it. `window.__RT_OPERATOR="scripted_playwright"` labels the recording honestly. |
 | Bill Pay | `app/(dash)/bills/**`, `components/dash/**`, `lib/dash.ts`, `app/api/{dash,runs,teach,learn,stt}/*` | Bill page tabs Overview / Review / Evidence / Activity; Review = routing card + the triggered run + live view (frames from `runs/<id>/live/frame.jpg`, the agent's CDP screencast) + steps. Workflows tab with the learning card; workflow page tabs (Rules, Recordings, Runs, Evals, Versions); run page waterfall; recording page. `POST /api/dash/reset` hides invoices; `POST /api/dash/deliver` makes one arrive and spawns `agent/cli.ts` (route → run). |
 | Screens | `demo/video/diagrams.ts` (`SECTIONS`) | Eight HTML/CSS screens rendered frame by frame, reading the take's archive at render time (`setRunDir`). Each section's voice-over lines are its `captions`. |
-| Captions | `film.ts` `voiceover()` + `postProduce()` | Caption PNGs in the stage subtitle style (Inter 500 30px, dark pill), alpha-faded overlays on the master take. Screen captions are inside the screen renders. |
+| Voice-over + captions | `demo/video/voiceover/lines.json` + `film.ts` `postProduce()` | The recorded lines and their captions (see "Voice-over"). Footage captions are PNGs in the stage subtitle style (Inter 500 30px, dark pill) overlaid on the composed film; screen captions are inside the screen renders. `voiceover()` is the fallback without a recording. |
 | Master take | `demo/video/master/take.mp4`, `take.json` | The assembled footage of the last real take (no captions, no screens). `post` needs only this and `film-run/`. |
 
 ## The screens (`diagrams.ts`, `SECTIONS`)
@@ -178,8 +204,8 @@ Screen style rules the owner signed off on (keep them):
 
 ## Changing things
 
-- **Caption text / timing:** edit `voiceover()` in `film.ts` (footage) or a section's `captions` in `diagrams.ts`,
-  then `--phase post` (any container: it needs only the master take and `film-run/`).
+- **Caption text / timing:** edit `text` / `at` in `demo/video/voiceover/lines.json`, then `--phase post` (any
+  container: it needs only the master take, `film-run/` and `voiceover/`).
 - **A screen:** edit `diagrams.ts`, preview stills, then `--phase post`.
 - **The film's length:** `--target <seconds>` on `--phase assemble` (same container as the take) refits the waits;
   in another container shorten a section's `duration` (and its animation times) and run `--phase post`.

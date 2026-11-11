@@ -773,9 +773,28 @@ const srtTime = (t: number) => {
   return `${String(h).padStart(2, "0")}:${String(mi).padStart(2, "0")}:${String(se).padStart(2, "0")},${String(ms % 1000).padStart(3, "0")}`;
 };
 
+/** Voice-over: the recorded narration (demo/video/voiceover/), cut into lines that land on the film. */
+const VO_DIR = path.join(ROOT, "demo", "video", "voiceover");
+interface VoLine {
+  speaker: string;
+  a: number;
+  b: number;
+  text: string;
+  at: { sec?: string; t?: number; mark?: string; dt?: number; said?: number; after?: number };
+  caption?: boolean;
+}
+const loadVo = () => readMaybeJson<{ audio: string; lines: VoLine[] }>(path.join(VO_DIR, "lines.json"));
+/** Silence kept between two voice-over lines, and how far before a part's end a line must finish (s). */
+const VO_GAP = 0.25;
+const VO_TAIL = { sec: 0.7, main: 0.4 };
+/** The stage's own subtitle CSS (public/stage/index.html #sub): footage captions sit in the same place. */
+const SUB_CSS = "position:absolute;left:50%;bottom:46px;transform:translateX(-50%);max-width:1300px;width:max-content;color:#fff;font-size:30px;line-height:1.35;font-weight:500;text-align:center;padding:14px 28px;border-radius:14px;box-sizing:border-box";
+
 /**
  * Post: needs only the master take (take.mp4 + take.json) and the take's archive (RUN_OUT). Renders every
- * screen from diagrams.ts, burns the footage captions, composes the film and writes the voice-over script.
+ * screen from diagrams.ts, lays the voice-over (if demo/video/voiceover/lines.json exists) on the film, burns
+ * the captions, composes the film and writes the voice-over script. A line that runs past its part holds that
+ * part longer: a screen plays longer, a footage part freezes on its last frame.
  */
 async function postProduce() {
   if (!fs.existsSync(MASTER_JSON) || !fs.existsSync(MASTER_MP4)) throw new Error(`no master take at ${path.relative(ROOT, MASTER_DIR)} (shoot a take, or run --phase assemble in the container that shot it)`);
@@ -784,95 +803,184 @@ async function postProduce() {
   const dir = path.join(WORK, "post");
   fs.rmSync(dir, { recursive: true, force: true });
   fs.mkdirSync(dir, { recursive: true });
+  const out = mapper(asm);
+  const vo = loadVo();
+  // The narrator lines the stage said during the recording (burned into the take as subtitles).
+  const rec = readMaybeJson<{ steps: { ts: string; kind: string; detail: { text?: string } }[] }>(path.join(RUN_OUT, "film-recording.json"));
+  const said = (rec?.steps ?? []).filter((s) => s.kind === "narration").map((s) => ({ t: (Date.parse(s.ts) - Date.parse(take.t0)) / 1000, text: s.detail.text ?? "" }));
 
-  // 1. Screens (intro, the five technical sections, close, outro), read from the archive.
+  // 1. Layout: intro, main part n + screen n for every slot, close, outro; 0.5 s crossfades.
+  const slots = slotsFor(marks).map((s) => ({ at: out(s.at), resume: out(s.resume), id: s.id }));
+  type Seg = { kind: "main" | "sec"; id?: string; a?: number; b?: number; len: number; hold: number };
+  const segs: Seg[] = [{ kind: "sec", id: "intro", len: sectionById("intro").duration, hold: 0 }];
+  slots.forEach((s, n) => {
+    const a = n === 0 ? 0 : slots[n - 1].resume;
+    segs.push({ kind: "main", a, b: s.at, len: s.at - a, hold: 0 }, { kind: "sec", id: s.id, len: sectionById(s.id).duration, hold: 0 });
+  });
+  segs.push({ kind: "sec", id: "close", len: sectionById("close").duration, hold: 0 }, { kind: "sec", id: "outro", len: sectionById("outro").duration, hold: 0 });
+  const starts = () => segs.reduce<number[]>((acc, g, i) => [...acc, i === 0 ? 0 : acc[i - 1] + segs[i - 1].len - XF], []);
+  /** master (assembled) time -> [segment index, film time], for a time inside a footage part. */
+  const finMain = (o: number) => {
+    const st = starts();
+    const i = segs.findIndex((g) => g.kind === "main" && o >= g.a! && o < g.b!);
+    return i < 0 ? null : { i, t: st[i] + (o - segs[i].a!) };
+  };
+
+  // 2. Voice-over lines placed in film time, in order; a part grows when a line would run past it.
+  type Placed = { seg: number; from: number; to: number; a: number; b: number; text: string; speaker: string; caption: boolean };
+  const placed: Placed[] = [];
+  for (const l of vo?.lines ?? []) {
+    let seg: number, target: number;
+    const prev = placed.at(-1);
+    if (l.at.after !== undefined) {
+      if (!prev) throw new Error(`voice-over line "${l.text}" follows nothing`);
+      seg = prev.seg;
+      target = prev.to + l.at.after;
+    } else if (l.at.sec) {
+      seg = segs.findIndex((g) => g.kind === "sec" && g.id === l.at.sec);
+      if (seg < 0) throw new Error(`voice-over line "${l.text}": no screen ${l.at.sec}`);
+      target = starts()[seg] + (l.at.t ?? 0);
+    } else {
+      const ft = (l.at.mark ? marks[l.at.mark] : said[l.at.said ?? -1]?.t) + (l.at.dt ?? 0);
+      const f = Number.isFinite(ft) ? finMain(out(ft)) : null;
+      if (!f) throw new Error(`voice-over line "${l.text}": ${JSON.stringify(l.at)} is not in the footage`);
+      seg = f.i;
+      target = f.t;
+    }
+    const from = Math.max(target, prev ? prev.to + VO_GAP : 0);
+    const to = from + (l.b - l.a);
+    const end = starts()[seg] + segs[seg].len - VO_TAIL[segs[seg].kind];
+    if (to > end) {
+      segs[seg].len += to - end;
+      if (segs[seg].kind === "main") segs[seg].hold += to - end;
+    }
+    placed.push({ seg, from, to, a: l.a, b: l.b, text: l.text, speaker: l.speaker, caption: l.caption !== false });
+  }
+  const st = starts();
+
+  // 3. Captions. With a voice-over, every caption is a line as said; without one, the written captions.
+  type Cap = { from: number; to: number; text: string };
+  const secCaps = new Map<string, Cap[]>();
+  let footCaps: Cap[] = [];
+  if (vo) {
+    const shown = placed.filter((p) => p.caption);
+    shown.forEach((p, k) => {
+      const next = shown[k + 1];
+      const segEnd = st[p.seg] + segs[p.seg].len - XF - 0.1;
+      const cap = { from: p.from - 0.1, to: Math.min(p.to + 0.5, next ? next.from - 0.15 : Infinity, segEnd), text: p.text };
+      if (segs[p.seg].kind === "sec") {
+        const id = segs[p.seg].id!;
+        secCaps.set(id, [...(secCaps.get(id) ?? []), { from: cap.from - st[p.seg], to: cap.to - st[p.seg], text: cap.text }]);
+      } else footCaps.push(cap);
+    });
+  } else {
+    footCaps = voiceover(marks, asm).flatMap(([a, b, text]) => {
+      const f = finMain(out(a));
+      return f ? [{ from: f.t, to: f.t + (out(b) - out(a)), text }] : [];
+    });
+  }
+  // The take's own subtitles (the stage said each narrator line) stay on screen from the first line until the
+  // recording stops. With a voice-over they are covered: the captions over that window join up, are opaque and
+  // at least as large as the widest of them.
+  const cover = vo && said.length ? { from: finMain(out(said[0].t))!.t - 0.15, to: finMain(out(marks.record_stop))!.t } : null;
+  const inCover = (c: Cap) => !!cover && c.to > cover.from && c.from < cover.to;
+  if (cover) {
+    const ins = footCaps.filter(inCover);
+    if (!ins.length) throw new Error("no voice-over caption covers the take's subtitles");
+    ins[0].from = Math.min(ins[0].from, cover.from);
+    ins.forEach((c, k) => (c.to = k + 1 < ins.length ? ins[k + 1].from : Math.max(c.to, cover.to + 0.4)));
+  }
+  for (const c of [...footCaps, ...[...secCaps.values()].flat()]) if (BANNED.test(c.text)) throw new Error(`caption has banned wording: ${c.text}`);
+
+  // 4. Screens (intro, the five technical sections, close, outro), read from the archive, at their final length.
   const src = fs.readFileSync(path.join(ROOT, "components", "dash", "RampLogo.tsx"), "utf8");
   const logos = { word: /const WORD = "([^"]+)"/.exec(src)![1], mark: /const MARK = "([^"]+)"/.exec(src)![1] };
+  const file = (id: string) => path.join(dir, `sec-${id}.mp4`);
   for (const s of SECTIONS) {
-    await renderSection(s, path.join(dir, `sec-${s.id}.mp4`), dir, logos);
-    console.log(`screen ${s.id}: ${s.duration} s`);
+    const g = segs.find((x) => x.kind === "sec" && x.id === s.id);
+    const len = g ? g.len : s.duration;
+    const captions = vo ? (secCaps.get(s.id) ?? []).map((c) => ({ t0: c.from, t1: c.to, text: c.text })) : s.captions;
+    await renderSection({ ...s, duration: len, captions }, file(s.id), dir, logos);
+    console.log(`screen ${s.id}: ${len.toFixed(1)} s${len > s.duration + 0.05 ? ` (held ${(len - s.duration).toFixed(1)} s for the voice-over)` : ""}`);
   }
 
-  // 2. Footage captions as PNG overlays on the master.
-  const out = mapper(asm);
-  const lines = voiceover(marks, asm).map(([a, b, text]) => ({ from: out(a), to: out(b), text }));
-  for (const l of lines) if (BANNED.test(l.text)) throw new Error(`caption has banned wording: ${l.text}`);
+  // 5. Footage caption overlays (PNG, film time).
   const capDir = path.join(dir, "captions");
   fs.mkdirSync(capDir, { recursive: true });
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: W, height: H } });
-  for (const [i, l] of lines.entries()) {
-    await page.setContent(
-      `<!doctype html><html><head><style>${fontFaceCss([])}</style></head><body style="margin:0;background:transparent;width:${W}px;height:${H}px;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased">` +
-        `<div style="position:absolute;left:50%;bottom:46px;transform:translateX(-50%);max-width:1300px;width:max-content;background:rgba(18,18,18,.84);color:#fff;font-size:30px;line-height:1.35;font-weight:500;text-align:center;padding:14px 28px;border-radius:14px">${l.text.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</div></body></html>`,
-    );
+  const head = `<!doctype html><html><head><style>${fontFaceCss([])}</style></head><body style="margin:0;background:transparent;width:${W}px;height:${H}px;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased">`;
+  const esc = (t: string) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  // The widest and tallest of the take's subtitles, measured with the stage's CSS.
+  let box = { w: 0, h: 0 };
+  for (const s of cover ? said : []) {
+    await page.setContent(`${head}<div id="b" style="${SUB_CSS}">${esc(s.text)}</div></body></html>`);
+    const r = await page.locator("#b").boundingBox();
+    if (r) box = { w: Math.max(box.w, r.width), h: Math.max(box.h, r.height) };
+  }
+  for (const [i, c] of footCaps.entries()) {
+    const big = inCover(c) ? `min-width:${Math.ceil(box.w + 6)}px;min-height:${Math.ceil(box.h + 6)}px;bottom:43px;display:flex;align-items:center;justify-content:center;` : "";
+    await page.setContent(`${head}<div style="${SUB_CSS};background:rgb(26,26,26);${big}">${esc(c.text)}</div></body></html>`);
     await page.screenshot({ path: path.join(capDir, `c${i}.png`), omitBackground: true });
   }
   await browser.close();
-  const inputs = ["-i", MASTER_MP4];
-  let graph = "";
-  let last = "0:v";
-  lines.forEach((l, i) => {
-    const d = Math.max(0.6, l.to - l.from);
-    inputs.push("-loop", "1", "-t", d.toFixed(2), "-i", path.join(capDir, `c${i}.png`));
-    graph += `[${i + 1}:v]format=rgba,fade=in:st=0:d=0.3:alpha=1,fade=out:st=${(d - 0.3).toFixed(2)}:d=0.3:alpha=1,setpts=PTS-STARTPTS+${l.from.toFixed(3)}/TB[c${i}];`;
-    graph += `[${last}][c${i}]overlay=0:0:eof_action=pass[v${i}];`;
-    last = `v${i}`;
-  });
-  const captioned = path.join(dir, "captioned.mp4");
-  execFileSync("ffmpeg", ["-y", "-loglevel", "error", ...inputs, "-filter_complex", graph.replace(/;$/, ""), "-map", `[${last}]`, "-c:v", "libx264", "-preset", "medium", "-crf", "14", "-pix_fmt", "yuv420p", "-an", captioned]);
 
-  // 3. Compose: intro, main part n + screen n for every slot, close, outro; 0.5 s crossfades.
-  const slots = slotsFor(marks).map((s) => ({ at: out(s.at), resume: out(s.resume), id: s.id }));
-  const file = (id: string) => path.join(dir, `sec-${id}.mp4`);
-  const dur = (f: string) => Number(probe(f));
-  type Seg = { kind: "main" | "sec"; id?: string; a?: number; b?: number; len: number };
-  const segs: Seg[] = [{ kind: "sec", id: "intro", len: dur(file("intro")) }];
-  slots.forEach((s, n) => {
-    const a = n === 0 ? 0 : slots[n - 1].resume;
-    segs.push({ kind: "main", a, b: s.at, len: s.at - a }, { kind: "sec", id: s.id, len: dur(file(s.id)) });
-  });
-  segs.push({ kind: "sec", id: "close", len: dur(file("close")) }, { kind: "sec", id: "outro", len: dur(file("outro")) });
-  const starts: number[] = [];
-  segs.forEach((g, i) => starts.push(i === 0 ? 0 : starts[i - 1] + segs[i - 1].len - XF));
+  // 6. Compose: every part, crossfades, footage captions on top, the voice-over mixed under it.
   const secSegs = segs.filter((g) => g.kind === "sec");
-  const cin = ["-i", captioned, ...secSegs.flatMap((g) => ["-i", file(g.id!)])];
   const mains = segs.filter((g) => g.kind === "main").length;
+  const cin = ["-i", MASTER_MP4, ...secSegs.flatMap((g) => ["-i", file(g.id!)])];
   let cg = `[0:v]split=${mains}${Array.from({ length: mains }, (_, n) => `[m${n}]`).join("")};`;
   let mi = 0, si = 0;
   const norm = "fps=30,format=yuv420p,settb=AVTB,setpts=PTS-STARTPTS";
   segs.forEach((g, i) => {
-    if (g.kind === "main") cg += `[m${mi++}]trim=${g.a!.toFixed(3)}:${g.b!.toFixed(3)},${norm}[g${i}];`;
+    if (g.kind === "main") cg += `[m${mi++}]trim=${g.a!.toFixed(3)}:${g.b!.toFixed(3)},${norm}${g.hold > 0 ? `,tpad=stop_mode=clone:stop_duration=${g.hold.toFixed(3)}` : ""}[g${i}];`;
     else cg += `[${++si}:v]${norm}[g${i}];`;
   });
   let acc = "g0";
   let accLen = segs[0].len;
   for (let i = 1; i < segs.length; i++) {
-    const lab = i === segs.length - 1 ? "final" : `x${i}`;
-    cg += `[${acc}][g${i}]xfade=transition=fade:duration=${XF}:offset=${(accLen - XF).toFixed(3)}[${lab}];`;
-    acc = lab;
+    cg += `[${acc}][g${i}]xfade=transition=fade:duration=${XF}:offset=${(accLen - XF).toFixed(3)}[x${i}];`;
+    acc = `x${i}`;
     accLen += segs[i].len - XF;
   }
-  execFileSync("ffmpeg", ["-y", "-loglevel", "error", ...cin, "-filter_complex", cg.replace(/;$/, ""), "-map", "[final]", "-c:v", "libx264", "-preset", "slow", "-crf", "24", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-an", OUT]);
-
-  // 4. Voice-over script (.srt): footage captions, the narration said during recording, every screen's captions.
-  const mainIdx = segs.map((g, i) => (g.kind === "main" ? i : -1)).filter((i) => i >= 0);
-  const partOf = (t: number) => mainIdx.findIndex((i) => t >= segs[i].a! && t < segs[i].b!);
-  const fin = (t: number, n: number) => starts[mainIdx[n]] + (t - segs[mainIdx[n]].a!);
-  const rec = readMaybeJson<{ steps: { ts: string; kind: string; detail: { text?: string } }[] }>(path.join(RUN_OUT, "film-recording.json"));
-  const said = (rec?.steps ?? [])
-    .filter((s) => s.kind === "narration")
-    .map((s) => {
-      const ft = (Date.parse(s.ts) - Date.parse(take.t0)) / 1000;
-      return { from: out(ft), to: out(ft) + 2.8, text: s.detail.text ?? "" };
-    });
-  const secLines = segs.flatMap((g, i) => (g.kind === "sec" ? sectionById(g.id!).captions.map((c) => ({ from: starts[i] + c.t0, to: starts[i] + c.t1, text: c.text })) : []));
-  const mainLines = [...lines, ...said].flatMap((l) => {
-    const n = partOf(l.from);
-    if (n < 0) return [];
-    return [{ from: fin(l.from, n), to: fin(Math.min(l.to, segs[mainIdx[n]].b! - 0.05), n), text: l.text }];
+  footCaps.forEach((c, k) => {
+    const n = cin.length / 2;
+    const d = Math.max(0.6, c.to - c.from);
+    cin.push("-loop", "1", "-t", d.toFixed(3), "-i", path.join(capDir, `c${k}.png`));
+    // Captions that join up switch without a fade (the take's subtitle must never show through).
+    const joinIn = footCaps.some((p) => Math.abs(p.to - c.from) < 0.02), joinOut = footCaps.some((p) => Math.abs(p.from - c.to) < 0.02);
+    const fades = `${joinIn ? "" : ",fade=in:st=0:d=0.25:alpha=1"}${joinOut ? "" : `,fade=out:st=${(d - 0.25).toFixed(3)}:d=0.25:alpha=1`}`;
+    cg += `[${n}:v]format=rgba${fades},setpts=PTS-STARTPTS+${c.from.toFixed(3)}/TB[c${k}];[${acc}][c${k}]overlay=0:0:eof_action=pass[o${k}];`;
+    acc = `o${k}`;
   });
-  const all = [...mainLines, ...secLines].sort((x, y) => x.from - y.from);
+  cg += `[${acc}]null[final];`;
+  const audioArgs: string[] = [];
+  if (vo) {
+    const n = cin.length / 2;
+    cin.push("-i", path.join(VO_DIR, vo.audio));
+    cg += `[${n}:a]aresample=48000,asplit=${placed.length}${placed.map((_, k) => `[s${k}]`).join("")};`;
+    placed.forEach((p, k) => {
+      const d = p.b - p.a;
+      cg += `[s${k}]atrim=${p.a.toFixed(3)}:${p.b.toFixed(3)},asetpts=PTS-STARTPTS,afade=t=in:d=0.02,afade=t=out:st=${(d - 0.04).toFixed(3)}:d=0.04,adelay=${Math.round(p.from * 1000)}:all=1[v${k}];`;
+    });
+    cg += `${placed.map((_, k) => `[v${k}]`).join("")}amix=inputs=${placed.length}:normalize=0:dropout_transition=0,highpass=f=70,afftdn=nf=-30,loudnorm=I=-16:TP=-1.5:LRA=11,apad[aout];`;
+    audioArgs.push("-map", "[aout]", "-c:a", "aac", "-b:a", "160k", "-ar", "48000", "-t", accLen.toFixed(3));
+  }
+  execFileSync("ffmpeg", ["-y", "-loglevel", "error", ...cin, "-filter_complex", cg.replace(/;$/, ""), "-map", "[final]", "-c:v", "libx264", "-preset", "slow", "-crf", "24", "-pix_fmt", "yuv420p", ...(audioArgs.length ? audioArgs : ["-an"]), "-movflags", "+faststart", OUT]);
+
+  // 7. Voice-over script (.srt): every line as said (or, without a voice-over, every caption).
+  type Line = { from: number; to: number; text: string };
+  let all: Line[];
+  if (vo) all = placed.map((p) => ({ from: p.from, to: p.to + 0.3, text: p.text }));
+  else {
+    const sayLines = said.flatMap((s) => {
+      const f = finMain(out(s.t));
+      return f ? [{ from: f.t, to: f.t + 2.8, text: s.text }] : [];
+    });
+    const secLines = segs.flatMap((g, i) => (g.kind === "sec" ? sectionById(g.id!).captions.map((c) => ({ from: st[i] + c.t0, to: st[i] + c.t1, text: c.text })) : []));
+    all = [...footCaps, ...sayLines, ...secLines];
+  }
+  all.sort((x, y) => x.from - y.from);
   all.forEach((l, i) => {
     if (all[i + 1]) l.to = Math.min(l.to, all[i + 1].from - 0.1);
   });
@@ -881,8 +989,9 @@ async function postProduce() {
   if (BANNED.test(srt)) throw new Error("the voice-over script has banned wording");
   fs.writeFileSync(OUT.replace(/\.mp4$/, ".voiceover.srt"), srt);
   const total = Number(probe(OUT));
-  const log = segs.map((g, i) => `${g.kind === "sec" ? g.id : "footage"} ${starts[i].toFixed(1)}`).join(", ");
-  console.log(`wrote ${path.relative(ROOT, OUT)}: ${(fs.statSync(OUT).size / 1e6).toFixed(2)} MB, ${total.toFixed(1)} s (target ${TARGET} s), ${lines.length} footage captions; ${log}`);
+  const held = segs.filter((g) => g.kind === "main" && g.hold > 0).map((g) => `${g.hold.toFixed(1)} s at ${(st[segs.indexOf(g)] + g.len).toFixed(1)}`);
+  const log = segs.map((g, i) => `${g.kind === "sec" ? g.id : "footage"} ${st[i].toFixed(1)}`).join(", ");
+  console.log(`wrote ${path.relative(ROOT, OUT)}: ${(fs.statSync(OUT).size / 1e6).toFixed(2)} MB, ${total.toFixed(1)} s (target ${TARGET} s), ${footCaps.length} footage captions${vo ? `, ${placed.length} voice-over lines` : ""}${held.length ? `, footage held ${held.join(", ")}` : ""}; ${log}`);
 }
 const readMaybeJson = <T>(p: string): T | null => (fs.existsSync(p) ? readJson<T>(p) : null);
 

@@ -1,0 +1,435 @@
+{
+ "note": "Voice-over lines. a/b: seconds in voiceover.m4a. at: where the line lands (sec+t: seconds into a screen; mark+dt: a take mark; said: the n-th narrator line of the take; after: seconds after the previous line). text: the caption, as said. caption:false: audio only.",
+ "audio": "voiceover.m4a",
+ "lines": [
+  {
+   "speaker": "rohin",
+   "a": 1.094,
+   "b": 7.938,
+   "text": "Suppose I'm Rohin, an AP accountant. Every week I check invoices from our staffing agency, Halcyon, by hand.",
+   "heard": "Suppose I'm Rohin in AP Accountant. Every week I check invoices from our staffing agency, Halcyon, by hand.",
+   "at": {
+    "sec": "intro",
+    "t": 0.6
+   },
+   "caption": false
+  },
+  {
+   "speaker": "sahith",
+   "a": 8.041,
+   "b": 13.794,
+   "text": "Ramp Teach lets Rohin show that check once, so every bill after already arrives checked, with the proof.",
+   "heard": "Ramp Teach lets Rohin show that check once, so every bill after already arrives checked with the proof.",
+   "at": {
+    "after": 0.5
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 15.121,
+   "b": 20.087,
+   "text": "So let's say it's close week, so I'm recording myself reviewing this month's Halcyon invoice.",
+   "heard": "So let's say it's close week, so I'm recording myself reviewing this month's Halcyon invoice.",
+   "at": {
+    "said": 0,
+    "dt": -0.4
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 20.527,
+   "b": 23.617,
+   "text": "Every rate on it has to match the rate card in our contract,",
+   "heard": "Every rate on it has to match the rate card in our contract,",
+   "at": {
+    "said": 1
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 23.659,
+   "b": 25.992,
+   "text": "and nobody should be billed twice for the same week.",
+   "heard": "and nobody should be billed twice for the same week.",
+   "at": {
+    "said": 2
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 26.24,
+   "b": 29.924,
+   "text": "Then I check each person's hours against their approved timecard.",
+   "heard": "Then I check each person's hours against their approved timecard.",
+   "at": {
+    "said": 3
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 30.005,
+   "b": 33.821,
+   "text": "Maya's approved for 40 hours, so billed hours can't go over that.",
+   "heard": "Maya's approved for 40 hours, so billed hours can't go over that.",
+   "at": {
+    "said": 4
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 33.987,
+   "b": 36.535,
+   "text": "Sam's approved for 36.",
+   "heard": "Sam's is approved for 36.",
+   "at": {
+    "said": 5
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 36.838,
+   "b": 40.706,
+   "text": "If anything's off, I dispute it and ask the agency for a credit memo.",
+   "heard": "If anything's off, I dispute it and ask the agency for a credit memo.",
+   "at": {
+    "said": 6
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 40.86,
+   "b": 44.941,
+   "text": "When I stop, each thing I said shows up, linked to the step it was about.",
+   "heard": "When I stop, each thing I said shows up, linked to the step it was about.",
+   "at": {
+    "mark": "record_stop",
+    "dt": 0.5
+   }
+  },
+  {
+   "speaker": "sahith",
+   "a": 45.983,
+   "b": 53.241,
+   "text": "Rohin, while you worked, the recorder saved each click with the exact element you hit, and every sentence you said with its timing, matched to the clicks around it.",
+   "heard": "Rohin, while you worked, the recorder saved each click with the exact element you made and every sentence you said with this timing matched the clicks around it.",
+   "at": {
+    "sec": "record",
+    "t": 0.4
+   }
+  },
+  {
+   "speaker": "sahith",
+   "a": 53.241,
+   "b": 56.666,
+   "text": "Your click shows where the evidence is, and your sentences say the rules.",
+   "heard": "Your click shows where the evidence is, and your sentences say the rules.",
+   "at": {
+    "after": 0.4
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 56.976,
+   "b": 58.838,
+   "text": "So now I'm going to send it to Ramp.",
+   "heard": "So now I'm going to send it to Ramp.",
+   "at": {
+    "mark": "record_end",
+    "dt": 0.2
+   }
+  },
+  {
+   "speaker": "sahith",
+   "a": 59.32,
+   "b": 66.774,
+   "text": "Rohin's recording becomes a workflow, and when the next invoice comes in, an agent runs that workflow in its own browser, bringing back the same evidence.",
+   "heard": "Rohin's recording becomes a workflow, and when the next invoice comes in, an agent runs that workflow in its own browser, bringing back the same evidence.",
+   "at": {
+    "sec": "overview",
+    "t": 0.3
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 67.118,
+   "b": 70.217,
+   "text": "Bill Pay is learning my review, one stage at a time.",
+   "heard": "Bill Pay is learning my review one stage at a time.",
+   "at": {
+    "mark": "learn_start",
+    "dt": 0.4
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 70.298,
+   "b": 71.557,
+   "text": "Here's what it learned.",
+   "heard": "Here's what it learned.",
+   "at": {
+    "mark": "learn_done",
+    "dt": 1.8
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 71.609,
+   "b": 74.457,
+   "text": "Each rule points back to what I said and where I clicked,",
+   "heard": "Each rule points back to what I said and where I clicked,",
+   "at": {
+    "mark": "rules",
+    "dt": 1.1
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 74.457,
+   "b": 77.561,
+   "text": "and my recording keeps my words lined up with my clicks.",
+   "heard": "and my recording keeps my words lined up with my clicks.",
+   "at": {
+    "mark": "recording",
+    "dt": 0.3
+   }
+  },
+  {
+   "speaker": "sahith",
+   "a": 77.867,
+   "b": 83.849,
+   "text": "Claude reads your recording and writes the workflow: each rule with the words and click that it came from, and where the proof lives.",
+   "heard": "Claude reads your recording and writes the workflow. Each rule with the words and click that it came from, and that's where the proof lives.",
+   "at": {
+    "sec": "learning",
+    "t": 0.4
+   }
+  },
+  {
+   "speaker": "sahith",
+   "a": 84.324,
+   "b": 89.424,
+   "text": "It learns what to check and where to find it, writing real deterministic math code to spot differences.",
+   "heard": "It learns what to check and where to find it, writing real deterministic math code to spot differences.",
+   "at": {
+    "after": 0.4
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 90.28,
+   "b": 94.312,
+   "text": "Here it passed its evals, so this is now our active workflow.",
+   "heard": "Here it passed its evals, so this is now our active workflow.",
+   "at": {
+    "mark": "eval_end",
+    "dt": 0.3
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 94.384,
+   "b": 97.656,
+   "text": "Just now, a new invoice from Halcyon hit my approval queue,",
+   "heard": "Just now, a new invoice from Halcyon hit my approval queue,",
+   "at": {
+    "mark": "deliver_1011",
+    "dt": 0.2
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 97.656,
+   "b": 100.827,
+   "text": "so we can see Ramp picks the right workflow and starts its agent.",
+   "heard": "so we can see Ramp picks the right workflow and starts its agent.",
+   "at": {
+    "mark": "review",
+    "dt": 0.0
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 101.18,
+   "b": 105.175,
+   "text": "While it does that, I can watch the agent's own browser right here in the bill,",
+   "heard": "While it does that, I can watch the agent's own browser right here in the bill,",
+   "at": {
+    "mark": "agent_on",
+    "dt": 0.4
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 105.193,
+   "b": 108.04,
+   "text": "and it also pulls each timecard the same way I did.",
+   "heard": "and it also pulls each timecard the same way I did.",
+   "at": {
+    "mark": "agent_on",
+    "dt": 4.6
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 108.224,
+   "b": 112.36,
+   "text": "The run lives under Workflows, with every model turn and tool call,",
+   "heard": "The run lives under workflows with every model turn and tool call,",
+   "at": {
+    "mark": "agent_leave",
+    "dt": 1.4
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 112.36,
+   "b": 116.098,
+   "text": "and each step shows its tokens, cost and request ID.",
+   "heard": "and each step shows its tokens, cost, and request ID.",
+   "at": {
+    "mark": "result_1011",
+    "dt": 0.9
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 116.127,
+   "b": 120.145,
+   "text": "So every fact gets reread from its page by plain code.",
+   "heard": "So every fact gets reread from its page by plain code.",
+   "at": {
+    "mark": "evidence",
+    "dt": 0.0
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 120.16,
+   "b": 125.169,
+   "text": "It found three problems and $3,500 to credit back,",
+   "heard": "It found three problems and 3 ,500 to credit back,",
+   "at": {
+    "mark": "evidence",
+    "dt": 3.4
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 125.208,
+   "b": 130.314,
+   "text": "and this is where I can dispute it, as the agent never approves or pays anything itself.",
+   "heard": "and this is where I can dispute it as an agent never approves or pays anything itself.",
+   "at": {
+    "mark": "dispute",
+    "dt": -1.2
+   }
+  },
+  {
+   "speaker": "sahith",
+   "a": 131.094,
+   "b": 136.971,
+   "text": "The agent gets its own browser, and each turn Claude sees the page as an outline, picks the action, and gets the result.",
+   "heard": "The agent gets its own browser, and each turn Claude sees the page as an outline, picks the action, and gets the result.",
+   "at": {
+    "sec": "execution",
+    "t": 0.4
+   }
+  },
+  {
+   "speaker": "sahith",
+   "a": 137.169,
+   "b": 141.476,
+   "text": "It only records the facts with the page that they came from, and code turns them into pass or fail.",
+   "heard": "It only records the fact that the page that they came from encodes turns them into pass or fail.",
+   "at": {
+    "after": 0.4
+   }
+  },
+  {
+   "speaker": "sahith",
+   "a": 141.659,
+   "b": 144.082,
+   "text": "Claude writes the receipt, and then you make the call.",
+   "heard": "Claude writes to the receipt, and then you make the call.",
+   "at": {
+    "after": 0.3
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 145.089,
+   "b": 148.195,
+   "text": "Next, this is a clean invoice from the same agency,",
+   "heard": "Next, this is a clean invoice from the same agency,",
+   "at": {
+    "mark": "deliver_1012",
+    "dt": 0.2
+   }
+  },
+  {
+   "speaker": "rohin",
+   "a": 148.353,
+   "b": 152.586,
+   "text": "and since everything checks out, just one click from me moves it on to payment.",
+   "heard": "and since everything checks out, just one click from me moves it onto the payment.",
+   "at": {
+    "mark": "ready_1012",
+    "dt": 0.3
+   }
+  },
+  {
+   "speaker": "sahith",
+   "a": 153.82,
+   "b": 160.141,
+   "text": "We test the checks against past corrections, the learnings against recordings with known answers, and the whole review end to end.",
+   "heard": "We test the checks against past corrections, the learnings against recordings with known answers, and the whole review end to end.",
+   "at": {
+    "sec": "evaluation",
+    "t": 0.4
+   }
+  },
+  {
+   "speaker": "sahith",
+   "a": 160.379,
+   "b": 165.837,
+   "text": "Every Claude call is logged with its tokens, its cost, and request ID that we can look up for observability.",
+   "heard": "Every Claude call is logged with its tokens, its cost, and request ID that we can look up for observability.",
+   "at": {
+    "after": 0.4
+   }
+  },
+  {
+   "speaker": "sahith",
+   "a": 167.295,
+   "b": 172.809,
+   "text": "Today, this one recording from Rohin can become a tested workflow, with evidence behind every single recommendation.",
+   "heard": "Today, this one recording from Rohan can become a tested workflow with evidence behind every single recommendation.",
+   "at": {
+    "sec": "close",
+    "t": 0.3
+   }
+  },
+  {
+   "speaker": "sahith",
+   "a": 173.735,
+   "b": 179.202,
+   "text": "In the future, we see integrations with Teams and Slack to attach evidence from there to receipts as well.",
+   "heard": "In the future, we see integrations with Teams and Slack to attach evidence from there to receipts as well.",
+   "at": {
+    "after": 0.4
+   }
+  },
+  {
+   "speaker": "sahith",
+   "a": 179.92,
+   "b": 181.053,
+   "text": "Thank you.",
+   "heard": "Thank you.",
+   "at": {
+    "sec": "outro",
+    "t": 0.4
+   },
+   "caption": false
+  }
+ ]
+}
