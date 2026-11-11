@@ -54,7 +54,8 @@ function readBody(req: http.IncomingMessage): Promise<string> {
 
 export function createPortalStubHandler() {
   const vendor = loadVendor();
-  const invoices = loadAllInvoices();
+  // This is the vendor's own portal: only its invoices (data/ also holds another vendor's invoice for routing).
+  const invoices = loadAllInvoices().filter((i) => i.vendor === vendor.vendor);
   const timecards = loadTimecards(); // portal BACKEND data (stub only)
   const empByName = new Map(vendor.employees.map((e) => [e.name.toLowerCase(), e]));
 

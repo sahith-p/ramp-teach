@@ -306,6 +306,72 @@ export class PlaywrightDriver implements BrowserDriver {
     return "";
   }
 
+  /* ------------------------- observability extras ------------------------- */
+  // Not part of the frozen BrowserDriver interface; the engine feature-detects them.
+
+  /** PNG of the active tab without saving it (step screenshots are named by the caller). */
+  async capturePng(tabId?: string): Promise<Buffer> {
+    return (await this.page(tabId)).screenshot({ type: "png" });
+  }
+
+  /**
+   * Read the element `[data-field=<field>]` on the active tab. Returns its trimmed text, and saves a crop
+   * of the element to `cropPath` (absolute) when given. null when the page has no such element.
+   */
+  async readField(field: string, cropPath?: string | null, tabId?: string): Promise<{ text: string; cropPath: string | null } | null> {
+    if (!/^[A-Za-z0-9_-]{1,64}$/.test(field)) throw new Error(`Invalid data-field name "${field}"`);
+    const page = await this.page(tabId);
+    const loc = page.locator(`[data-field="${field}"]`).first();
+    if ((await loc.count()) === 0) return null;
+    const text = ((await loc.innerText()) ?? "").trim();
+    let saved: string | null = null;
+    if (cropPath) {
+      try {
+        fs.mkdirSync(path.dirname(cropPath), { recursive: true });
+        await loc.scrollIntoViewIfNeeded();
+        await loc.screenshot({ path: cropPath });
+        saved = cropPath;
+      } catch {
+        saved = null;
+      }
+    }
+    return { text, cropPath: saved };
+  }
+
+  /**
+   * Stream the active tab with a CDP screencast (Page.startScreencast). Every frame is acked; `onFrame`
+   * gets the JPEG bytes and the page URL. Returns a stop function.
+   */
+  async startScreencast(
+    onFrame: (jpeg: Buffer, url: string) => void,
+    opts: { maxWidth?: number; maxHeight?: number; quality?: number } = {},
+  ): Promise<() => Promise<void>> {
+    const page = await this.page();
+    const session = await page.context().newCDPSession(page);
+    session.on("Page.screencastFrame", (ev: { data: string; sessionId: number }) => {
+      session.send("Page.screencastFrameAck", { sessionId: ev.sessionId }).catch(() => {});
+      try {
+        onFrame(Buffer.from(ev.data, "base64"), page.url());
+      } catch {
+        /* a frame consumer must never break the run */
+      }
+    });
+    await session.send("Page.startScreencast", {
+      format: "jpeg",
+      quality: opts.quality ?? 60,
+      maxWidth: opts.maxWidth ?? this.opts.viewport.width,
+      maxHeight: opts.maxHeight ?? this.opts.viewport.height,
+      everyNthFrame: 1,
+    });
+    let stopped = false;
+    return async () => {
+      if (stopped) return;
+      stopped = true;
+      await session.send("Page.stopScreencast").catch(() => {});
+      await session.detach().catch(() => {});
+    };
+  }
+
   /** Hover a target (used by the hover toolset member). Not part of the frozen interface. */
   async hover(target: BrowserTarget, tabId?: string): Promise<string> {
     const page = await this.page(tabId);

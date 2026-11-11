@@ -82,5 +82,12 @@
     "amount": 12374,
     "status": "pending",
     "receipt_id": null
+  },
+  {
+    "bill_id": "bill_OFS-2201",
+    "vendor": "Brightline Office Supply",
+    "amount": 1665,
+    "status": "pending",
+    "receipt_id": null
   }
 ]

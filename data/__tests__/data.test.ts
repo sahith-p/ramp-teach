@@ -98,7 +98,11 @@ const vendor = loadVendor();
 const timecards = loadTimecards();
 const corrections = loadCorrections();
 const past = loadPastInvoices();
-const fresh = loadNewInvoices();
+// OFS-2201 (Brightline Office Supply) is the router's "no workflow fits" case: a different vendor with no
+// labor lines. The Halcyon world checks below run on Halcyon's invoices; it has its own test.
+const OTHER_VENDOR_IDS = new Set(["OFS-2201"]);
+const fresh = loadNewInvoices().filter((i) => !OTHER_VENDOR_IDS.has(i.invoice_id));
+const other = loadNewInvoices().filter((i) => OTHER_VENDOR_IDS.has(i.invoice_id));
 const all = [...past, ...fresh];
 
 describe("data: schemas and the synthetic world", () => {
@@ -186,9 +190,23 @@ describe("data: schemas and the synthetic world", () => {
     expect(sam?.approved_hours).toBe(38);
   });
 
+  it("OFS-2201: another vendor's office-supply invoice, no labor lines, consistent totals, pending bill", () => {
+    expect(other.map((i) => i.invoice_id)).toEqual(["OFS-2201"]);
+    const inv = other[0];
+    expect(inv.vendor).toBe("Brightline Office Supply");
+    expect(inv.vendor).not.toBe(vendor.vendor);
+    expect(inv.line_items.some((l) => LABOR_LINE_REGEX.test(l.description))).toBe(false);
+    for (const l of inv.line_items) expect(moneyEq(cents(l.quantity * l.unit_rate), l.amount)).toBe(true);
+    expect(moneyEq(cents(inv.line_items.reduce((s, l) => s + l.amount, 0)), inv.total)).toBe(true);
+    expect(inv.due_date).toBe(addDays(inv.issue_date, 30));
+    expect(invoicePathFor(inv.invoice_id)).toBe("data/invoices/new/OFS-2201.json");
+    const bill = loadBillsSeed().find((b) => b.bill_id === billIdFor(inv.invoice_id));
+    expect(bill).toEqual({ bill_id: "bill_OFS-2201", vendor: inv.vendor, amount: inv.total, status: "pending", receipt_id: null });
+  });
+
   it("bills: one per invoice with the right status and amount", () => {
-    const bills = loadBillsSeed();
-    expect(() => bills.forEach((b) => BillSchema.parse(b))).not.toThrow();
+    const bills = loadBillsSeed().filter((b) => !OTHER_VENDOR_IDS.has(b.bill_id.replace(/^bill_/, "")));
+    expect(() => loadBillsSeed().forEach((b) => BillSchema.parse(b))).not.toThrow();
     const corrected = new Set(corrections.map((c) => c.invoice_id));
     expect(bills.map((b) => b.bill_id)).toEqual(all.map((i) => billIdFor(i.invoice_id)));
     for (const inv of all) {

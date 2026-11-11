@@ -71,7 +71,9 @@ export class AnthropicProvider implements AIProvider {
 
   /**
    * Model-driven browser loop over the BrowserDriver (mode: real). See ./browser-loop.ts.
-   * Returns a BrowserLoopResult (BrowserTaskResult + usage, stopReason, screenshots).
+   * Streams every turn (task budget, progress notes via thinking display "updates", refusal fallback).
+   * `req` may carry the BrowserLoopRequest extras (hooks, step screenshots, task budget); they pass through.
+   * Returns a BrowserLoopResult (BrowserTaskResult + usage, stopReason, screenshots, notes).
    */
   async runBrowserTask(req: BrowserTaskRequest): Promise<BrowserLoopResult> {
     return runBrowserLoop(this.client, { model: this.model, effort: engineConfig.effort }, req);
