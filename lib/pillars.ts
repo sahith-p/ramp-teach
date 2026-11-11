@@ -16,6 +16,8 @@ import fs from "node:fs";
 import path from "node:path";
 import {
   EvidenceCheckReportSchema,
+  RouteDecisionSchema,
+  type RouteDecision,
   RecordingSchema,
   SkillEvalCaseSchema,
   SkillEvalRunSchema,
@@ -159,4 +161,9 @@ export function appendSpan(invoiceId: string, span: Span): void {
 
 export function readEvidenceCheck(invoiceId: string): EvidenceCheckReport | null {
   return readJson(evidenceCheckPath(invoiceId), (x) => EvidenceCheckReportSchema.parse(x));
+}
+
+export const routePath = (invoiceId: string) => path.join(runDir(invoiceId), "route.json");
+export function readRoute(invoiceId: string): RouteDecision | null {
+  return readJson(routePath(invoiceId), (x) => RouteDecisionSchema.parse(x));
 }

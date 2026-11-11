@@ -266,3 +266,24 @@ export const EvidenceCheckReportSchema = z.object({
   checks: z.array(EvidenceCheckSchema),
 });
 export type EvidenceCheckReport = z.infer<typeof EvidenceCheckReportSchema>;
+
+/* ================================== ROUTING ================================== */
+
+/**
+ * When a new invoice arrives, a routing model picks which workflow (skill) should handle it, or none.
+ * Written to runs/<invoice_id>/route.json before the workflow agent starts.
+ */
+export const RouteDecisionSchema = z.object({
+  invoice_id: z.string(),
+  decided_at: z.string(),
+  /** Chosen workflow, or null = no workflow fits (send to manual review). */
+  workflow_id: z.string().nullable(),
+  version: z.number().int().positive().nullable(),
+  confidence: z.number().min(0).max(1),
+  reason: z.string(),
+  candidates: z.array(z.object({ workflow_id: z.string(), score: z.number().min(0).max(1), why: z.string() })),
+  mode: PillarModeSchema,
+  model: z.string().nullable(),
+  request_id: z.string().nullable(),
+});
+export type RouteDecision = z.infer<typeof RouteDecisionSchema>;
