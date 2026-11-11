@@ -1,127 +1,147 @@
 1
-00:00:00,400 --> 00:00:06,999
-I'm about to record myself checking an invoice from our staffing vendor, so Ramp can learn how I review it.
+00:00:00,500 --> 00:00:04,800
+A reviewer shows the check once; the next invoice arrives with the evidence and a recommendation.
 
 2
-00:00:07,502 --> 00:00:10,302
-I'm checking this month's invoice from Halcyon Staffing.
+00:00:04,900 --> 00:00:09,752
+I record myself checking one invoice from our staffing vendor.
 
 3
-00:00:11,986 --> 00:00:14,526
-Every rate on it has to match our contract.
+00:00:10,066 --> 00:00:12,866
+I'm checking this month's invoice from Halcyon Staffing.
 
 4
-00:00:14,626 --> 00:00:17,239
-And nobody should be billed twice for the same week.
+00:00:15,296 --> 00:00:17,774
+Every rate on it has to match our contract.
 
 5
-00:00:17,339 --> 00:00:19,167
-Then I check each person's hours against their timecard.
+00:00:17,874 --> 00:00:20,190
+And nobody should be billed twice for the same week.
 
 6
-00:00:19,267 --> 00:00:22,067
-Maya is approved for 40 hours. Billed hours can't go over that.
+00:00:20,290 --> 00:00:22,399
+Then I check each person's hours against their timecard.
 
 7
-00:00:25,742 --> 00:00:28,542
-Sam is approved for 36.
+00:00:22,499 --> 00:00:25,299
+Maya is approved for 40 hours. Billed hours can't go over that.
 
 8
-00:00:28,898 --> 00:00:31,698
-If anything is off, I dispute it and ask for a credit.
+00:00:28,941 --> 00:00:31,712
+Sam is approved for 36.
 
 9
-00:00:35,772 --> 00:00:41,172
-While I work, the recorder saves each click with the exact element it hit.
+00:00:31,812 --> 00:00:34,612
+If anything is off, I dispute it and ask for a credit.
 
 10
-00:00:41,372 --> 00:00:46,872
-What I say is saved alongside, and passwords are blanked before they leave the page.
+00:00:37,049 --> 00:00:41,226
+When I stop, each sentence shows up linked to the steps it describes.
 
 11
-00:00:46,972 --> 00:00:50,372
-When I'm done, I send the recording straight to Ramp.
+00:00:41,326 --> 00:00:49,326
+The recorder saves each click with the exact element it hit, and every sentence I say with its timing, linked to the clicks around it.
 
 12
-00:00:50,572 --> 00:00:53,954
-I sign in, and Ramp Teach starts learning from what I just did.
+00:00:49,526 --> 00:00:53,026
+The click shows where the evidence is; the sentence says the rule.
 
 13
-00:00:54,354 --> 00:01:02,918
-A few seconds later it has the rules, written from my clicks and what I said.
+00:00:53,126 --> 00:00:55,368
+I send it to Ramp.
 
 14
-00:01:03,118 --> 00:01:07,918
-The agent sees each page as a short outline, with a tag on every element it can use.
+00:00:55,468 --> 00:01:01,368
+What I recorded becomes a workflow. When a new invoice arrives, an agent runs it in its own browser and brings back evidence.
 
 15
-00:01:08,118 --> 00:01:13,518
-It picks an action, sees what changed, and goes again. Eight turns to read four timecards.
+00:01:01,468 --> 00:01:06,505
+Bill Pay learns the workflow, one stage at a time.
 
 16
-00:01:13,718 --> 00:01:18,218
-It can't run scripts, upload files or leave the vendor's portal.
+00:01:06,653 --> 00:01:10,773
+Here is what it learned.
 
 17
-00:01:18,318 --> 00:01:23,297
-Now a new invoice from the same vendor lands in Bill Pay.
+00:01:10,921 --> 00:01:14,225
+Each rule points back to what I said and where I clicked.
 
 18
-00:01:23,697 --> 00:01:25,675
-The agent picks it up on its own.
+00:01:14,595 --> 00:01:16,797
+The recording keeps my words in time with my clicks.
 
 19
-00:01:26,075 --> 00:01:37,475
-It opens the vendor portal and checks each timecard, the same way I did.
+00:01:16,897 --> 00:01:23,697
+Claude reads the recording and writes the workflow: each rule with the words and click it came from, and where the proof lives.
 
 20
-00:01:37,675 --> 00:01:49,475
-Every step it takes shows up on the bill as it happens.
+00:01:23,897 --> 00:01:28,172
+The checks are code we wrote; what it learned is what to check and where.
 
 21
-00:01:49,675 --> 00:02:00,702
-It checks billed hours, rates and duplicate lines against the contract.
+00:01:28,272 --> 00:01:34,819
+It passed its evals, so v1 is now the active workflow.
 
 22
-00:02:01,002 --> 00:02:08,024
-Then it writes up what it found.
+00:01:35,219 --> 00:01:37,060
+A new invoice from the same vendor arrives.
 
 23
-00:02:08,324 --> 00:02:13,724
-Three problems: a rate above contract, a line billed twice, and hours over the timecard. $3,448 to credit back.
+00:01:37,208 --> 00:01:41,083
+Ramp picks the workflow and starts its agent.
 
 24
-00:02:13,924 --> 00:02:17,501
-So I dispute it. The agent never approves or pays anything on its own.
+00:01:41,183 --> 00:01:45,183
+The agent's own browser runs right here in the bill.
 
 25
-00:02:17,601 --> 00:02:23,201
-Plain code does the math. The agent's timecard facts settle the one check code can't do alone.
+00:01:45,350 --> 00:01:49,683
+It reads each timecard the way I did.
 
 26
-00:02:23,401 --> 00:02:30,001
-Claude writes the receipt with a source for each problem, and only I can approve or dispute.
+00:01:49,883 --> 00:01:56,916
+The run is under Workflows, every model turn and tool call.
 
 27
-00:02:30,201 --> 00:02:37,420
-Next, a clean invoice from the same vendor.
+00:01:57,138 --> 00:02:03,046
+Each step has its tokens, cost and request ID.
 
 28
-00:02:37,620 --> 00:02:44,346
-Same review, sped up.
+00:02:03,320 --> 00:02:05,742
+Every fact was read again from its page by plain code.
 
 29
-00:02:44,466 --> 00:02:47,266
-Everything checks out, so it's ready to approve.
+00:02:05,890 --> 00:02:10,429
+Three problems, $3448 to credit. I dispute it. The agent never approves or pays.
 
 30
-00:02:47,466 --> 00:02:55,206
-One click from me, and it moves on to payment.
+00:02:10,529 --> 00:02:16,929
+The agent works in its own browser. Each turn, Claude sees the page as an outline, picks an action and gets the result.
 
 31
-00:02:55,306 --> 00:03:01,306
-Every step writes a line to a log: what ran, and whether Claude, plain code or a person did it.
+00:02:17,129 --> 00:02:23,429
+It records facts with the page they came from. Code turns them into pass or fail, Claude writes the receipt, and I decide.
 
 32
-00:03:01,506 --> 00:03:08,706
-Each Claude call is logged with its request ID, so it can be checked against Anthropic's own records.
+00:02:26,687 --> 00:02:30,587
+Next, a clean invoice from the same vendor.
+
+33
+00:02:30,787 --> 00:02:38,713
+Everything checks out. One click from me, and it moves on to payment.
+
+34
+00:02:38,813 --> 00:02:44,613
+We test the checks against past corrections, the learning against recordings with known answers, and the whole review end to end.
+
+35
+00:02:44,813 --> 00:02:50,713
+One review was 11 Claude calls, 55 seconds and $0.22, and each call has a request ID we can look up.
+
+36
+00:02:50,813 --> 00:02:53,813
+Today, one recording becomes a tested workflow with evidence behind every recommendation.
+
+37
+00:02:54,013 --> 00:02:57,213
+Next, it could pull a delivery confirmation from Teams or Slack and attach it to the receipt.
