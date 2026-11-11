@@ -382,6 +382,58 @@ function assemble() {
   writeJson(path.join(WORK, "assemble.json"), { offset, on, off, a, b, SPEED, start, rect, out_duration: d, waits });
 }
 
+/* =============================== outro =============================== */
+
+export const OUTRO_TAGLINE = "Show it once. Ramp Teach handles the rest.";
+const OUTRO_SECONDS = 5;
+
+/** Ramp-style outro: logo + divider + "Teach" in Lausanne, tagline, lemon sweep. Rendered frame by frame (deterministic). */
+async function outro() {
+  const logoSrc = fs.readFileSync(path.join(ROOT, "components", "dash", "RampLogo.tsx"), "utf8");
+  const WORD = /const WORD = "([^"]+)"/.exec(logoSrc)![1];
+  const MARK = /const MARK = "([^"]+)"/.exec(logoSrc)![1];
+  const ease = "cubic-bezier(.2,.8,.2,1)";
+  const html = `<!doctype html><html><head><meta charset="utf-8"><style>
+    @font-face { font-family: Lausanne; font-weight: 300; src: url("https://assets.ramp.com/fonts/lausanne/lausanne-300/TWKLausanne-300.woff2") format("woff2"); }
+    @font-face { font-family: Lausanne; font-weight: 400; src: url("https://assets.ramp.com/fonts/lausanne/lausanne-400/TWKLausanne-400.woff2") format("woff2"); }
+    html,body { margin:0; width:${W}px; height:${H}px; background: rgb(244,242,240); overflow:hidden; font-family: Lausanne, Inter, sans-serif; color: rgb(26,25,25); }
+    .stage { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:44px; }
+    .lockup { display:flex; align-items:center; gap:34px; }
+    .logo { height:92px; width:auto; opacity:0; transform: translateY(26px); animation: up .75s ${ease} .15s forwards; }
+    .div { width:2px; height:96px; background: rgb(210,206,203); transform: scaleY(0); transform-origin: top; animation: grow .5s ${ease} .55s forwards; }
+    .teach { font-size:96px; font-weight:400; letter-spacing:-.02em; line-height:1; opacity:0; transform: translateX(-18px); animation: slide .65s ${ease} .7s forwards; }
+    .tag { position:relative; font-size:38px; font-weight:300; color: rgb(71,69,67); opacity:0; transform: translateY(14px); animation: up .6s ${ease} 1.35s forwards; }
+    .bar { position:absolute; left:0; right:0; bottom:-14px; height:6px; background: rgb(228,242,34); transform: scaleX(0); transform-origin:left; animation: sweep .7s ${ease} 1.65s forwards; }
+    @keyframes up { to { opacity:1; transform:none; } }
+    @keyframes grow { to { transform: scaleY(1); } }
+    @keyframes slide { to { opacity:1; transform:none; } }
+    @keyframes sweep { to { transform: scaleX(1); } }
+  </style></head><body><div class="stage">
+    <div class="lockup">
+      <svg class="logo" viewBox="0 0 227 61" fill="currentColor" aria-label="Ramp"><path d="${WORD}"/><path d="${MARK}"/></svg>
+      <span class="div"></span><span class="teach">Teach</span>
+    </div>
+    <div class="tag">${OUTRO_TAGLINE}<span class="bar"></span></div>
+  </div></body></html>`;
+  const dir = path.join(WORK, "outro");
+  fs.rmSync(dir, { recursive: true, force: true });
+  fs.mkdirSync(dir, { recursive: true });
+  const browser = await chromium.launch();
+  const page = await browser.newPage({ viewport: { width: W, height: H } });
+  await page.setContent(html, { waitUntil: "networkidle" });
+  await page.evaluate(() => document.fonts.ready);
+  const fontOk = await page.evaluate(() => document.fonts.check("400 96px Lausanne"));
+  await page.evaluate(() => document.getAnimations().forEach((a) => a.pause()));
+  const frames = OUTRO_SECONDS * 30;
+  for (let i = 0; i < frames; i++) {
+    await page.evaluate((t) => document.getAnimations().forEach((a) => (a.currentTime = t)), (i / 30) * 1000);
+    await page.screenshot({ path: path.join(dir, `f${String(i).padStart(4, "0")}.png`) });
+  }
+  await browser.close();
+  execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-framerate", "30", "-i", path.join(dir, "f%04d.png"), "-c:v", "libx264", "-preset", "medium", "-crf", "14", "-pix_fmt", "yuv420p", path.join(WORK, "outro.mp4")]);
+  console.log(`outro: ${frames} frames, Lausanne loaded: ${fontOk}`);
+}
+
 /* ============================== captions ============================== */
 
 /**
@@ -405,8 +457,7 @@ function voiceover(m: Record<string, number>): [number, number, string][] {
     [m.deliver_1012 + 0.2, m.fast_start + 0.3, "Next, a clean invoice from the same vendor."],
     [m.fast_start + 0.5, m.fast_end - 0.4, "Same review, sped up."],
     [m.fast_end - 0.2, m.fast_end + 2.6, "Everything checks out, so it's ready to approve."],
-    [m.fast_end + 2.8, m.end - 4.0, "One click from me, and it moves on to payment."],
-    [m.end - 3.6, m.end, "Show it once. Ramp Teach handles the rest."],
+    [m.fast_end + 2.8, m.end - 3.0, "One click from me, and it moves on to payment."],
   ];
 }
 
@@ -453,8 +504,15 @@ async function captions() {
     graph += `[${last}][c${i}]overlay=0:0:eof_action=pass[v${i}];`;
     last = `v${i}`;
   });
-  graph = graph.replace(/;$/, "");
-  execFileSync("ffmpeg", ["-y", "-loglevel", "error", ...inputs, "-filter_complex", graph, "-map", `[${last}]`, "-c:v", "libx264", "-preset", "slow", "-crf", "24", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-an", OUT]);
+  // Cut just before the take's own end fade, then crossfade (0.6 s) into the Ramp-style outro.
+  const cut = out(marks.end - 2.9);
+  const XF = 0.6;
+  const outroIdx = lines.length + 1;
+  inputs.push("-i", path.join(WORK, "outro.mp4"));
+  graph += `[${last}]trim=0:${cut.toFixed(3)},setpts=PTS-STARTPTS,fps=30,format=yuv420p,settb=AVTB[main];`;
+  graph += `[${outroIdx}:v]fps=30,format=yuv420p,settb=AVTB[out1];`;
+  graph += `[main][out1]xfade=transition=fade:duration=${XF}:offset=${(cut - XF).toFixed(3)}[final]`;
+  execFileSync("ffmpeg", ["-y", "-loglevel", "error", ...inputs, "-filter_complex", graph, "-map", "[final]", "-c:v", "libx264", "-preset", "slow", "-crf", "24", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-an", OUT]);
 
   // Voice-over script (.srt): the captions plus the narration lines said during recording (times from the recording).
   const rec = readJson<{ steps: { ts: string; kind: string; detail: { text?: string } }[] }>(path.join(WORK, "film-recording.json"));
@@ -464,7 +522,8 @@ async function captions() {
       const ft = (Date.parse(s.ts) - Date.parse(t0)) / 1000;
       return { from: out(ft), to: out(ft) + 2.8, text: s.detail.text ?? "" };
     });
-  const all = [...lines, ...said].sort((x, y) => x.from - y.from);
+  const outroStart = cut - XF + 1.35;
+  const all = [...lines, ...said, { from: outroStart, to: outroStart + 3.4, text: OUTRO_TAGLINE }].sort((x, y) => x.from - y.from);
   all.forEach((l, i) => {
     if (all[i + 1]) l.to = Math.min(l.to, all[i + 1].from - 0.1);
   });
@@ -512,7 +571,10 @@ function restore() {
 (async () => {
   if (PHASE === "all" || PHASE === "shoot") await shoot();
   if (PHASE === "all" || PHASE === "assemble") assemble();
-  if (PHASE === "all" || PHASE === "assemble" || PHASE === "captions") await captions();
+  if (PHASE === "all" || PHASE === "assemble" || PHASE === "captions" || PHASE === "outro") {
+    if (PHASE !== "captions" || !fs.existsSync(path.join(WORK, "outro.mp4"))) await outro();
+    await captions();
+  }
   if (PHASE === "all" || PHASE === "restore") restore();
 })().catch((e) => {
   console.error(e instanceof Error ? e.stack : e);

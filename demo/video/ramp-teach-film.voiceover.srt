@@ -87,9 +87,9 @@ Same review, sped up.
 Everything checks out, so it's ready to approve.
 
 23
-00:02:06,460 --> 00:02:13,329
+00:02:06,460 --> 00:02:14,329
 One click from me, and it moves on to payment.
 
 24
-00:02:13,729 --> 00:02:17,100
+00:02:15,179 --> 00:02:18,579
 Show it once. Ramp Teach handles the rest.
