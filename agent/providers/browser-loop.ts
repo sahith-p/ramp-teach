@@ -228,14 +228,15 @@ export async function runBrowserLoop(
     turns++;
     model = res.model ?? model;
     addUsage(usage, res.usage as unknown as Partial<Record<keyof TokenUsage, number | null>>);
-    recordUsage("browser-turn", res.model ?? model, res.usage);
+    const ids = { request_id: (res as unknown as { _request_id?: string | null })._request_id ?? null, message_id: res.id ?? null };
+    recordUsage("browser-turn", res.model ?? model, res.usage, ids);
     messages.push({ role: "assistant", content: res.content as unknown as BetaContentBlockParam[] });
     const text = textOf(res.content);
     if (text) {
       finalText = text;
       req.onStep({ kind: "text", detail: { turn: turns, text: clip(text, 600) } });
     }
-    req.onStep({ kind: "result", detail: { turn: turns, stop_reason: res.stop_reason, usage: res.usage ?? null } });
+    req.onStep({ kind: "result", detail: { turn: turns, stop_reason: res.stop_reason, usage: res.usage ?? null, ...ids } });
 
     const toolUses = res.content.filter((b): b is BetaToolUseBlock => b.type === "tool_use");
     switch (res.stop_reason) {

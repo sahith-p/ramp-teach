@@ -371,6 +371,151 @@ function reviewBody(logos: Logos): string {
     </svg>`;
 }
 
+/** 04 · The take's own logs (read at render time from demo/video/film-run/, so they match the take shown). */
+const RUN = () => path.join(ROOT, "demo", "video", "film-run");
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type J = any;
+const jsonl = (f: string): J[] =>
+  fs.existsSync(f) ? fs.readFileSync(f, "utf8").split("\n").filter(Boolean).map((l) => JSON.parse(l)) : [];
+const kfmt = (n: number) => (n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n));
+const tin = (u: J) => (u?.input_tokens ?? 0) + (u?.cache_read_input_tokens ?? 0) + (u?.cache_creation_input_tokens ?? 0);
+
+function traceData() {
+  const learn = jsonl(path.join(RUN(), "learn-trace.jsonl"));
+  const trace = jsonl(path.join(RUN(), "trace.jsonl"));
+  const usage = jsonl(path.join(RUN(), "usage.jsonl"));
+  const decisions = jsonl(path.join(RUN(), "decisions.jsonl"));
+  const runs = [...new Set(trace.map((e) => e.run_id as string))];
+  const r1 = runs.find((r) => r.includes("HSG-1011")) ?? runs[0];
+  const e1 = trace.filter((e) => e.run_id === r1);
+  const step = (name: string, from: J[] = e1) => from.find((e) => e.step === name);
+  const time = (ts: string) => ts.slice(11, 22);
+  type Row = { ts: string; mode: string; step: string; detail: string };
+  const rows: Row[] = [];
+  const add = (e: J, detail: string, stepName?: string) => {
+    if (e) rows.push({ ts: time(e.ts), mode: e.mode, step: stepName ?? e.step, detail });
+  };
+  const SHORT: Record<string, string> = {
+    line_amounts_correct: "line math",
+    total_matches_line_items: "total",
+    rate_matches_contract: "rates",
+    no_duplicate_lines: "duplicates",
+    no_unknown_charges: "charges",
+    hours_match_timecards: "hours",
+  };
+  const fails = (r: Record<string, string> | undefined) => {
+    const e = Object.entries(r ?? {});
+    const pass = e.filter(([, v]) => v === "pass").length;
+    const other = e.filter(([, v]) => v !== "pass").map(([n, v]) => `${SHORT[n] ?? n} ${v}`);
+    return `${pass} pass · ${other.join(", ")}`;
+  };
+
+  const lr = step("load_recording", learn);
+  add(lr, `${lr?.detail.steps} steps, ${lr?.detail.narration} spoken · operator ${lr?.detail.provenance?.operator ?? "?"}`);
+  const dr = step("distill.real", learn);
+  add(dr, `${dr?.detail.model} · ${dr?.detail.cache_hit ? "cache hit" : "live call"} · ${kfmt(tin(dr?.detail.usage))} in / ${kfmt(dr?.detail.usage?.output_tokens ?? 0)} out · ${dr?.detail.rules} rules`);
+  const ci = step("calc.initial");
+  add(ci, fails(ci?.detail.results));
+  const bs = step("browser.start");
+  add(bs, `${bs?.detail.model} · ${bs?.detail.tasks} timecards to read · max ${bs?.detail.max_turns} turns`);
+  for (const e of e1.filter((x) => x.step === "browser.action" && !/wait$/.test(x.detail.tool)).slice(0, 7)) {
+    const i = e.detail.input ?? {};
+    const tool = String(e.detail.tool).replace(/^browser\./, "");
+    let arg = "";
+    if (i.url) arg = new URL(i.url).pathname + new URL(i.url).search;
+    else if (i.target?.ref) arg = i.target.ref;
+    else if (i.query) arg = `"${i.query}"`;
+    else if (i.key) arg = `${i.key} = ${i.value}`;
+    else if (i.filter) arg = i.filter;
+    add(e, `turn ${e.detail.turn} · ${tool} ${arg}`);
+  }
+  const ev = e1.find((e) => e.step === "browser.evidence" && e.detail.key === "approved_hours" && String(e.detail.source).includes("E-104"));
+  add(ev, `approved_hours = ${ev?.detail.value} · ${String(ev?.detail.source ?? "").replace(/^fixture:/, "")}`);
+  const bd = step("browser.done");
+  add(bd, `${bd?.detail.turns} turns · ${bd?.detail.facts} facts · ${bd?.detail.stop_reason}`);
+  const cw = step("calc.with_evidence");
+  add(cw, fails(cw?.detail.results));
+  const sd = step("synthesis.done");
+  add(sd, `${sd?.detail.model} · ${kfmt(tin(sd?.detail.usage))} in / ${kfmt(sd?.detail.usage?.output_tokens ?? 0)} out`);
+  const rw = step("receipt.written");
+  add(rw, `${rw?.detail.path} · recommends ${rw?.detail.recommendation}`);
+  const d1 = decisions.find((d) => JSON.stringify(d).includes("HSG-1011"));
+  if (d1) rows.push({ ts: time(d1.decided_at), mode: "human", step: "decision", detail: `${d1.decision} by ${d1.decided_by ?? "reviewer"}` });
+
+  // Claude calls in the take, counted from the traces.
+  const byRun = (run: string) => trace.filter((e) => e.run_id === run);
+  const calls: { label: string; n: number; tin: number; tout: number }[] = [
+    { label: "Learn the rules", n: dr ? 1 : 0, tin: tin(dr?.detail.usage), tout: dr?.detail.usage?.output_tokens ?? 0 },
+  ];
+  for (const run of runs) {
+    const id = /HSG-\d+/.exec(run)?.[0] ?? run;
+    const turns = byRun(run).filter((e) => e.step === "browser.result" && e.detail.stop_reason);
+    calls.push({
+      label: `${id} agent`,
+      n: turns.length,
+      tin: turns.reduce((a, e) => a + tin(e.detail.usage), 0),
+      tout: turns.reduce((a, e) => a + (e.detail.usage?.output_tokens ?? 0), 0),
+    });
+    const sy = byRun(run).find((e) => e.step === "synthesis.done");
+    if (sy) calls.push({ label: `${id} receipt`, n: 1, tin: tin(sy.detail.usage), tout: sy.detail.usage?.output_tokens ?? 0 });
+  }
+  // Cost from the usage ledger when the take archived it (same prices as scripts/usage.ts).
+  const cost = usage.length
+    ? usage.reduce((a, r) => a + (r.input_tokens * 4 + r.output_tokens * 20 + r.cache_read_input_tokens * 0.2 + r.cache_creation_input_tokens * 5) / 1e6, 0)
+    : null;
+  const reqIds = [...usage.map((u) => u.request_id), ...trace.map((e) => e.detail?.request_id), dr?.detail.usage?.request_id].filter(
+    (x): x is string => typeof x === "string" && x.length > 0,
+  );
+  return { rows, calls, cost, reqIds: [...new Set(reqIds)] };
+}
+
+export const hasRequestIds = () => traceData().reqIds.length > 0;
+
+function traceBody(): string {
+  const { rows, calls, cost, reqIds } = traceData();
+  const LX = 96, LY = 214, LW = 1150;
+  const RH = 31, R0 = LY + 54 + 14, T0 = 0.8, ST = 0.28;
+  const modeCls = (m: string) => (m === "real" ? "hl" : m === "human" ? "t" : "m");
+  const clip = (s: string) => (s.length > 66 ? s.slice(0, 65) + "…" : s);
+  const rowHtml = rows
+    .map(
+      (r, i) =>
+        `<div class="r mono" style="${box(LX + 22, R0 + i * RH, LW - 44)}font-size:14.5px;height:${RH}px;line-height:${RH}px;${at(T0 + i * ST, 0.3)}"><span class="m" style="display:inline-block;width:124px">${esc(r.ts)}</span><span class="${modeCls(r.mode)}" style="display:inline-block;width:132px">${esc(r.mode)}</span><span class="t" style="display:inline-block;width:196px">${esc(r.step)}</span><span>${esc(clip(r.detail))}</span></div>`,
+    )
+    .join("");
+  const footY = R0 + rows.length * RH + 12;
+  const LH = footY + 52 - LY;
+  const tEnd = T0 + rows.length * ST;
+
+  const RX = 1290, RY = 214, RW = 534;
+  const CRH = 46, C0 = RY + 54 + 12, tC = tEnd - 0.6;
+  const callHtml = calls
+    .map(
+      (c, i) =>
+        `<div class="r" style="${box(RX + 22, C0 + i * CRH, RW - 44)}height:${CRH}px;line-height:${CRH}px;font-size:18px;${i ? "border-top:1px solid rgb(38,36,34);" : ""}${at(tC + i * 0.2, 0.4)}"><span style="color: rgb(228,224,219)">${esc(c.label)}</span><span class="mono" style="position:absolute;right:0;top:0;font-size:14.5px;line-height:${CRH}px"><span class="t">${c.n} ${c.n === 1 ? "call" : "calls"}</span> <span class="m">· ${kfmt(c.tin)} in · ${kfmt(c.tout)} out</span></span></div>`,
+    )
+    .join("");
+  const total = calls.reduce((a, c) => a + c.n, 0);
+  const totY = C0 + calls.length * CRH + 10;
+  const tTot = tC + calls.length * 0.2;
+  const ids = reqIds.slice(0, 4);
+  const idY = totY + 64;
+  const PH = (ids.length ? idY + 40 + ids.length * 30 + 14 : totY + 62) - RY;
+  const idHtml = ids.length
+    ? `<div class="r muted" style="${box(RX + 22, idY, RW - 44)}font-size:15px;letter-spacing:.06em;text-transform:uppercase;${at(tTot + 0.4)}">Request IDs · first ${ids.length} of ${reqIds.length}</div>` +
+      ids.map((id, i) => `<div class="r mono" style="${box(RX + 22, idY + 36 + i * 30, RW - 44)}font-size:14px;color: rgb(190,185,180);${at(tTot + 0.6 + i * 0.15)}">${esc(id)}</div>`).join("")
+    : "";
+  return `
+    ${panel(LX, LY, LW, LH, `<span>Trace</span><span class="n">learn/trace.jsonl · agent/trace.jsonl · receipts/decisions.jsonl</span>`, 0.4)}
+    ${rowHtml}
+    ${rule(LX, footY - 4, LW, tEnd)}
+    <div class="r mono" style="${box(LX + 22, footY + 12, LW - 44)}font-size:14px;${at(tEnd + 0.2)}"><span class="hl">real</span><span class="m"> Claude did it</span><span class="m" style="margin-left:36px">deterministic</span><span class="m"> plain code</span><span class="t" style="margin-left:36px">human</span><span class="m"> a person</span></div>
+    ${panel(RX, RY, RW, PH, `${claudeMark(22)}<span>Claude calls in this take</span>`, tC - 0.3)}
+    ${callHtml}
+    <div class="r" style="${box(RX + 22, totY, RW - 44)}display:flex;justify-content:space-between;border-top:1px solid rgb(48,46,44);padding-top:14px;font-size:19px;${at(tTot)}"><span style="color:#fff">${total} calls</span><span class="mono" style="font-size:15px;color:#fff">${cost != null ? `≈ $${cost.toFixed(2)}` : ""}</span></div>
+    ${idHtml}`;
+}
+
 export const DIAGRAMS: Diagram[] = [
   {
     id: "record",
@@ -405,6 +550,25 @@ export const DIAGRAMS: Diagram[] = [
       { t0: 0.4, t1: 6.0, text: "Plain code does the math. The agent's timecard facts settle the one check code can't do alone." },
       { t0: 6.2, t1: 12.8, text: "Claude writes the receipt with a source for each problem, and only I can approve or dispute." },
     ],
+  },
+  {
+    id: "trace",
+    kicker: "04 · Observability",
+    title: "Every step is on the record",
+    duration: 14,
+    body: traceBody,
+    get captions(): DCaption[] {
+      return [
+        { t0: 0.4, t1: 6.4, text: "Every step writes a line to a log: what ran, and whether Claude, plain code or a person did it." },
+        {
+          t0: 6.6,
+          t1: 13.8,
+          text: hasRequestIds()
+            ? "Each Claude call is logged with its request ID, so it can be checked against Anthropic's own records."
+            : "Each Claude call is logged with the model that ran it and the tokens it used.",
+        },
+      ];
+    },
   },
 ];
 

@@ -17,10 +17,13 @@ export interface UsageRecord {
   output_tokens: number;
   cache_read_input_tokens: number;
   cache_creation_input_tokens: number;
+  /** Anthropic's request id (response header) and message id: lets anyone match a line to the API's own logs. */
+  request_id?: string | null;
+  message_id?: string | null;
 }
 
 /** Accepts the SDK's `usage` object (or anything shaped like it). Never throws. */
-export function recordUsage(purpose: string, model: string, usage: unknown): void {
+export function recordUsage(purpose: string, model: string, usage: unknown, ids?: { request_id?: string | null; message_id?: string | null }): void {
   if (process.env.VITEST) return; // unit tests use fake clients; keep the ledger to real calls
   try {
     const u = (usage ?? {}) as Record<string, unknown>;
@@ -33,6 +36,8 @@ export function recordUsage(purpose: string, model: string, usage: unknown): voi
       output_tokens: n("output_tokens"),
       cache_read_input_tokens: n("cache_read_input_tokens"),
       cache_creation_input_tokens: n("cache_creation_input_tokens"),
+      request_id: ids?.request_id ?? null,
+      message_id: ids?.message_id ?? null,
     };
     fs.mkdirSync(path.dirname(USAGE_FILE), { recursive: true });
     fs.appendFileSync(USAGE_FILE, JSON.stringify(rec) + "\n");

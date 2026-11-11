@@ -33,6 +33,11 @@ const PHASE = opt("phase", "all");
 const PORT = opt("port", "3000");
 /** Rehearsal: the agent runs in its labeled offline mode (scripted evidence, mock receipt). No API cost. */
 const OFFLINE = args.includes("--offline");
+// A real take without a key would silently fall back to offline mode and film a fake run.
+if (!OFFLINE && ["all", "shoot"].includes(PHASE) && !process.env.RAMP_ANTHROPIC_API_KEY && !process.env.ANTHROPIC_API_KEY) {
+  console.error("No RAMP_ANTHROPIC_API_KEY / ANTHROPIC_API_KEY: refusing a real take. Use --offline to rehearse.");
+  process.exit(2);
+}
 const BASE = `http://localhost:${PORT}`;
 const WORK = path.join(ROOT, "demo", "video", "work-film");
 const OUT = path.join(ROOT, "demo", "video", "ramp-teach-film.mp4");
@@ -520,25 +525,34 @@ async function captions() {
   graph = graph.replace(/;$/, "");
   execFileSync("ffmpeg", ["-y", "-loglevel", "error", ...inputs, "-filter_complex", graph, "-map", `[${last}]`, "-c:v", "libx264", "-preset", "medium", "-crf", "14", "-pix_fmt", "yuv420p", "-an", captioned]);
 
-  // ---- compose: main | record diagram | main | check diagram | main | system diagram | outro ----
+  // ---- compose: main and the diagrams, crossfaded, then the outro ----
+  // Each diagram is cut in at a calm moment of the take; the last one follows the end of the take.
   const XF = 0.5;
-  const cuts = [out(marks.record_end + 0.1), out(marks.learn_done + 5.9), out(marks.end - 2.9)];
-  const dur = (f: string) => Number(probe(f));
-  const diag = DIAGRAMS.map((d) => ({ d, file: path.join(WORK, `diag-${d.id}.mp4`), len: dur(path.join(WORK, `diag-${d.id}.mp4`)) }));
-  const outroFile = path.join(WORK, "outro.mp4");
-  const segs: { kind: "main" | "diag" | "outro"; file?: string; a?: number; b?: number; len: number; diagIdx?: number }[] = [
-    { kind: "main", a: 0, b: cuts[0], len: cuts[0] },
-    { kind: "diag", diagIdx: 0, len: diag[0].len },
-    { kind: "main", a: cuts[0], b: cuts[1], len: cuts[1] - cuts[0] },
-    { kind: "diag", diagIdx: 1, len: diag[1].len },
-    { kind: "main", a: cuts[1], b: cuts[2], len: cuts[2] - cuts[1] },
-    { kind: "diag", diagIdx: 2, len: diag[2].len },
-    { kind: "outro", len: dur(outroFile) },
+  const slots: [number, string][] = [
+    [out(marks.record_end + 0.1), "record"], // after recording, before Send to Ramp
+    [out(marks.learn_done + 5.9), "agent"], // before Bill Pay and the first agent run
+    [out(marks.deliver_1012 - 0.3), "review"], // after the HSG-1011 dispute
+    [out(marks.end - 2.9), "trace"], // after the approval, before the outro
   ];
+  const cuts = slots.map((x) => x[0]);
+  const dur = (f: string) => Number(probe(f));
+  const diag = slots.map(([, id]) => {
+    const d = DIAGRAMS.find((x) => x.id === id)!;
+    const file = path.join(WORK, `diag-${d.id}.mp4`);
+    return { d, file, len: dur(file) };
+  });
+  const outroFile = path.join(WORK, "outro.mp4");
+  type Seg = { kind: "main" | "diag" | "outro"; a?: number; b?: number; len: number; diagIdx?: number };
+  const segs: Seg[] = [];
+  cuts.forEach((c, n) => {
+    const a = n === 0 ? 0 : cuts[n - 1];
+    segs.push({ kind: "main", a, b: c, len: c - a }, { kind: "diag", diagIdx: n, len: diag[n].len });
+  });
+  segs.push({ kind: "outro", len: dur(outroFile) });
   const starts: number[] = [];
   segs.forEach((g, i) => starts.push(i === 0 ? 0 : starts[i - 1] + segs[i - 1].len - XF));
   const cin = ["-i", captioned, ...diag.flatMap((x) => ["-i", x.file]), "-i", outroFile];
-  let cg = `[0:v]split=3[m0][m1][m2];`;
+  let cg = `[0:v]split=${cuts.length}${cuts.map((_, n) => `[m${n}]`).join("")};`;
   let mi = 0;
   segs.forEach((g, i) => {
     const norm = "fps=30,format=yuv420p,settb=AVTB,setpts=PTS-STARTPTS";
@@ -556,11 +570,11 @@ async function captions() {
   }
   cg = cg.replace(/;$/, "");
   execFileSync("ffmpeg", ["-y", "-loglevel", "error", ...cin, "-filter_complex", cg, "-map", "[final]", "-c:v", "libx264", "-preset", "slow", "-crf", "24", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-an", OUT]);
-  // main-output time -> final time
+  // main-output time -> final time (main part n is segment 2n)
   const fin = (t: number) => {
-    const k = t < cuts[0] ? 0 : t < cuts[1] ? 2 : t < cuts[2] ? 4 : -1;
-    if (k < 0) return starts[6];
-    return starts[k] + (t - segs[k].a!);
+    const n = cuts.findIndex((c) => t < c);
+    if (n < 0) return starts[2 * cuts.length - 1];
+    return starts[2 * n] + (t - segs[2 * n].a!);
   };
   // Voice-over script (.srt): the captions plus the narration lines said during recording (times from the recording).
   const rec = readJson<{ steps: { ts: string; kind: string; detail: { text?: string } }[] }>(path.join(WORK, "film-recording.json"));
@@ -570,7 +584,7 @@ async function captions() {
       const ft = (Date.parse(s.ts) - Date.parse(t0)) / 1000;
       return { from: out(ft), to: out(ft) + 2.8, text: s.detail.text ?? "" };
     });
-  const diagLines = diag.flatMap((x, i) => x.d.captions.map((c) => ({ from: starts[1 + i * 2] + c.t0, to: starts[1 + i * 2] + c.t1, text: c.text })));
+  const diagLines = diag.flatMap((x, i) => x.d.captions.map((c) => ({ from: starts[2 * i + 1] + c.t0, to: starts[2 * i + 1] + c.t1, text: c.text })));
   const all = [...[...lines, ...said].map((l) => ({ from: fin(l.from), to: fin(l.to), text: l.text })), ...diagLines].sort((x, y) => x.from - y.from);
   all.forEach((l, i) => {
     if (all[i + 1]) l.to = Math.min(l.to, all[i + 1].from - 0.1);
@@ -582,7 +596,8 @@ async function captions() {
 
 /* =============================== restore =============================== */
 
-function restore() {
+/** Copies the take's outputs (receipts, traces, decisions, learned rules, usage, the sent recording) to film-run/. */
+function archive() {
   fs.mkdirSync(RUN_OUT, { recursive: true });
   for (const [src, dst] of [
     ["receipts/HSG-1011.json", "receipt-HSG-1011.json"],
@@ -607,17 +622,34 @@ function restore() {
   }
   const learnTrace = fs.readFileSync(path.join(ROOT, "learn", "trace.jsonl"), "utf8").split("\n").filter((l) => l && JSON.parse(l).ts >= t0);
   fs.writeFileSync(path.join(RUN_OUT, "learn-trace.jsonl"), learnTrace.join("\n") + "\n");
-  for (const f of ["film-recording.json", "marks.json", "assemble.json"]) {
+  const usageFile = path.join(ROOT, "runtime", "usage.jsonl");
+  if (fs.existsSync(usageFile)) {
+    const usage = fs.readFileSync(usageFile, "utf8").split("\n").filter((l) => l && JSON.parse(l).ts >= t0);
+    fs.writeFileSync(path.join(RUN_OUT, "usage.jsonl"), usage.join("\n") + "\n");
+  }
+  const job = path.join(ROOT, "runtime", "learn-job.json");
+  if (fs.existsSync(job)) {
+    const rp = readJson<{ recording_path?: string }>(job).recording_path;
+    if (rp && fs.existsSync(path.join(ROOT, rp))) fs.copyFileSync(path.join(ROOT, rp), path.join(RUN_OUT, "sent-recording.json"));
+  }
+  for (const f of ["film-recording.json", "marks.json"]) {
     if (fs.existsSync(path.join(WORK, f))) fs.copyFileSync(path.join(WORK, f), path.join(RUN_OUT, f));
   }
+  console.log(`archived the take to ${path.relative(ROOT, RUN_OUT)}`);
+}
+
+/** Puts the repo's committed run artifacts back. */
+function restore() {
+  if (fs.existsSync(path.join(WORK, "assemble.json"))) fs.copyFileSync(path.join(WORK, "assemble.json"), path.join(RUN_OUT, "assemble.json"));
   const backup = path.join(WORK, "backup");
   for (const t of TRACKED) if (fs.existsSync(path.join(backup, t))) fs.copyFileSync(path.join(backup, t), path.join(ROOT, t));
   for (const n of NEW_OUTPUTS) fs.rmSync(path.join(ROOT, n), { recursive: true, force: true });
-  console.log(`archived to ${path.relative(ROOT, RUN_OUT)}; restored committed artifacts`);
+  console.log("restored committed artifacts");
 }
 
 (async () => {
   if (PHASE === "all" || PHASE === "shoot") await shoot();
+  if ((PHASE === "all" && !OFFLINE) || PHASE === "archive") archive();
   if (PHASE === "all" || PHASE === "assemble") assemble();
   if (["all", "assemble", "captions", "outro", "diagrams"].includes(PHASE)) {
     if (PHASE !== "captions" || !fs.existsSync(path.join(WORK, "outro.mp4"))) await outro();

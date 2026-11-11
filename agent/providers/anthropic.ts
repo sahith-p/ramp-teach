@@ -52,8 +52,11 @@ export class AnthropicProvider implements AIProvider {
       parsed_output: unknown;
       model: string;
       usage?: Record<string, unknown>;
+      id?: string;
+      _request_id?: string | null;
     };
-    recordUsage("structured", msg.model ?? this.model, msg.usage);
+    const ids = { request_id: msg._request_id ?? null, message_id: msg.id ?? null };
+    recordUsage("structured", msg.model ?? this.model, msg.usage, ids);
     if (msg.stop_reason === "refusal") {
       throw new ProviderRefusalError(msg.stop_details?.category ?? null, msg.stop_details?.explanation ?? null);
     }
@@ -61,7 +64,9 @@ export class AnthropicProvider implements AIProvider {
     if (msg.parsed_output == null) throw new Error("Structured output failed to parse");
     // Re-validate against the caller's (frozen) schema.
     const output = req.schema.parse(msg.parsed_output);
-    return { output, model: msg.model, usage: msg.usage };
+    // The ids ride along in `usage` (the frozen StructuredResult has no other slot) so the learn and
+    // synthesis traces record which API request produced them.
+    return { output, model: msg.model, usage: msg.usage ? { ...msg.usage, ...ids } : msg.usage };
   }
 
   /**
