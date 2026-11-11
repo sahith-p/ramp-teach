@@ -2,36 +2,21 @@
   "vendor": "Not stated in recording",
   "proof_sources": [
     {
-      "app": "Halcyon Staffing client portal",
-      "location": "/portal/invoices",
-      "fields": [
-        "invoice_id",
-        "week_ending",
-        "total"
-      ]
-    },
-    {
-      "app": "Halcyon Staffing client portal",
+      "app": "Fixture vendor portal",
       "location": "/portal/invoices/<invoice_id>",
       "fields": [
-        "line_items.description",
-        "line_items.quantity",
-        "line_items.unit_rate",
-        "line_items.amount",
+        "description",
+        "quantity",
+        "unit_rate",
+        "amount",
         "total"
       ]
     },
     {
-      "app": "Halcyon Staffing client portal",
+      "app": "Fixture vendor portal",
       "location": "/portal/employees/<employee_id>?week=<YYYY-MM-DD>",
       "fields": [
-        "approved_hours",
-        "employee_id",
-        "employee_name",
-        "role",
-        "week_ending",
-        "status",
-        "approved_by"
+        "approved_hours"
       ]
     },
     {
@@ -44,9 +29,15 @@
     }
   ],
   "rules": [
-    "Every rate on it has to match our contract.",
-    "And nobody should be billed twice for the same week.",
-    "Billed hours can't go over that."
+    "Each line amount must equal quantity (hours) times unit_rate.",
+    "The sum of all line amounts must equal the invoice total.",
+    "Every labor line's hourly rate must equal the contract rate card rate for that employee's role.",
+    "No employee may be billed on more than one labor line for the same week ending date.",
+    "Every non-labor charge must be on the contract's allowed charges list and must not exceed its cap.",
+    "Billed hours for an employee and week must not exceed the approved_hours on that employee's timecard for the same week ending date.",
+    "If any check fails, recommend dispute and ask the vendor for a credit memo; if all checks pass, approve."
   ],
-  "open_questions": []
+  "open_questions": [
+    "Is overtime above 40 hours a week billable at 1.5 times the rate?"
+  ]
 }
