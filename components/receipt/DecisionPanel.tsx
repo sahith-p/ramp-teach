@@ -44,7 +44,7 @@ export function DecisionPanel({
 
   async function decide(decision: HumanDecision) {
     if (!name.trim()) {
-      setError("Enter your name so the decision is attributable.");
+      setError("Enter your name.");
       return;
     }
     setPending(decision);
@@ -67,7 +67,7 @@ export function DecisionPanel({
       });
       router.refresh();
     } catch {
-      setError("Network error; the decision was not recorded.");
+      setError("Network error. Not recorded.");
     } finally {
       setPending(null);
     }
@@ -75,28 +75,20 @@ export function DecisionPanel({
 
   if (shown) {
     return (
-      <Card eyebrow="Human decision" data-testid="decision-recorded">
-        <div className="flex flex-wrap items-center gap-3">
+      <Card data-testid="decision-recorded">
+        <div className="flex flex-wrap items-center gap-3 text-sm">
           <DecisionBadge decision={shown.decision} />
-          <span className="text-sm text-ink">
-            Recorded by <span className="font-medium">{shown.decided_by ?? "unknown"}</span> on {fmtDateTime(shown.decided_at)}
+          <span className="text-ink-muted">
+            {shown.decided_by ?? "Unknown"}, {fmtDateTime(shown.decided_at)}
           </span>
-        </div>
-        <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-line pt-4 text-sm">
-          <span className="text-ink-muted">Bill</span>
-          <span className="font-mono text-xs">{billId}</span>
-          {shownBill ? (
-            <>
-              <BillStatusBadge status={shownBill.status} />
-              <span className="text-ink-muted">
-                {shownBill.receipt_id ? `Receipt ${shownBill.receipt_id} attached` : "No receipt attached"}
-              </span>
-            </>
-          ) : (
-            <span className="text-ink-muted">Bill state unavailable</span>
+          {/* Bill status only when it disagrees with the decision (e.g. the attach did not happen). */}
+          {shownBill && shownBill.status !== (shown.decision === "approve" ? "approved" : "disputed") && (
+            <span className="flex items-center gap-2 text-ink-muted">
+              Bill <BillStatusBadge status={shownBill.status} />
+            </span>
           )}
-          <Link href={`/bills/${encodeURIComponent(billId)}`} className="ml-auto text-sm font-medium underline underline-offset-4">
-            Open bill in inbox →
+          <Link href={`/bills/${encodeURIComponent(billId)}`} className="ml-auto font-medium underline underline-offset-4">
+            Open bill in inbox
           </Link>
         </div>
       </Card>
@@ -104,13 +96,7 @@ export function DecisionPanel({
   }
 
   return (
-    <Card eyebrow="Your decision" data-testid="decision-panel">
-      {sample && (
-        <p className="mb-4 text-sm text-ink-muted">
-          This is the bundled sample receipt, so decisions are disabled. Run <code className="font-mono text-xs">npm run demo</code> to
-          produce a real receipt you can decide on.
-        </p>
-      )}
+    <Card title="Decide" data-testid="decision-panel">
       <div className="grid gap-4 md:grid-cols-[1fr_1.4fr_auto] md:items-end">
         <label className="block text-sm">
           <span className="mb-1 block text-ink-muted">Your name</span>
@@ -119,7 +105,6 @@ export function DecisionPanel({
             value={name}
             onChange={(e) => setName(e.target.value)}
             disabled={sample || pending !== null}
-            placeholder="e.g. Dana (AP)"
             className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-ink disabled:bg-wash"
           />
         </label>
@@ -130,7 +115,6 @@ export function DecisionPanel({
             value={note}
             onChange={(e) => setNote(e.target.value)}
             disabled={sample || pending !== null}
-            placeholder="e.g. Request credit memo"
             className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-ink disabled:bg-wash"
           />
         </label>
@@ -148,9 +132,6 @@ export function DecisionPanel({
           {error}
         </p>
       )}
-      <p className="mt-4 text-xs text-ink-faint">
-        Your decision is logged to receipts/decisions.jsonl and attaches the receipt to {billId} as approved or disputed.
-      </p>
     </Card>
   );
 }

@@ -36,7 +36,8 @@ try {
 
   // 3. Login
   check("demo creds shown", (await page.textContent("body")).includes("demo-only"));
-  check("fixture label shown", (await page.getByTestId("fixture-label").textContent()).includes("Fixture vendor portal"));
+  check("demo label shown (footer)", (await page.getByTestId("demo-banner").textContent()).includes("Synthetic data"));
+  check("vendor header shown", (await page.textContent("header")).includes("Halcyon Staffing"));
   await page.fill('input[name="username"]', "ap.reviewer");
   await page.fill('input[name="password"]', "demo-only");
   await Promise.all([page.waitForURL(/\/portal\/invoices$/), page.getByRole("button", { name: "Sign in" }).click()]);
@@ -77,7 +78,7 @@ try {
   await page.goto(`${BASE}/bills`);
   const billRows = await page.locator("tr[data-bill-id]").count();
   check("/bills lists 11 bills", billRows === 11, String(billRows));
-  check("bill inbox fixture label", (await page.getByTestId("fixture-label").textContent()).includes("Fixture bill inbox"));
+  check("bill inbox demo label (footer)", (await page.getByTestId("demo-banner").textContent()).includes("Synthetic data"));
 
   // 8. Attach (temp receipt; state restored afterwards)
   const receiptFile = path.join(ROOT, "receipts", "HSG-1011.json");

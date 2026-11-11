@@ -23,12 +23,3 @@ export function BillStatusBadge({ status }: { status: BillStatus }) {
   const label = { pending: "Pending", receipt_attached: "Receipt attached", approved: "Approved", disputed: "Disputed" }[status];
   return <Badge tone={tone}>{label}</Badge>;
 }
-
-/** Labels a page or panel as showing the bundled sample, not a real run. */
-export function SampleLabel() {
-  return (
-    <span className="inline-flex items-center rounded-full border border-ink px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-ink">
-      Sample
-    </span>
-  );
-}

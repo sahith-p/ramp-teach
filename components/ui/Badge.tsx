@@ -13,13 +13,20 @@ export function Badge({ tone = "neutral", children }: { tone?: keyof typeof tone
   );
 }
 
-/** Mode label shown wherever an output is displayed: never pass off scripted/mock as AI. */
+/** One muted line when output was written without AI (mock/scripted/deterministic). Nothing for `real`. */
+export function OfflineNote({ mode, className = "" }: { mode: string; className?: string }) {
+  if (mode === "real") return null;
+  return (
+    <p className={`text-xs text-ink-faint ${className}`} data-testid="offline-note">
+      Offline mode: written without AI.
+    </p>
+  );
+}
+
+/**
+ * @deprecated No mode badges in the UI. Kept so pages outside this lane still compile; it renders
+ * the same quiet OfflineNote (nothing when `real`).
+ */
 export function ModeBadge({ mode }: { mode: "real" | "scripted" | "mock" | "deterministic" }) {
-  const label = {
-    real: "Real AI (Claude)",
-    scripted: "Scripted (Playwright, no AI)",
-    mock: "Mock (deterministic, no AI)",
-    deterministic: "Deterministic (no AI)",
-  }[mode];
-  return <Badge tone={mode === "real" ? "pass" : "warn"}>{label}</Badge>;
+  return <OfflineNote mode={mode} />;
 }
