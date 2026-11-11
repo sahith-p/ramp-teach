@@ -1,0 +1,163 @@
+{
+ "v1": [
+  {
+   "id": "r1",
+   "text": "Every billed rate must match the contract rate card for that role.",
+   "kind": "check",
+   "source": "said",
+   "citations": [
+    {
+     "utterance_id": "u2",
+     "quote": "Every rate on it has to match our contract.",
+     "step_index": 10,
+     "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+     "url": "http://localhost:3000/portal/invoices"
+    }
+   ]
+  },
+  {
+   "id": "r2",
+   "text": "No one may be billed twice for the same week.",
+   "kind": "check",
+   "source": "said",
+   "citations": [
+    {
+     "utterance_id": "u3",
+     "quote": "nobody should be billed twice for the same week",
+     "step_index": 11,
+     "selector": null,
+     "url": "http://localhost:3000/portal/invoices/HSG-1010"
+    }
+   ]
+  },
+  {
+   "id": "r4",
+   "text": "Billed hours should match the timecard.",
+   "kind": "check",
+   "source": "said",
+   "citations": [
+    {
+     "utterance_id": "u5",
+     "quote": "Billed hours can't go over that.",
+     "step_index": null,
+     "selector": null,
+     "url": null
+    }
+   ]
+  },
+  {
+   "id": "r5",
+   "text": "If any check fails, dispute the bill and ask for a credit.",
+   "kind": "decision",
+   "source": "said",
+   "citations": [
+    {
+     "utterance_id": "u7",
+     "quote": "If anything is off, I dispute it and ask for a credit.",
+     "step_index": null,
+     "selector": null,
+     "url": null
+    }
+   ]
+  }
+ ],
+ "v3": [
+  {
+   "id": "r1",
+   "text": "Every billed rate must match the contract rate card for that role.",
+   "kind": "check",
+   "source": "said",
+   "citations": [
+    {
+     "utterance_id": "u2",
+     "quote": "Every rate on it has to match our contract.",
+     "step_index": 10,
+     "selector": "a[href=\"/portal/invoices/HSG-1010\"]",
+     "url": "http://localhost:3000/portal/invoices"
+    }
+   ]
+  },
+  {
+   "id": "r2",
+   "text": "No one may be billed twice for the same week.",
+   "kind": "check",
+   "source": "said",
+   "citations": [
+    {
+     "utterance_id": "u3",
+     "quote": "nobody should be billed twice for the same week",
+     "step_index": 11,
+     "selector": null,
+     "url": "http://localhost:3000/portal/invoices/HSG-1010"
+    }
+   ]
+  },
+  {
+   "id": "r3",
+   "text": "Open each person's timecard for the invoice week.",
+   "kind": "procedure",
+   "source": "both",
+   "citations": [
+    {
+     "utterance_id": "u4",
+     "quote": "I check each person's hours against their timecard",
+     "step_index": 14,
+     "selector": "a[href=\"/portal/employees/E-101?week=2026-10-11\"]",
+     "url": "http://localhost:3000/portal/invoices/HSG-1010"
+    }
+   ]
+  },
+  {
+   "id": "r4",
+   "text": "Billed hours may not exceed the approved hours on the timecard.",
+   "kind": "check",
+   "source": "both",
+   "citations": [
+    {
+     "utterance_id": "u5",
+     "quote": "Billed hours can't go over that.",
+     "step_index": 16,
+     "selector": "[data-field=\"approved_hours\"]",
+     "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+    },
+    {
+     "utterance_id": "u6",
+     "quote": "Sam is approved for 36.",
+     "step_index": 21,
+     "selector": "[data-field=\"approved_hours\"]",
+     "url": "http://localhost:3000/portal/employees/E-104?week=2026-10-11"
+    }
+   ]
+  },
+  {
+   "id": "r5",
+   "text": "If any check fails, dispute the bill and ask for a credit.",
+   "kind": "decision",
+   "source": "said",
+   "citations": [
+    {
+     "utterance_id": "u7",
+     "quote": "If anything is off, I dispute it and ask for a credit.",
+     "step_index": null,
+     "selector": null,
+     "url": null
+    }
+   ]
+  },
+  {
+   "id": "r6",
+   "text": "Read approved hours from the Approved hours field, not the scheduled hours.",
+   "kind": "procedure",
+   "source": "shown",
+   "citations": [
+    {
+     "utterance_id": null,
+     "quote": "",
+     "step_index": 16,
+     "selector": "[data-field=\"approved_hours\"]",
+     "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-11"
+    }
+   ]
+  }
+ ]
+}

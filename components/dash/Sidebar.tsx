@@ -5,7 +5,7 @@ type Item = { label: string; href?: string; icon: keyof typeof ICONS; children?:
 
 /** Same groups and order as Ramp's sidebar. Only Bill Pay > Bills is live in this demo. */
 const GROUPS: Item[][] = [
-  [{ label: "Home", icon: "home" }, { label: "Ramp Teach", icon: "spark", href: "/agents" }],
+  [{ label: "Home", icon: "home" }],
   [
     { label: "Cards and expenses", icon: "card" },
     { label: "Travel", icon: "travel" },
@@ -47,7 +47,7 @@ function Icon({ name }: { name: keyof typeof ICONS }) {
 
 const row = "flex h-8 items-center gap-2.5 px-2 text-[15px] text-[rgb(26,25,25)]";
 
-export function Sidebar({ active }: { active: "bills" | "teach" }) {
+export function Sidebar({ active }: { active: "bills" }) {
   return (
     <aside className="font-ramp sticky top-0 flex h-screen w-[216px] shrink-0 flex-col bg-[rgb(244,242,240)]">
       <div className="px-2 pb-2 pt-2">
@@ -82,7 +82,7 @@ export function Sidebar({ active }: { active: "bills" | "teach" }) {
                 </li>
               ) : it.href ? (
                 <li key={it.label}>
-                  <Link href={it.href} className={`${row} ${active === "teach" && it.href === "/agents" ? "bg-[rgb(234,231,228)]" : ""}`}>
+                  <Link href={it.href} className={row}>
                     <Icon name={it.icon} />
                     {it.label}
                   </Link>

@@ -2,24 +2,13 @@
 /** Bill Pay table (polls the dashboard API so arrivals and agent progress show live). */
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import type { DashBill, DashStatus } from "@/lib/dash";
+import type { DashBill } from "@/lib/dash";
+import { BILL_MATCH, BillPayTabs, billCounts, type BillTab } from "./BillPayTabs";
 import { fmtDate, fmtMoney, StatusPill, VendorAvatar } from "./ui";
 
-type Tab = "all" | "drafts" | "approval" | "payment" | "inflight" | "history";
-const review = (s: DashStatus) => s === "new" || s === "reviewing" || s === "needs_review" || s === "ready" || s === "failed";
-/** Ramp's Bill Pay tabs. Approved bills that arrived in this session need payment; older decided bills are history. */
-const TABS: { key: Tab; label: string; match: (b: DashBill) => boolean; count?: boolean }[] = [
-  { key: "all", label: "All bills", match: () => true, count: true },
-  { key: "drafts", label: "Drafts", match: () => false, count: true },
-  { key: "approval", label: "For approval", match: (b) => review(b.status), count: true },
-  { key: "payment", label: "Payment required", match: (b) => b.status === "approved" && !!b.arrived_at, count: true },
-  { key: "inflight", label: "In-flight", match: () => false, count: true },
-  { key: "history", label: "History", match: (b) => (b.status === "approved" && !b.arrived_at) || b.status === "disputed" },
-];
-
-export function BillsTable({ initial, activeBillId }: { initial: DashBill[]; activeBillId?: string }) {
+export function BillsTable({ initial, activeBillId, initialTab = "approval", workflows }: { initial: DashBill[]; activeBillId?: string; initialTab?: BillTab; workflows?: number }) {
   const [bills, setBills] = useState(initial);
-  const [tab, setTab] = useState<Tab>("approval");
+  const [tab, setTab] = useState<BillTab>(initialTab);
   const [toast, setToast] = useState<string | null>(null);
   const [fresh, setFresh] = useState<Set<string>>(new Set());
   const known = useRef(new Set(initial.map((b) => b.bill_id)));
@@ -51,23 +40,11 @@ export function BillsTable({ initial, activeBillId }: { initial: DashBill[]; act
     };
   }, []);
 
-  const shown = bills.filter((b) => TABS.find((t) => t.key === tab)!.match(b));
-  const count = (t: (typeof TABS)[number]) => bills.filter((b) => t.match(b)).length;
+  const shown = bills.filter(BILL_MATCH[tab]);
 
   return (
     <div className="relative">
-      <div className="-mx-14 mt-7 flex items-end border-b border-[rgb(226,222,219)] px-[42px]">
-        {TABS.map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            className={`-mb-px flex h-12 items-center gap-2 border-b-2 px-4 text-[15px] ${tab === t.key ? "border-[rgb(26,25,25)] text-[rgb(26,25,25)]" : "border-transparent text-[rgb(110,106,104)] hover:text-[rgb(26,25,25)]"}`}
-          >
-            {t.label}
-            {t.count && <span className="flex h-[18px] min-w-[18px] items-center justify-center rounded-[3px] bg-[rgb(234,231,228)] px-1 text-[12px] text-[rgb(71,69,67)]">{count(t)}</span>}
-          </button>
-        ))}
-      </div>
+      <BillPayTabs active={tab} counts={billCounts(bills)} onSelect={setTab} workflows={workflows} />
 
       <div className="-mx-14 min-h-[calc(100vh-240px)] bg-[rgb(250,249,248)] px-14 pb-16 pt-6">
       <div className="overflow-hidden border border-[rgb(234,231,228)] bg-white">
@@ -94,10 +71,10 @@ export function BillsTable({ initial, activeBillId }: { initial: DashBill[]; act
             <tr
               key={b.bill_id}
               data-bill={b.bill_id}
-              className={`border-t border-[rgb(234,231,228)] transition-colors duration-[1200ms] ${fresh.has(b.bill_id) ? "bg-[#f4f8c7]" : b.bill_id === activeBillId ? "bg-[#f6f6f2]" : "hover:bg-[#fafaf7]"} ${fresh.has(b.bill_id) ? "animate-[rowin_.5s_ease-out]" : ""}`}
+              className={`relative cursor-pointer border-t border-[rgb(234,231,228)] transition-colors duration-[1200ms] ${fresh.has(b.bill_id) ? "bg-[#f4f8c7]" : b.bill_id === activeBillId ? "bg-[#f6f6f2]" : "hover:bg-[#fafaf7]"} ${fresh.has(b.bill_id) ? "animate-[rowin_.5s_ease-out]" : ""}`}
             >
               <td className="py-3 pl-5">
-                <Link href={`/bills/${b.bill_id}`} className="flex items-center gap-3 font-normal">
+                <Link href={`/bills/${b.bill_id}`} data-testid="bill-link" className="flex items-center gap-3 font-normal after:absolute after:inset-0">
                   <VendorAvatar name={b.vendor} />
                   {b.vendor}
                 </Link>

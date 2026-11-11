@@ -1,0 +1,214 @@
+[
+ {
+  "id": "u1",
+  "text": "I'm checking this month's invoice from Halcyon Staffing.",
+  "start": 2.42,
+  "end": 6.62,
+  "words": [
+   {
+    "text": "I'm",
+    "start": 2.42,
+    "end": 2.73,
+    "confidence": 0.89
+   },
+   {
+    "text": "checking",
+    "start": 2.8,
+    "end": 3.34,
+    "confidence": 0.87
+   },
+   {
+    "text": "this",
+    "start": 3.41,
+    "end": 3.77,
+    "confidence": 0.91
+   },
+   {
+    "text": "month's",
+    "start": 3.84,
+    "end": 4.34,
+    "confidence": 0.88
+   },
+   {
+    "text": "invoice",
+    "start": 4.41,
+    "end": 4.9,
+    "confidence": 0.87
+   },
+   {
+    "text": "from",
+    "start": 4.97,
+    "end": 5.33,
+    "confidence": 0.91
+   },
+   {
+    "text": "Halcyon",
+    "start": 5.4,
+    "end": 5.9,
+    "confidence": 0.42
+   },
+   {
+    "text": "Staffing.",
+    "start": 5.97,
+    "end": 6.55,
+    "confidence": 0.98
+   }
+  ],
+  "step_refs": [
+   0,
+   2,
+   4,
+   6,
+   8
+  ],
+  "low_confidence": [
+   "Halcyon"
+  ]
+ },
+ {
+  "id": "u2",
+  "text": "Every rate on it has to match our contract.",
+  "start": 7.28,
+  "end": 11.1,
+  "words": [
+   {
+    "text": "Every",
+    "start": 7.28,
+    "end": 7.69,
+    "confidence": 0.96
+   },
+   {
+    "text": "rate",
+    "start": 7.75,
+    "end": 8.12,
+    "confidence": 0.96
+   },
+   {
+    "text": "on",
+    "start": 8.19,
+    "end": 8.46,
+    "confidence": 0.89
+   },
+   {
+    "text": "it",
+    "start": 8.53,
+    "end": 8.79,
+    "confidence": 0.93
+   },
+   {
+    "text": "has",
+    "start": 8.87,
+    "end": 9.18,
+    "confidence": 0.9
+   },
+   {
+    "text": "to",
+    "start": 9.25,
+    "end": 9.52,
+    "confidence": 0.88
+   },
+   {
+    "text": "match",
+    "start": 9.59,
+    "end": 9.99,
+    "confidence": 0.87
+   },
+   {
+    "text": "our",
+    "start": 10.06,
+    "end": 10.38,
+    "confidence": 0.89
+   },
+   {
+    "text": "contract.",
+    "start": 10.45,
+    "end": 11.04,
+    "confidence": 0.98
+   }
+  ],
+  "step_refs": [
+   4,
+   6,
+   8,
+   10,
+   11
+  ],
+  "low_confidence": []
+ },
+ {
+  "id": "u3",
+  "text": "And nobody should be billed twice for the same week.",
+  "start": 9.99,
+  "end": 14.43,
+  "words": [
+   {
+    "text": "And",
+    "start": 9.99,
+    "end": 10.31,
+    "confidence": 0.97
+   },
+   {
+    "text": "nobody",
+    "start": 10.38,
+    "end": 10.83,
+    "confidence": 0.96
+   },
+   {
+    "text": "should",
+    "start": 10.9,
+    "end": 11.35,
+    "confidence": 0.96
+   },
+   {
+    "text": "be",
+    "start": 11.42,
+    "end": 11.69,
+    "confidence": 0.89
+   },
+   {
+    "text": "billed",
+    "start": 11.76,
+    "end": 12.21,
+    "confidence": 0.9
+   },
+   {
+    "text": "twice",
+    "start": 12.28,
+    "end": 12.68,
+    "confidence": 0.94
+   },
+   {
+    "text": "for",
+    "start": 12.75,
+    "end": 13.07,
+    "confidence": 0.96
+   },
+   {
+    "text": "the",
+    "start": 13.14,
+    "end": 13.45,
+    "confidence": 0.97
+   },
+   {
+    "text": "same",
+    "start": 13.52,
+    "end": 13.88,
+    "confidence": 0.97
+   },
+   {
+    "text": "week.",
+    "start": 13.95,
+    "end": 14.36,
+    "confidence": 0.87
+   }
+  ],
+  "step_refs": [
+   10,
+   11,
+   14,
+   15,
+   16
+  ],
+  "low_confidence": []
+ }
+]

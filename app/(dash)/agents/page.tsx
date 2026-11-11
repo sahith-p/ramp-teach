@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
-import { TeachView } from "@/components/dash/TeachView";
-import { learnedWorkflow, learnProgress, readLearnJob } from "@/lib/learnjob";
+import { redirect } from "next/navigation";
+import { readLearnJob } from "@/lib/learnjob";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Ramp Teach · Ramp" };
 
-export default function TeachPage() {
+/** Old Ramp Teach page. Workflows now live under Bill Pay; keep this URL for the extension and the film. */
+export default async function TeachRedirect({ searchParams }: { searchParams: Promise<{ recording?: string }> }) {
+  const { recording } = await searchParams;
   const job = readLearnJob();
-  return <TeachView initial={{ job, progress: learnProgress(job), ...learnedWorkflow() }} />;
+  const rec = recording ?? (job?.status === "running" ? job.session_id : undefined);
+  redirect(rec ? `/bills/workflows?recording=${encodeURIComponent(rec)}` : "/bills/workflows");
 }

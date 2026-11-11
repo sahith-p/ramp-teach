@@ -1,0 +1,135 @@
+[
+ {
+  "span_id": "s0",
+  "parent_id": null,
+  "trace_id": "run_HSG-1011",
+  "name": "review HSG-1011",
+  "kind": "run",
+  "mode": "real",
+  "start": "2026-11-11T02:07:58.300Z",
+  "end": "2026-11-11T02:08:27.670Z",
+  "attrs": {
+   "workflow": "halcyon-invoice-review",
+   "version": 3
+  }
+ },
+ {
+  "span_id": "s1",
+  "parent_id": "s0",
+  "trace_id": "run_HSG-1011",
+  "name": "calc.initial",
+  "kind": "calc",
+  "mode": "deterministic",
+  "start": "2026-11-11T02:07:58.300Z",
+  "end": "2026-11-11T02:07:58.420Z",
+  "attrs": {
+   "checks": 6,
+   "failed": 2
+  }
+ },
+ {
+  "span_id": "s2",
+  "parent_id": "s0",
+  "trace_id": "run_HSG-1011",
+  "name": "turn 1",
+  "kind": "model",
+  "mode": "real",
+  "start": "2026-11-11T02:07:58.470Z",
+  "end": "2026-11-11T02:08:00.870Z",
+  "attrs": {
+   "model": "claude-opus-5-5",
+   "request_id": "req_011C1101x",
+   "message_id": "msg_0101",
+   "input_tokens": 3400,
+   "output_tokens": 180,
+   "cache_read_input_tokens": 0,
+   "cost_usd": 0.0215,
+   "note": "Opening the vendor portal to read timecards."
+  }
+ },
+ {
+  "span_id": "s3",
+  "parent_id": "s0",
+  "trace_id": "run_HSG-1011",
+  "name": "navigate /portal/login",
+  "kind": "tool",
+  "mode": "real",
+  "start": "2026-11-11T02:08:00.920Z",
+  "end": "2026-11-11T02:08:01.520Z",
+  "attrs": {
+   "tool": "navigate",
+   "input": {
+    "url": "http://localhost:3000/portal/login"
+   },
+   "url": "http://localhost:3000/portal/login"
+  }
+ },
+ {
+  "span_id": "s9",
+  "parent_id": "s0",
+  "trace_id": "run_HSG-1011",
+  "name": "record_evidence E-101",
+  "kind": "tool",
+  "mode": "real",
+  "start": "2026-11-11T02:08:07.220Z",
+  "end": "2026-11-11T02:08:07.320Z",
+  "attrs": {
+   "tool": "record_evidence",
+   "fact": {
+    "key": "approved_hours",
+    "value": "40",
+    "subject": {
+     "employee_id": "E-101",
+     "employee": "Maya Chen"
+    }
+   },
+   "url": "http://localhost:3000/portal/employees/E-101?week=2026-10-18"
+  }
+ },
+ {
+  "span_id": "s20",
+  "parent_id": "s0",
+  "trace_id": "run_HSG-1011",
+  "name": "calc.with_evidence",
+  "kind": "calc",
+  "mode": "deterministic",
+  "start": "2026-11-11T02:08:19.370Z",
+  "end": "2026-11-11T02:08:19.520Z",
+  "attrs": {
+   "checks": 6,
+   "failed": 3
+  }
+ },
+ {
+  "span_id": "s21",
+  "parent_id": "s0",
+  "trace_id": "run_HSG-1011",
+  "name": "evidence check",
+  "kind": "verify",
+  "mode": "deterministic",
+  "start": "2026-11-11T02:08:19.570Z",
+  "end": "2026-11-11T02:08:21.370Z",
+  "attrs": {
+   "checked": 4,
+   "mismatch": 1
+  }
+ },
+ {
+  "span_id": "s22",
+  "parent_id": "s0",
+  "trace_id": "run_HSG-1011",
+  "name": "synthesis",
+  "kind": "synthesis",
+  "mode": "real",
+  "start": "2026-11-11T02:08:21.420Z",
+  "end": "2026-11-11T02:08:27.620Z",
+  "attrs": {
+   "model": "claude-opus-5-5",
+   "request_id": "req_011Csyn11",
+   "input_tokens": 9100,
+   "output_tokens": 820,
+   "cost_usd": 0.066,
+   "note": "Recommend dispute: rate and duplicate line issues."
+  }
+ }
+]

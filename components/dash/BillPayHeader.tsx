@@ -2,10 +2,7 @@
 export function BillPayHeader() {
   return (
     <div className="flex items-end justify-between">
-      <div>
-        <div className="text-[16px] leading-6 text-[rgb(110,106,104)]">Bill Pay</div>
-        <h1 className="mt-1 text-[40px] font-normal leading-[48px] tracking-[-0.01em]">Bills</h1>
-      </div>
+      <h1 className="text-[40px] font-normal leading-[48px] tracking-[-0.01em]">Bill Pay</h1>
       <div className="flex items-center gap-2 pb-1">
         <span className="flex h-10 w-8 items-center justify-center text-[rgb(71,69,67)]" aria-hidden>
           <svg width="4" height="16" viewBox="0 0 4 16" fill="currentColor"><circle cx="2" cy="2.5" r="1.5" /><circle cx="2" cy="8" r="1.5" /><circle cx="2" cy="13.5" r="1.5" /></svg>
