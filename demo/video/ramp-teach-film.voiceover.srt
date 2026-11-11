@@ -1,95 +1,127 @@
 1
-00:00:00,400 --> 00:00:07,087
+00:00:00,400 --> 00:00:06,999
 I'm about to record myself checking an invoice from our staffing vendor, so Ramp can learn how I review it.
 
 2
-00:00:07,604 --> 00:00:10,404
+00:00:07,502 --> 00:00:10,302
 I'm checking this month's invoice from Halcyon Staffing.
 
 3
-00:00:12,302 --> 00:00:14,872
+00:00:11,986 --> 00:00:14,526
 Every rate on it has to match our contract.
 
 4
-00:00:14,972 --> 00:00:17,645
+00:00:14,626 --> 00:00:17,239
 And nobody should be billed twice for the same week.
 
 5
-00:00:17,745 --> 00:00:19,651
+00:00:17,339 --> 00:00:19,167
 Then I check each person's hours against their timecard.
 
 6
-00:00:19,751 --> 00:00:22,551
+00:00:19,267 --> 00:00:22,067
 Maya is approved for 40 hours. Billed hours can't go over that.
 
 7
-00:00:26,245 --> 00:00:29,045
+00:00:25,742 --> 00:00:28,542
 Sam is approved for 36.
 
 8
-00:00:29,456 --> 00:00:32,256
+00:00:28,898 --> 00:00:31,698
 If anything is off, I dispute it and ask for a credit.
 
 9
-00:00:36,600 --> 00:00:40,000
-When I'm done, I send the recording straight to Ramp.
+00:00:35,772 --> 00:00:41,172
+While I work, the recorder saves each click with the exact element it hit.
 
 10
-00:00:40,200 --> 00:00:43,660
-I sign in, and Ramp Teach starts learning from what I just did.
+00:00:41,372 --> 00:00:46,872
+What I say is saved alongside, and passwords are blanked before they leave the page.
 
 11
-00:00:44,060 --> 00:00:51,159
-A few seconds later it has the rules, written from my clicks and what I said.
+00:00:46,972 --> 00:00:50,372
+When I'm done, I send the recording straight to Ramp.
 
 12
-00:00:51,559 --> 00:00:56,644
-Now a new invoice from the same vendor lands in Bill Pay.
+00:00:50,572 --> 00:00:53,954
+I sign in, and Ramp Teach starts learning from what I just did.
 
 13
-00:00:57,044 --> 00:00:59,103
-The agent picks it up on its own.
+00:00:54,354 --> 00:01:02,918
+A few seconds later it has the rules, written from my clicks and what I said.
 
 14
-00:00:59,503 --> 00:01:10,903
-It opens the vendor portal and checks each timecard, the same way I did.
+00:01:03,118 --> 00:01:07,918
+The agent sees each page as a short outline, with a tag on every element it can use.
 
 15
-00:01:11,103 --> 00:01:22,903
-Every step it takes shows up on the bill as it happens.
+00:01:08,118 --> 00:01:13,518
+It picks an action, sees what changed, and goes again. Eight turns to read four timecards.
 
 16
-00:01:23,103 --> 00:01:28,576
-It checks billed hours, rates and duplicate lines against the contract.
+00:01:13,718 --> 00:01:18,218
+It can't run scripts, upload files or leave the vendor's portal.
 
 17
-00:01:28,876 --> 00:01:38,988
-Then it writes up what it found.
+00:01:18,318 --> 00:01:23,297
+Now a new invoice from the same vendor lands in Bill Pay.
 
 18
-00:01:39,288 --> 00:01:44,688
-Three problems: a rate above contract, a line billed twice, and hours over the timecard. $3,448 to credit back.
+00:01:23,697 --> 00:01:25,675
+The agent picks it up on its own.
 
 19
-00:01:44,888 --> 00:01:48,854
-So I dispute it. The agent never approves or pays anything on its own.
+00:01:26,075 --> 00:01:37,475
+It opens the vendor portal and checks each timecard, the same way I did.
 
 20
-00:01:49,254 --> 00:01:56,472
-Next, a clean invoice from the same vendor.
+00:01:37,675 --> 00:01:49,475
+Every step it takes shows up on the bill as it happens.
 
 21
-00:01:56,672 --> 00:02:03,340
-Same review, sped up.
+00:01:49,675 --> 00:02:00,702
+It checks billed hours, rates and duplicate lines against the contract.
 
 22
-00:02:03,460 --> 00:02:06,260
-Everything checks out, so it's ready to approve.
+00:02:01,002 --> 00:02:08,024
+Then it writes up what it found.
 
 23
-00:02:06,460 --> 00:02:14,329
-One click from me, and it moves on to payment.
+00:02:08,324 --> 00:02:13,724
+Three problems: a rate above contract, a line billed twice, and hours over the timecard. $3,448 to credit back.
 
 24
-00:02:15,179 --> 00:02:18,579
-Show it once. Ramp Teach handles the rest.
+00:02:13,924 --> 00:02:17,501
+So I dispute it. The agent never approves or pays anything on its own.
+
+25
+00:02:17,601 --> 00:02:23,201
+Plain code does the math. The agent's timecard facts settle the one check code can't do alone.
+
+26
+00:02:23,401 --> 00:02:30,001
+Claude writes the receipt with a source for each problem, and only I can approve or dispute.
+
+27
+00:02:30,201 --> 00:02:37,420
+Next, a clean invoice from the same vendor.
+
+28
+00:02:37,620 --> 00:02:44,346
+Same review, sped up.
+
+29
+00:02:44,466 --> 00:02:47,266
+Everything checks out, so it's ready to approve.
+
+30
+00:02:47,466 --> 00:02:55,206
+One click from me, and it moves on to payment.
+
+31
+00:02:55,306 --> 00:03:01,306
+Every step writes a line to a log: what ran, and whether Claude, plain code or a person did it.
+
+32
+00:03:01,506 --> 00:03:08,706
+Each Claude call is logged with its request ID, so it can be checked against Anthropic's own records.

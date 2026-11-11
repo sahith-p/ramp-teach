@@ -32,7 +32,7 @@ When a person asks you to read this handoff:
 
    Then run `npm run setup` again; it should say the key is accepted. Without a key everything runs in labeled
    offline mode and the film script refuses to shoot. Spend so far: `npx tsx scripts/usage.ts` (a film take is
-   about $0.33).
+   about $0.36).
 2. **Only if missing** (setup says so): Node 22+, Chromium for Playwright (`npx playwright install chromium`; never on
    a Claude Code cloud machine, it is preinstalled), ffmpeg with libx264 (only for the videos).
 3. **GitHub access** to push: the person's own git credentials, or in Claude Code cloud the connected GitHub account.
@@ -132,7 +132,7 @@ Runtime files (gitignored `runtime/`): `bills.json`, `inbox.json`, `agent-jobs.j
 - **UI copy:** plain words, no em dashes in visible UI text, no jargon.
 - **The agent's browser** may reach only localhost fixture pages; no scripts, uploads or other sites; 25-turn cap.
 - **Secrets:** never print, log or commit keys. Check presence with `[ -n "$RAMP_ANTHROPIC_API_KEY" ] && echo set`.
-- **Commits:** push to branch `claude/pensive-turing-jh6orb`. No PRs unless asked. End commit messages with the
+- **Commits:** push to the session's work branch, then fast-forward `main` only when asked. No PRs unless asked. End commit messages with the
   session's attribution lines.
 
 ## 6. Configuration and environment
@@ -184,21 +184,16 @@ cloud sessions; don't reinstall), system fonts are optional (Inter and JetBrains
 
 ## 7. Current state (2026-11-11)
 
-- Branches: work happens on `claude/pensive-turing-jh6orb`; `main` was fast-forwarded to it on 2026-11-11 at the
-  user's request. Keep `main` a fast-forward of the work branch (no force pushes).
+- Branches: `main` is the source of truth; it was fast-forwarded from `claude/pensive-turing-jh6orb`, then from
+  `claude/product-film-handoff-bwdohs` (the film take) on 2026-11-11. Keep `main` a fast-forward (no force pushes).
 - All build tickets done; 171 tests pass; artifact guard OK.
 - Walkthrough video: `demo/video/ramp-teach-walkthrough.mp4` (done).
-- **Product film:** the committed `ramp-teach-film.mp4` is the previous cut (138.8 s, no diagrams, light outro).
-  The new cut is fully wired and rehearsed offline (four technical diagrams, dark logo-only outro, request IDs in
-  the trace diagram) but **needs one real take**, which is blocked on the API key being added to the environment.
-  When the key is there:
-  ```bash
-  npx tsx demo/video/film.ts --phase all
-  ```
-  Then: check frames (diagrams, transitions, extension icon, avatar, no blank frames), confirm `film-run/usage.jsonl`
-  has `request_id`s, update `demo/video/README.md` (duration, size, four diagrams, dark outro) and `MORNING.md`'s
-  Demo videos section, run the guard, commit only the intended files, push, and send the MP4 to the user.
-- API spend so far ≈ $2.00 total (103 calls) by the usage ledger; a film take ≈ $0.33.
+- **Product film:** done. `demo/video/ramp-teach-film.mp4` is the real take of 2026-11-11 (192.4 s, 8.1 MB, four
+  technical diagrams, dark logo-only outro). All 19 Claude calls in `film-run/usage.jsonl` carry Anthropic
+  `request_id`s. Before this take, structured calls (learn, receipts) were logged without one because
+  `beta.messages.parse()` drops the SDK's `_request_id`; `agent/providers/anthropic.ts` now uses
+  `create().withResponse()` + `parseBetaMessage`. Re-make with `npx tsx demo/video/film.ts --phase all`.
+- API spend so far ≈ $2.72 total (142 calls) by the usage ledgers; a film take ≈ $0.36.
 
 ## 8. Outstanding product work
 

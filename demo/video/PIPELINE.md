@@ -10,7 +10,7 @@ npx tsx demo/video/film.ts --phase all
 ```
 
 Needs `RAMP_ANTHROPIC_API_KEY` (or `ANTHROPIC_API_KEY`) in the environment, ffmpeg with libx264, the preinstalled
-Chromium (Playwright), and port 3000 free. A real take costs about **$0.33** (19 Claude calls). Without a key the
+Chromium (Playwright), and port 3000 free. A real take costs about **$0.36** (19 Claude calls). Without a key the
 script **refuses** to shoot (it used to fall back to offline mode silently and film a fake run).
 
 Free rehearsal (no API calls; output goes to `demo/video/work-film/rehearsal.mp4`, never over the committed film):

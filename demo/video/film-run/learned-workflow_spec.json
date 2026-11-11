@@ -8,8 +8,7 @@
         "line description",
         "quantity",
         "unit_rate",
-        "amount",
-        "total"
+        "View timecard link"
       ]
     },
     {
@@ -28,13 +27,10 @@
     }
   ],
   "rules": [
-    "Every labor line's hourly rate must equal the contract rate card rate for that line's role.",
-    "No employee may be billed more than once for the same week ending date.",
-    "Billed hours on each labor line must not exceed the approved_hours on that employee's timecard for the same week.",
-    "If any check fails, dispute the invoice and request a credit."
+    "Every labor line's hourly rate (unit_rate) must equal the contract rate card rate for that line's role.",
+    "No employee may be billed on more than one labor line for the same week ending date.",
+    "For each labor line, billed hours (quantity) must not exceed the approved_hours on that employee's timecard for the same week.",
+    "If any check fails, dispute the invoice and ask the vendor for a credit."
   ],
-  "open_questions": [
-    "The demonstrator did not state the contract rates per role; what are the rate card values?",
-    "The demonstrator did not say which non-labor charges are allowed or their caps; what does the contract allow?"
-  ]
+  "open_questions": []
 }
